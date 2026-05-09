@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIMS · 통합 자산 관리 플랫폼 아키텍처 전체 설계</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+/* ── TOKENS ── */
+:root {
+  --ink:    #1E2761; --ink2: #2E3F8F; --ink-s: rgba(30,39,97,.07);
+  --acc:    #A16207; --acc-s: rgba(161,98,7,.08);
+  --suc:    #0F766E; --suc-s: rgba(15,118,110,.08);
+  --war:    #B45309; --war-s: rgba(180,83,9,.08);
+  --dan:    #991B1B; --dan-s: rgba(153,27,27,.07);
+  --inf:    #1D4ED8; --inf-s: rgba(29,78,216,.07);
+  --vio:    #6D28D9; --vio-s: rgba(109,40,217,.07);
+  --cya:    #0E7490; --cya-s: rgba(14,116,144,.07);
+
+  --bg:     #F2F3F5;
+  --sur:    #FFFFFF;
+  --sub:    #F6F6F8;
+  --sub2:   #EEEEف1;
+  --bdr:    #E4E4E7;
+  --bdr2:   #D1D1D6;
+  --t1:#18181B; --t2:#3F3F46; --t3:#71717A; --t4:#A1A1AA;
+
+  --font:'Pretendard Variable','Pretendard',system-ui,sans-serif;
+  --r:10px; --rl:16px;
+  --sh:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.03);
+  --sh2:0 4px 16px rgba(0,0,0,.07);
+  --sh3:0 12px 40px rgba(0,0,0,.1);
+}
+
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);font-size:14px;line-height:1.6;color:var(--t1);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+code{font-family:'Courier New',monospace;font-size:11.5px;background:var(--sub);color:var(--ink);padding:1px 6px;border-radius:4px;white-space:nowrap}
+
+/* ── LAYOUT ── */
+.page{max-width:1040px;margin:0 auto;padding:48px 32px 80px}
+@media(max-width:700px){.page{padding:20px 14px 60px}}
+
+/* ── COVER ── */
+.cover{
+  background:linear-gradient(135deg, #1E2761 0%, #162060 60%, #0D1640 100%);
+  border-radius:var(--rl);padding:52px 56px 44px;margin-bottom:28px;
+  position:relative;overflow:hidden;
+}
+.cover::before,.cover::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.03)}
+.cover::before{width:420px;height:420px;right:-100px;top:-120px}
+.cover::after{width:220px;height:220px;left:60%;bottom:-60px}
+.cover-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:20px}
+.cover h1{font-size:30px;font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.2;margin-bottom:10px}
+.cover .tagline{font-size:15px;color:rgba(255,255,255,.5);margin-bottom:36px;font-weight:400}
+.cover-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+.cpill{padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;border:1px solid;background:rgba(255,255,255,.06)}
+.cpill.s0{color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.15)}
+.cpill.s1{color:#7DD3FC;border-color:rgba(125,211,252,.3)}
+.cpill.s2{color:#86EFAC;border-color:rgba(134,239,172,.3)}
+.cpill.s3{color:#FDE68A;border-color:rgba(253,230,138,.3)}
+.cover-meta{display:flex;gap:28px;flex-wrap:wrap;padding-top:24px;border-top:1px solid rgba(255,255,255,.1)}
+.cmeta{display:flex;flex-direction:column;gap:3px}
+.cmeta .cl{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.06em;text-transform:uppercase}
+.cmeta .cv{font-size:13px;font-weight:600;color:rgba(255,255,255,.7)}
+
+/* ── TOC ── */
+.toc{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);padding:28px 32px;margin-bottom:28px;box-shadow:var(--sh)}
+.toc-h{font-size:10.5px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 40px}
+@media(max-width:600px){.toc-grid{grid-template-columns:1fr}}
+.toc-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:13px;color:var(--t2);font-weight:500;transition:color .15s}
+.toc-row:hover{color:var(--ink)}
+.toc-n{width:22px;height:22px;border-radius:6px;background:var(--ink-s);color:var(--ink);display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0}
+
+/* ── SECTION ── */
+.sec{margin-bottom:32px}
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.sec-num{width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0}
+.sec-title{font-size:20px;font-weight:800;letter-spacing:-.025em;color:var(--t1)}
+.sec-desc{font-size:13px;color:var(--t3);margin-bottom:20px;line-height:1.6;margin-left:42px}
+.divider{height:1px;background:var(--bdr);margin:32px 0}
+
+/* ── CARDS ── */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);padding:22px 26px;box-shadow:var(--sh);margin-bottom:14px}
+.card-title{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px;letter-spacing:-.01em}
+.card-sub{font-size:10.5px;font-weight:700;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+@media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}}
+
+/* ── KV STAT ── */
+.kv{display:flex;flex-direction:column;gap:4px;padding:14px 16px;background:var(--sub);border:1px solid var(--bdr);border-radius:var(--r)}
+.kv .k{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.06em;text-transform:uppercase}
+.kv .v{font-size:16px;font-weight:700;color:var(--t1);letter-spacing:-.015em}
+.kv .note{font-size:11px;color:var(--t3);margin-top:1px;line-height:1.4}
+
+/* ── PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.pill::before{content:"";width:5px;height:5px;border-radius:50%}
+.p-gray{background:rgba(113,113,122,.1);color:#52525B}.p-gray::before{background:#71717A}
+.p-ink{background:var(--ink-s);color:var(--ink)}.p-ink::before{background:var(--ink)}
+.p-suc{background:var(--suc-s);color:var(--suc)}.p-suc::before{background:var(--suc)}
+.p-inf{background:var(--inf-s);color:var(--inf)}.p-inf::before{background:var(--inf)}
+.p-vio{background:var(--vio-s);color:var(--vio)}.p-vio::before{background:var(--vio)}
+.p-acc{background:var(--acc-s);color:var(--acc)}.p-acc::before{background:var(--acc)}
+.p-war{background:var(--war-s);color:var(--war)}.p-war::before{background:var(--war)}
+.p-dan{background:var(--dan-s);color:var(--dan)}.p-dan::before{background:var(--dan)}
+
+/* ── ARCH BOX ── */
+.arch{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);padding:28px;box-shadow:var(--sh);margin-bottom:14px;overflow-x:auto}
+.arch-inner{min-width:700px}
+.alayer{margin-bottom:14px}
+.alayer-lbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.alayer-lbl::after{content:"";flex:1;height:1px;background:var(--bdr)}
+.arow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.anode{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;padding:12px 14px;border-radius:var(--r);
+  font-size:11.5px;font-weight:600;border:1.5px solid;
+  min-width:110px;text-align:center;position:relative;
+  line-height:1.3;
+}
+.anode .nsub{font-size:10px;font-weight:400;opacity:.7;margin-top:2px}
+.anode .nbadge{position:absolute;top:-9px;right:-6px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px}
+.n-ink{background:var(--ink-s);border-color:var(--ink);color:var(--ink)}
+.n-suc{background:var(--suc-s);border-color:var(--suc);color:var(--suc)}
+.n-inf{background:var(--inf-s);border-color:var(--inf);color:var(--inf)}
+.n-vio{background:var(--vio-s);border-color:var(--vio);color:var(--vio)}
+.n-acc{background:var(--acc-s);border-color:var(--acc);color:var(--acc)}
+.n-war{background:var(--war-s);border-color:var(--war);color:var(--war)}
+.n-cya{background:var(--cya-s);border-color:var(--cya);color:var(--cya)}
+.n-gray{background:var(--sub);border-color:var(--bdr2);color:var(--t2)}
+.n-dan{background:var(--dan-s);border-color:var(--dan);color:var(--dan)}
+
+.arr-row{display:flex;align-items:center;justify-content:center;gap:6px;padding:5px 0;font-size:11px;color:var(--t4)}
+.arr-line{flex:1;height:1px;background:var(--bdr);max-width:60px}
+.arr-down{text-align:center;font-size:16px;color:var(--bdr2);padding:2px 0;line-height:1}
+
+/* ── STAGE TIMELINE ── */
+.timeline{display:flex;gap:0;overflow-x:auto;padding-bottom:6px}
+.tstep{
+  flex:1;min-width:160px;padding:16px 18px;
+  position:relative;border-radius:var(--r);margin-right:2px;
+}
+.tstep::after{
+  content:"›";position:absolute;right:-12px;top:50%;transform:translateY(-50%);
+  font-size:22px;color:var(--t4);z-index:2;pointer-events:none;
+}
+.tstep:last-child{margin-right:0}
+.tstep:last-child::after{display:none}
+.t-phase{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.t-title{font-size:13px;font-weight:800;color:var(--t1);margin-bottom:8px;letter-spacing:-.01em}
+.t-list{font-size:11.5px;color:var(--t2);line-height:1.7}
+.t-effort{display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px}
+.t-users{margin-top:6px;font-size:10.5px;color:var(--t3)}
+
+.ts-0{background:#F4F4F6;border:1px solid var(--bdr2)}.ts-0 .t-phase{color:var(--t3)}.ts-0 .t-effort{background:rgba(113,113,122,.1);color:#52525B}
+.ts-1{background:var(--ink-s);border:1px solid rgba(30,39,97,.18)}.ts-1 .t-phase{color:var(--ink)}.ts-1 .t-effort{background:var(--ink-s);color:var(--ink)}
+.ts-2{background:var(--suc-s);border:1px solid rgba(15,118,110,.18)}.ts-2 .t-phase{color:var(--suc)}.ts-2 .t-effort{background:var(--suc-s);color:var(--suc)}
+.ts-3{background:var(--acc-s);border:1px solid rgba(161,98,7,.2)}.ts-3 .t-phase{color:var(--acc)}.ts-3 .t-effort{background:var(--acc-s);color:var(--acc)}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;border:1px solid var(--bdr);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead tr{background:var(--sub)}
+th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--bdr2);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--bdr);color:var(--t2);vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--sub)}
+td.lbl{font-weight:600;color:var(--t1);white-space:nowrap}
+
+/* ── LIMIT BOX ── */
+.lbox{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r);margin-bottom:10px;border:1px solid}
+.lbox.warn{background:var(--war-s);border-color:rgba(180,83,9,.2)}
+.lbox.dan{background:var(--dan-s);border-color:rgba(153,27,27,.2)}
+.lbox-ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.lbox-title{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.lbox.warn .lbox-title{color:var(--war)}
+.lbox.dan .lbox-title{color:var(--dan)}
+.lbox-text{font-size:12px;color:var(--t2);line-height:1.55}
+
+/* ── SCREEN CARD ── */
+.scard{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);margin-bottom:14px}
+.scard-hd{padding:16px 20px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.scard-name{font-size:14px;font-weight:800;color:var(--t1);letter-spacing:-.015em}
+.scard-desc{font-size:12px;color:var(--t3);margin-top:3px;line-height:1.5}
+.scard-body{padding:16px 20px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+@media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
+.feat{display:flex;gap:7px;align-items:flex-start;padding:7px 10px;background:var(--sub);border:1px solid var(--bdr);border-radius:8px}
+.feat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.feat-txt{font-size:12px;color:var(--t1);font-weight:500;line-height:1.5}
+.feat-db{margin-top:10px;padding:7px 12px;background:var(--ink-s);border:1px solid rgba(30,39,97,.12);border-radius:8px;font-size:11px;color:var(--ink);font-weight:600}
+.feat-db span{font-weight:400;color:var(--t2)}
+
+/* ── ERD ── */
+.erd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.erd-grid{grid-template-columns:1fr}}
+.erd-table{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.erd-th{padding:10px 14px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:8px;border-bottom:2px solid}
+.erd-fields{padding:8px 0}
+.erd-field{display:flex;align-items:baseline;gap:6px;padding:4px 14px;font-size:11.5px}
+.erd-field:hover{background:var(--sub)}
+.erd-fname{font-weight:600;color:var(--t1);white-space:nowrap;min-width:140px}
+.erd-ftype{color:var(--t3);font-size:11px;white-space:nowrap}
+.erd-fk{color:var(--inf);font-size:10px;font-weight:700;white-space:nowrap}
+.erd-pk{width:16px;height:16px;border-radius:4px;display:grid;place-items:center;font-size:8px;font-weight:800;flex-shrink:0}
+
+.erd-ink .erd-th{background:var(--ink-s);border-color:var(--ink);color:var(--ink)}
+.erd-ink .erd-pk{background:var(--ink);color:#fff}
+.erd-suc .erd-th{background:var(--suc-s);border-color:var(--suc);color:var(--suc)}
+.erd-suc .erd-pk{background:var(--suc);color:#fff}
+.erd-inf .erd-th{background:var(--inf-s);border-color:var(--inf);color:var(--inf)}
+.erd-inf .erd-pk{background:var(--inf);color:#fff}
+.erd-vio .erd-th{background:var(--vio-s);border-color:var(--vio);color:var(--vio)}
+.erd-vio .erd-pk{background:var(--vio);color:#fff}
+.erd-acc .erd-th{background:var(--acc-s);border-color:var(--acc);color:var(--acc)}
+.erd-acc .erd-pk{background:var(--acc);color:#fff}
+.erd-war .erd-th{background:var(--war-s);border-color:var(--war);color:var(--war)}
+.erd-war .erd-pk{background:var(--war);color:#fff}
+.erd-cya .erd-th{background:var(--cya-s);border-color:var(--cya);color:var(--cya)}
+.erd-cya .erd-pk{background:var(--cya);color:#fff}
+.erd-gray .erd-th{background:var(--sub);border-color:var(--bdr2);color:var(--t2)}
+.erd-gray .erd-pk{background:var(--t3);color:#fff}
+
+/* ── CODE BLOCK ── */
+.codeblock{background:#18181B;border-radius:var(--r);padding:16px 20px;margin-bottom:12px;overflow-x:auto}
+.codeblock pre{font-family:'Courier New',monospace;font-size:12px;color:#D4D4D8;line-height:1.7}
+.codeblock .cm{color:#6A9955}
+.codeblock .ck{color:#569CD6}
+.codeblock .cs{color:#CE9178}
+.codeblock .cn{color:#B5CEA8}
+.code-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+
+/* ── RBAC ── */
+.rbac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:800px){.rbac-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.rbac-grid{grid-template-columns:1fr}}
+.rcard{border-radius:var(--r);padding:16px;border:1.5px solid}
+.rcard-role{font-size:12px;font-weight:800;letter-spacing:.02em;margin-bottom:8px}
+.rcard-desc{font-size:11.5px;font-weight:400;margin-bottom:10px;line-height:1.4}
+.rcard-perms{font-size:11px;line-height:1.7;color:var(--t2)}
+.rcard-ex{margin-top:10px;padding-top:8px;border-top:1px solid;font-size:11px;color:var(--t3)}
+.rc-admin{background:var(--ink-s);border-color:rgba(30,39,97,.2)}.rc-admin .rcard-role{color:var(--ink)}
+.rc-editor{background:var(--suc-s);border-color:rgba(15,118,110,.2)}.rc-editor .rcard-role{color:var(--suc)}
+.rc-viewer{background:var(--inf-s);border-color:rgba(29,78,216,.2)}.rc-viewer .rcard-role{color:var(--inf)}
+.rc-audit{background:var(--acc-s);border-color:rgba(161,98,7,.2)}.rc-audit .rcard-role{color:var(--acc)}
+
+/* ── PAGE IA ── */
+.ia-grid{display:grid;grid-template-columns:200px 1fr;gap:0;border:1px solid var(--bdr);border-radius:var(--rl);overflow:hidden;background:var(--sur);box-shadow:var(--sh)}
+.ia-sidebar{background:var(--sub);padding:16px;border-right:1px solid var(--bdr)}
+.ia-sidebar-title{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;padding:4px 8px;margin-bottom:6px}
+.ia-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--t2);cursor:pointer;transition:all .12s}
+.ia-nav-item:hover{background:var(--bdr);color:var(--t1)}
+.ia-nav-item.active{background:var(--ink);color:#fff}
+.ia-nav-item .inic{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ia-content{padding:20px 24px;overflow-x:auto}
+.ia-page-title{font-size:14px;font-weight:800;color:var(--t1);margin-bottom:4px;letter-spacing:-.01em}
+.ia-page-desc{font-size:12px;color:var(--t3);margin-bottom:14px}
+.ia-comps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.ia-comp{padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid}
+.ia-roles{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+/* ── FOOTNOTE ── */
+.footnote{text-align:center;padding:24px;font-size:12px;color:var(--t4);border-top:1px solid var(--bdr);margin-top:40px}
+
+/* ── PRINT ── */
+@media print{body{background:#fff}.cover,.arch,.codeblock{-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.scard,.erd-table{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║              COVER                       ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="cover">
+  <div class="cover-eyebrow">Architecture Design Document · 2026.04</div>
+  <h1>AIMS<br>통합 자산 관리 플랫폼</h1>
+  <p class="tagline">현재 단일 HTML 대시보드 → DB 연동 → 독립 플랫폼 전체 아키텍처 설계</p>
+  <div class="cover-pills">
+    <span class="cpill s0">Stage 0 · 현재 HTML</span>
+    <span class="cpill s1">Stage 1 · Supabase 연동</span>
+    <span class="cpill s2">Stage 2 · 기능 확장</span>
+    <span class="cpill s3">Stage 3 · 독립 플랫폼</span>
+  </div>
+  <div class="cover-meta">
+    <div class="cmeta"><span class="cl">현재 자산 규모</span><span class="cv">₩1,185,916,820,759 (1.186조)</span></div>
+    <div class="cmeta"><span class="cl">관리 데이터</span><span class="cv">건물 15개 · 비품 41종</span></div>
+    <div class="cmeta"><span class="cl">목표 테이블 수</span><span class="cv">8개 테이블 · 90+ 필드</span></div>
+    <div class="cmeta"><span class="cl">목표 화면 수</span><span class="cv">13개 페이지 · 4 역할</span></div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-h">목차</div>
+  <div class="toc-grid">
+    <a class="toc-row" href="#s1"><span class="toc-n">1</span>현재 시스템 구조 (Stage 0)</a>
+    <a class="toc-row" href="#s5"><span class="toc-n">5</span>독립 플랫폼 화면 IA (Stage 3)</a>
+    <a class="toc-row" href="#s2"><span class="toc-n">2</span>현재 한계 분석</a>
+    <a class="toc-row" href="#s6"><span class="toc-n">6</span>RBAC 권한 설계</a>
+    <a class="toc-row" href="#s3"><span class="toc-n">3</span>전체 진화 로드맵</a>
+    <a class="toc-row" href="#s7"><span class="toc-n">7</span>DB 스키마 (ERD)</a>
+    <a class="toc-row" href="#s4"><span class="toc-n">4</span>신규·강화 화면 상세</a>
+    <a class="toc-row" href="#s8"><span class="toc-n">8</span>기술 스택 · API · 마이그레이션</a>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 1. 현재 시스템 구조                            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-hd"><div class="sec-num">1</div><div class="sec-title">현재 시스템 구조 (Stage 0)</div></div>
+  <p class="sec-desc">외부 서버 없이 단일 HTML 94KB 파일 하나로 동작합니다. 브라우저 localStorage에 데이터를 저장하며, 공유 시 데이터 내장 HTML을 생성합니다.</p>
+
+  <div class="arch">
+    <div class="arch-inner">
+      <div class="alayer">
+        <div class="alayer-lbl">화면 계층 (3탭)</div>
+        <div class="arow">
+          <div class="anode n-ink">자산 현황<div class="nsub">히어로KPI · 드릴다운차트</div></div>
+          <div class="anode n-ink">건물 상세<div class="nsub">15개 카드 · 사진관리</div></div>
+          <div class="anode n-ink">데이터 조정<div class="nsub">월별실적·비품·건물 편집</div></div>
+        </div>
+      </div>
+      <div class="arr-row"><div class="arr-line"></div>읽기/쓰기<div class="arr-line"></div></div>
+      <div class="alayer">
+        <div class="alayer-lbl">데이터 계층</div>
+        <div class="arow">
+          <div class="anode n-gray">localStorage<div class="nsub">5MB 한계 · 단일 브라우저</div></div>
+          <div class="anode n-gray">JSON 파일<div class="nsub">수동 내보내기/가져오기</div></div>
+          <div class="anode n-gray">공유 HTML<div class="nsub">데이터 내장 단일파일 생성</div></div>
+          <div class="anode n-gray">base64 이미지<div class="nsub">localStorage 내 직접 저장</div></div>
+        </div>
+      </div>
+      <div class="arr-row"><div class="arr-line"></div>CDN 참조 (읽기 전용)<div class="arr-line"></div></div>
+      <div class="alayer">
+        <div class="alayer-lbl">외부 의존성</div>
+        <div class="arow">
+          <div class="anode n-gray">Chart.js 4.4<div class="nsub">차트 렌더링</div></div>
+          <div class="anode n-gray">Pretendard Variable<div class="nsub">단일 폰트</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="kv"><div class="k">코드베이스</div><div class="v">94 KB</div><div class="note">HTML 단일 파일 · 1,990줄</div></div>
+    <div class="kv"><div class="k">함수 수</div><div class="v">62개</div><div class="note">렌더·차트·CRUD·I/O</div></div>
+    <div class="kv"><div class="k">저장소</div><div class="v">localStorage</div><div class="note">5MB 상한 · 브라우저 로컬</div></div>
+    <div class="kv"><div class="k">사용자</div><div class="v">1명</div><div class="note">동시 편집 불가</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 2. 현재 한계                                   -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-hd"><div class="sec-num">2</div><div class="sec-title">현재 시스템 한계 분석</div></div>
+  <p class="sec-desc">5가지 구조적 한계가 확장을 막고 있습니다. 모두 DB 도입으로 해소됩니다.</p>
+
+  <div class="lbox dan">
+    <div class="lbox-ico">📦</div>
+    <div><div class="lbox-title">저장 용량 5MB 천장</div>
+    <div class="lbox-text">건물 사진 base64 저장 시 3~4장만으로 상한 도달. 15개 건물 사진 관리 실질 불가. Supabase Storage(S3 호환) 전환으로 용량 제한 없음.</div></div>
+  </div>
+  <div class="lbox dan">
+    <div class="lbox-ico">👥</div>
+    <div><div class="lbox-title">단일 사용자 — 협업 불가</div>
+    <div class="lbox-text">데이터가 각자 브라우저에만 존재. A가 수정해도 B는 볼 수 없음. JSON 파일 이메일 공유가 유일한 동기화 방법. Supabase Realtime 연동 시 즉시 해소.</div></div>
+  </div>
+  <div class="lbox warn">
+    <div class="lbox-ico">📷</div>
+    <div><div class="lbox-title">스냅샷 구조 — 이력 없음</div>
+    <div class="lbox-text">비품·건물 데이터는 현재값만 저장. 누가, 언제, 무엇을 변경했는지 추적 불가. 원장(ledger) 구조 전환과 audit_logs 트리거로 해소.</div></div>
+  </div>
+  <div class="lbox warn">
+    <div class="lbox-ico">📋</div>
+    <div><div class="lbox-title">임대차·유지보수 데이터 부재</div>
+    <div class="lbox-text">임차인이 단일 문자열 1개. 계약 기간·만료일·월세를 관리할 구조 없음. 유지보수 비용 데이터도 전혀 없어 건물 실질 원가 계산 불가.</div></div>
+  </div>
+  <div class="lbox warn">
+    <div class="lbox-ico">📊</div>
+    <div><div class="lbox-title">보고서 자동화 불가</div>
+    <div class="lbox-text">월말 보고서를 매달 수작업으로 취합. 스케줄러가 읽을 데이터 소스 자체가 없음. Edge Function + asset_snapshots 도입으로 자동화 가능.</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 3. 전체 진화 로드맵                            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-hd"><div class="sec-num">3</div><div class="sec-title">전체 진화 로드맵 — Stage 0 → 3</div></div>
+  <p class="sec-desc">4단계 순차 진화. 각 단계는 독립 완결. DB는 Stage 1부터 Stage 3까지 동일 Supabase 인스턴스 사용 — 데이터 재이전 없음.</p>
+
+  <!-- 전체 아키텍처 진화도 -->
+  <div class="arch" style="margin-bottom:20px">
+    <div class="arch-inner" style="min-width:800px">
+
+      <!-- Stage 0 -->
+      <div class="alayer">
+        <div class="alayer-lbl">Stage 0 · 현재</div>
+        <div class="arow" style="align-items:center">
+          <div class="anode n-gray" style="flex:3">단일 HTML 파일 (94KB)<div class="nsub">3탭 · localStorage · 1명</div></div>
+          <div style="flex-shrink:0;color:var(--t4);font-size:20px;padding:0 8px">→</div>
+          <div class="anode n-gray" style="flex:1">JSON 파일 공유<div class="nsub">수동</div></div>
+        </div>
+      </div>
+
+      <div class="arr-down">↓ Stage 1 · 함수 4개만 교체</div>
+
+      <!-- Stage 1 -->
+      <div class="alayer">
+        <div class="alayer-lbl">Stage 1 · Supabase 드롭인 (1~2주)</div>
+        <div class="arow">
+          <div class="anode n-ink" style="flex:2">동일 HTML UI<div class="nsub">화면 변화 없음</div></div>
+          <div style="flex-shrink:0;color:var(--t4);font-size:20px;padding:0 8px">⟺</div>
+          <div class="anode n-suc" style="flex:3">Supabase PostgreSQL<div class="nsub">buildings · equipment_items · asset_snapshots</div></div>
+          <div style="flex-shrink:0;color:var(--t4);font-size:20px;padding:0 8px">+</div>
+          <div class="anode n-suc">Storage<div class="nsub">건물 사진</div></div>
+          <div style="flex-shrink:0;color:var(--t4);font-size:20px;padding:0 8px">+</div>
+          <div class="anode n-suc">Auth<div class="nsub">로그인</div></div>
+        </div>
+      </div>
+
+      <div class="arr-down">↓ Stage 2 · 탭 추가 (Phase B~E)</div>
+
+      <!-- Stage 2 -->
+      <div class="alayer">
+        <div class="alayer-lbl">Stage 2 · HTML 기능 확장 (8~13주)</div>
+        <div class="arow">
+          <div class="anode n-ink">자산현황+</div>
+          <div class="anode n-ink">건물상세+</div>
+          <div class="anode n-suc">임대차관리<div class="nsub">신규</div></div>
+          <div class="anode n-inf">유지보수<div class="nsub">신규</div></div>
+          <div class="anode n-vio">비품원장+</div>
+          <div class="anode n-acc">보고서<div class="nsub">신규</div></div>
+        </div>
+        <div class="arow" style="margin-top:8px">
+          <div class="anode n-suc" style="flex:1">lease_contracts<div class="nsub">신규</div></div>
+          <div class="anode n-inf" style="flex:1">maintenance_logs<div class="nsub">신규</div></div>
+          <div class="anode n-vio" style="flex:1">equipment_ledger<div class="nsub">신규</div></div>
+          <div class="anode n-vio" style="flex:1">depreciation_schedules<div class="nsub">신규</div></div>
+          <div class="anode n-gray" style="flex:1">audit_logs<div class="nsub">트리거 자동</div></div>
+        </div>
+      </div>
+
+      <div class="arr-down">↓ Stage 3 · 프론트엔드만 재작성 (8~12주)</div>
+
+      <!-- Stage 3 -->
+      <div class="alayer">
+        <div class="alayer-lbl">Stage 3 · 독립 플랫폼 — AIMS (Next.js)</div>
+        <div class="arow">
+          <div class="anode n-acc" style="flex:3">
+            Next.js 14 (App Router)<div class="nsub">shadcn/ui · Recharts · TanStack Table · Zustand · Kakao Maps</div>
+          </div>
+          <div style="flex-shrink:0;color:var(--t4);font-size:20px;padding:0 8px">⟺</div>
+          <div class="anode n-suc" style="flex:3">
+            Supabase (동일 DB)<div class="nsub">Stage 2 스키마 그대로 · 데이터 이전 없음</div>
+          </div>
+          <div style="flex-shrink:0;color:var(--t4);font-size:20px;padding:0 8px">+</div>
+          <div class="anode n-suc">
+            Edge Functions<div class="nsub">월말 스케줄러 · PDF</div>
+          </div>
+        </div>
+        <div class="arow" style="margin-top:8px">
+          <div class="anode n-acc" style="flex:1">Vercel 배포<div class="nsub">aims.vercel.app</div></div>
+          <div class="anode n-acc" style="flex:1">RBAC 4역할<div class="nsub">admin·editor·viewer·auditor</div></div>
+          <div class="anode n-acc" style="flex:1">13개 페이지<div class="nsub">사이드바 네비</div></div>
+          <div class="anode n-acc" style="flex:1">모바일 반응형<div class="nsub">바텀탭 전환</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 타임라인 -->
+  <div class="card" style="overflow-x:auto">
+    <div class="card-sub">단계별 일정 및 핵심 지표</div>
+    <div class="timeline" style="gap:8px;padding:4px 0 10px">
+      <div class="tstep ts-0">
+        <div class="t-phase">Stage 0</div>
+        <div class="t-title">현재 운영</div>
+        <div class="t-list">HTML 94KB<br>탭 3개<br>localStorage<br>함수 62개</div>
+        <div class="t-effort">진행 중</div>
+        <div class="t-users">사용자: 1명</div>
+      </div>
+      <div class="tstep ts-1">
+        <div class="t-phase">Stage 1</div>
+        <div class="t-title">Supabase 드롭인</div>
+        <div class="t-list">함수 4개 교체<br>화면 변화 없음<br>사진 Storage<br>Auth 로그인</div>
+        <div class="t-effort">1~2주</div>
+        <div class="t-users">사용자: 다중</div>
+      </div>
+      <div class="tstep ts-2">
+        <div class="t-phase">Stage 2 · Phase B</div>
+        <div class="t-title">임대차 관리</div>
+        <div class="t-list">신규 탭 1개<br>Gantt 타임라인<br>만료 경보<br>계약 CRUD</div>
+        <div class="t-effort">2~3주</div>
+        <div class="t-users">재무팀 직접 활용</div>
+      </div>
+      <div class="tstep ts-2">
+        <div class="t-phase">Stage 2 · Phase C</div>
+        <div class="t-title">유지보수 이력</div>
+        <div class="t-list">신규 탭 1개<br>칸반 보드<br>원가 차트<br>발주 현황</div>
+        <div class="t-effort">2주</div>
+        <div class="t-users">시설팀 활용</div>
+      </div>
+      <div class="tstep ts-2">
+        <div class="t-phase">Stage 2 · Phase D~E</div>
+        <div class="t-title">비품 원장 + 보고서</div>
+        <div class="t-list">원장 전환<br>감가상각 자동<br>PDF 보고서<br>이메일 발송</div>
+        <div class="t-effort">4~8주</div>
+        <div class="t-users">회계·감사 대응</div>
+      </div>
+      <div class="tstep ts-3">
+        <div class="t-phase">Stage 3</div>
+        <div class="t-title">독립 플랫폼 AIMS</div>
+        <div class="t-list">Next.js 재작성<br>13개 페이지<br>RBAC 4역할<br>모바일 반응형</div>
+        <div class="t-effort">8~12주</div>
+        <div class="t-users">전사 배포 가능</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-sub">핵심 원칙</div>
+    <div class="tw"><table>
+      <thead><tr><th>원칙</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">DB 단일화</td><td>Stage 1 → 2 → 3 모두 동일 Supabase 인스턴스 사용. 데이터 재이전 없음</td></tr>
+        <tr><td class="lbl">점진적 전환</td><td>Stage 2 HTML과 Stage 3 플랫폼 병행 운영 가능. 빅뱅 전환 불필요</td></tr>
+        <tr><td class="lbl">코드 재사용</td><td>현재 62개 함수 → Stage 3에서 훅/서비스로 1:1 변환. 비즈니스 로직 재작성 불필요</td></tr>
+        <tr><td class="lbl">최소 침습</td><td>Stage 1은 함수 4개(init/saveAll/exportJSON/importJSON)만 교체. 나머지 58개 무변경</td></tr>
+        <tr><td class="lbl">오프라인 유지</td><td>Stage 3 완료 후에도 HTML은 오프라인 뷰어로 유지 가능</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 4. 신규·강화 화면 상세                         -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-hd"><div class="sec-num">4</div><div class="sec-title">신규·강화 화면 상세</div></div>
+  <p class="sec-desc">Stage 2에서 추가되는 탭과 Stage 3에서 강화되는 화면입니다.</p>
+
+  <div class="scard">
+    <div class="scard-hd">
+      <div><div class="scard-name">자산 현황 <span class="pill p-ink">강화</span></div><div class="scard-desc">현재 히어로·드릴다운 구조 유지. DB 연동으로 자동 시계열과 공간 정보가 추가됩니다.</div></div>
+      <span class="pill p-gray">Stage 1부터</span>
+    </div>
+    <div class="scard-body">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-dot" style="background:var(--ink)"></div><div class="feat-txt">YoY · QoQ 비교 차트 — asset_snapshots 시계열 자동 집계</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--ink)"></div><div class="feat-txt">건물 위치 지도 핀 — 자산가치 버블 (Kakao Maps, Stage 3)</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--ink)"></div><div class="feat-txt">ROI 계산 — 취득가 대비 임대수익 연환산</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--ink)"></div><div class="feat-txt">감가상각 진행률 바 — 잔존가치 자동 계산</div></div>
+      </div>
+      <div class="feat-db">필요 테이블: <span>asset_snapshots · buildings · lease_contracts · depreciation_schedules</span></div>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="scard-hd">
+      <div><div class="scard-name">임대차 관리 <span class="pill p-suc">신규</span></div><div class="scard-desc">현재 임차인이 단일 문자열. 계약 단위 관리로 전환하면 재무팀이 이 탭만으로 임대 현황을 완결합니다.</div></div>
+      <span class="pill p-suc">Phase B · 우선순위 최상</span>
+    </div>
+    <div class="scard-body">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-dot" style="background:var(--suc)"></div><div class="feat-txt">계약 Gantt 타임라인 — 만료 30·60·90일 컬러 구분</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--suc)"></div><div class="feat-txt">임박 만료 경보 카드 — 자동 산출</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--suc)"></div><div class="feat-txt">월세 수납 현황 — 예정 vs 실수납 비교</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--suc)"></div><div class="feat-txt">임차인 포트폴리오 — 업종 분포 도넛 차트</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--suc)"></div><div class="feat-txt">계약 추가·편집·종료 모달 — DB CRUD</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--suc)"></div><div class="feat-txt">공실률 자동 재계산 — 건물 카드 연동</div></div>
+      </div>
+      <div class="feat-db">필요 테이블: <span>lease_contracts (신규) · buildings</span></div>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="scard-hd">
+      <div><div class="scard-name">유지보수 이력 <span class="pill p-inf">신규</span></div><div class="scard-desc">현재 유지보수 지출 데이터 없음. 이 탭이 생기면 건물별 실질 원가 분석이 처음으로 가능해집니다.</div></div>
+      <span class="pill p-inf">Phase C</span>
+    </div>
+    <div class="scard-body">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-dot" style="background:var(--inf)"></div><div class="feat-txt">건물별 유지보수 비용 — 연도별 히스토그램</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--inf)"></div><div class="feat-txt">카테고리별 비용 — 전기·소방·구조·수선·청소</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--inf)"></div><div class="feat-txt">작업 상태 칸반 — 예정 → 진행 → 완료</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--inf)"></div><div class="feat-txt">업체별 발주 현황 및 예산 소진률 게이지</div></div>
+      </div>
+      <div class="feat-db">필요 테이블: <span>maintenance_logs (신규) · buildings</span></div>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="scard-hd">
+      <div><div class="scard-name">비품 원장 <span class="pill p-vio">강화</span></div><div class="scard-desc">현재 월별 스냅샷 6항목 → 거래 원장 구조 전환. 품목별 전체 이력과 감가상각이 자동화됩니다.</div></div>
+      <span class="pill p-vio">Phase D</span>
+    </div>
+    <div class="scard-body">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-dot" style="background:var(--vio)"></div><div class="feat-txt">품목별 거래 히스토리 — 일자·수량·담당자</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--vio)"></div><div class="feat-txt">내용년수 대비 노후화 리스트 — 교체 우선순위</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--vio)"></div><div class="feat-txt">카테고리 트리맵 — IT·소방·물류·가전 구성비</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--vio)"></div><div class="feat-txt">이동 경로 추적 — 본사→매장 경로별 흐름</div></div>
+      </div>
+      <div class="feat-db">필요 테이블: <span>equipment_items · equipment_ledger (원장 전환) · depreciation_schedules</span></div>
+    </div>
+  </div>
+
+  <div class="scard">
+    <div class="scard-hd">
+      <div><div class="scard-name">보고서 자동화 <span class="pill p-acc">신규</span></div><div class="scard-desc">월말 자산 보고서 자동 생성 및 담당자 이메일 발송. 감사인 전용 접근 계정도 부여 가능합니다.</div></div>
+      <span class="pill p-acc">Phase E</span>
+    </div>
+    <div class="scard-body">
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-dot" style="background:var(--acc)"></div><div class="feat-txt">월간 자산 보고서 PDF 자동 생성</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--acc)"></div><div class="feat-txt">임대차 만료 예보 리스트 이메일 발송</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--acc)"></div><div class="feat-txt">분기별 감가상각 명세 자동 산출</div></div>
+        <div class="feat"><div class="feat-dot" style="background:var(--acc)"></div><div class="feat-txt">건물별 종합 현황 1-pager 다운로드</div></div>
+      </div>
+      <div class="feat-db">필요: <span>모든 테이블 + Supabase Edge Function (Deno) + SMTP</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 5. 독립 플랫폼 화면 IA (Stage 3)              -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s5">
+  <div class="sec-hd"><div class="sec-num">5</div><div class="sec-title">독립 플랫폼 화면 IA — AIMS (Stage 3)</div></div>
+  <p class="sec-desc">Next.js App Router 기반. 사이드바 네비게이션 + 페이지 단위 구성. 모바일에서는 바텀탭으로 전환됩니다.</p>
+
+  <div class="card">
+    <div class="tw"><table>
+      <thead><tr><th>경로</th><th>페이지명</th><th>핵심 컴포넌트</th><th>접근 역할</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl"><code>/</code></td><td>대시보드 홈</td><td>AssetHero · NotificationFeed · QuickStats</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/assets</code></td><td>자산 현황</td><td>AssetHero · YoYChart · CompositionBar · AssetMap</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/buildings</code></td><td>건물 목록</td><td>BuildingCard · 카드뷰↔테이블뷰 토글 · RegionFilter</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/buildings/[id]</code></td><td>건물 상세</td><td>PhotoGallery · LeaseContractList · MaintenanceHistory · DepreciationBar</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/leases</code></td><td>임대차 관리</td><td>LeaseGantt · ExpiryAlerts · TenantPortfolio</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/leases/[id]</code></td><td>계약 상세</td><td>ContractForm · PaymentHistory · FileAttachment</td><td><span class="pill p-ink">editor+</span></td></tr>
+        <tr><td class="lbl"><code>/maintenance</code></td><td>유지보수</td><td>MaintenanceKanban · CostHistogram · VendorList</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/maintenance/[id]</code></td><td>작업 상세</td><td>WorkOrderForm · InvoiceUpload · CommentThread</td><td><span class="pill p-ink">editor+</span></td></tr>
+        <tr><td class="lbl"><code>/equipment</code></td><td>비품 원장</td><td>CategoryTreemap · EquipmentTable · LifespanAlert</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/equipment/[id]</code></td><td>품목 상세</td><td>LedgerTimeline · DepreciationSchedule · TransferMap</td><td><span class="pill p-gray">전체</span></td></tr>
+        <tr><td class="lbl"><code>/reports</code></td><td>보고서</td><td>ReportBuilder · TemplateSelector · SendHistory</td><td><span class="pill p-inf">viewer+</span></td></tr>
+        <tr><td class="lbl"><code>/settings</code></td><td>설정</td><td>UserManagement · NotificationThresholds · FiscalYear</td><td><span class="pill p-vio">admin</span></td></tr>
+        <tr><td class="lbl"><code>/settings/audit</code></td><td>감사 로그</td><td>AuditTimeline · ChangeFilter · ExportLog</td><td><span class="pill p-vio">admin</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-sub">현재 → Stage 3 컴포넌트 변환</div>
+      <div class="tw"><table>
+        <thead><tr><th>현재 함수</th><th>→ Stage 3 컴포넌트</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl"><code>renderHero()</code></td><td>AssetHero.tsx</td></tr>
+          <tr><td class="lbl"><code>renderBuildings()</code></td><td>BuildingCard.tsx</td></tr>
+          <tr><td class="lbl"><code>renderDrillEq()</code></td><td>EquipmentDrilldown.tsx</td></tr>
+          <tr><td class="lbl"><code>renderDrillBd()</code></td><td>BuildingDrilldown.tsx</td></tr>
+          <tr><td class="lbl"><code>S (전역 객체)</code></td><td>Zustand store</td></tr>
+          <tr><td class="lbl"><code>Chart.js</code></td><td>Recharts (React 네이티브)</td></tr>
+          <tr><td class="lbl"><code>tbl (편집 테이블)</code></td><td>TanStack Table v8</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-sub">모바일 반응형 전략</div>
+      <div style="font-size:13px;color:var(--t2);line-height:1.7">
+        <p style="margin-bottom:10px">데스크탑과 모바일에서 레이아웃이 전환됩니다.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="kv" style="padding:10px 12px">
+            <div class="k">데스크탑</div>
+            <div class="v" style="font-size:13px">사이드바</div>
+            <div class="note">260px 고정 + 콘텐츠</div>
+          </div>
+          <div class="kv" style="padding:10px 12px">
+            <div class="k">모바일</div>
+            <div class="v" style="font-size:13px">바텀탭</div>
+            <div class="note">5개 주요 탭 하단</div>
+          </div>
+        </div>
+        <p style="margin-top:12px;font-size:12px;color:var(--t3)">Tailwind breakpoint <code>md:768px</code> 기준 자동 전환. shadcn/ui Sheet 컴포넌트로 모바일 드로어 구현.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 6. RBAC 권한 설계                             -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s6">
+  <div class="sec-hd"><div class="sec-num">6</div><div class="sec-title">RBAC 권한 설계</div></div>
+  <p class="sec-desc">4가지 역할. Supabase Row Level Security(RLS)로 DB 레벨에서 강제됩니다. 프론트엔드 접근제어만으로는 불충분하며 RLS가 필수입니다.</p>
+
+  <div class="rbac-grid">
+    <div class="rcard rc-admin">
+      <div class="rcard-role">Admin</div>
+      <div class="rcard-desc">시스템 관리자</div>
+      <div class="rcard-perms">✔ 전체 페이지<br>✔ CRUD 전체<br>✔ 사용자 관리<br>✔ 데이터 삭제<br>✔ 감사로그 열람</div>
+      <div class="rcard-ex">예: 안전보건팀 팀장</div>
+    </div>
+    <div class="rcard rc-editor">
+      <div class="rcard-role">Editor</div>
+      <div class="rcard-desc">데이터 편집자</div>
+      <div class="rcard-perms">✔ 설정·감사로그 제외 전체<br>✔ 데이터 입력·수정<br>✔ 보고서 생성<br>✘ 데이터 영구 삭제<br>✘ 사용자 관리</div>
+      <div class="rcard-ex">예: 김소정 대리 (현 작성자)</div>
+    </div>
+    <div class="rcard rc-viewer">
+      <div class="rcard-role">Viewer</div>
+      <div class="rcard-desc">읽기 전용</div>
+      <div class="rcard-perms">✔ 대시보드·자산·건물<br>✔ 임대차·보고서 열람<br>✔ 보고서 다운로드<br>✘ 데이터 수정<br>✘ 설정 접근</div>
+      <div class="rcard-ex">예: 경영진, 재무팀</div>
+    </div>
+    <div class="rcard rc-audit">
+      <div class="rcard-role">Auditor</div>
+      <div class="rcard-desc">감사 전용</div>
+      <div class="rcard-perms">✔ 보고서 열람·다운로드<br>✔ 감사로그 열람<br>✘ 데이터 수정<br>✘ 일반 운영 화면<br>✘ 설정 접근</div>
+      <div class="rcard-ex">예: 외부 감사인, 회계법인</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-sub">RLS 정책 구현 예시</div>
+    <div class="code-label">buildings 테이블 RLS</div>
+    <div class="codeblock"><pre><span class="cm">-- 읽기: 전체 역할</span>
+<span class="ck">CREATE POLICY</span> <span class="cs">"buildings_select"</span> <span class="ck">ON</span> buildings
+  <span class="ck">FOR SELECT USING</span> (auth.role() <span class="ck">IN</span> (<span class="cs">'admin'</span>,<span class="cs">'editor'</span>,<span class="cs">'viewer'</span>,<span class="cs">'auditor'</span>));
+
+<span class="cm">-- 쓰기: editor 이상</span>
+<span class="ck">CREATE POLICY</span> <span class="cs">"buildings_write"</span> <span class="ck">ON</span> buildings
+  <span class="ck">FOR INSERT OR UPDATE USING</span> (auth.role() <span class="ck">IN</span> (<span class="cs">'admin'</span>,<span class="cs">'editor'</span>));
+
+<span class="cm">-- 삭제: admin only</span>
+<span class="ck">CREATE POLICY</span> <span class="cs">"buildings_delete"</span> <span class="ck">ON</span> buildings
+  <span class="ck">FOR DELETE USING</span> (auth.role() = <span class="cs">'admin'</span>);</pre></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 7. DB 스키마 (ERD)                            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s7">
+  <div class="sec-hd"><div class="sec-num">7</div><div class="sec-title">DB 스키마 설계 (ERD)</div></div>
+  <p class="sec-desc">Stage 0 객체 2개(비품·건물) → 8개 테이블 · 90+ 필드. buildings와 equipment_items는 기존 데이터를 자동 마이그레이션합니다.</p>
+
+  <div class="erd-grid">
+
+    <div class="erd-table erd-ink">
+      <div class="erd-th"><span class="erd-pk">PK</span>buildings <span class="pill p-ink" style="margin-left:auto">확장</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">name / address</span><span class="erd-ftype">VARCHAR / TEXT</span></div>
+        <div class="erd-field"><span class="erd-fname">region</span><span class="erd-ftype">VARCHAR(20)</span></div>
+        <div class="erd-field"><span class="erd-fname">building_type</span><span class="erd-ftype">store|hub|office|apt</span></div>
+        <div class="erd-field"><span class="erd-fname">area_sqm / pyeong</span><span class="erd-ftype">DECIMAL / INT</span></div>
+        <div class="erd-field"><span class="erd-fname">acquisition_price</span><span class="erd-ftype">BIGINT</span></div>
+        <div class="erd-field"><span class="erd-fname">insurance_expiry</span><span class="erd-ftype">DATE 🆕</span></div>
+        <div class="erd-field"><span class="erd-fname">last_inspection_date</span><span class="erd-ftype">DATE 🆕</span></div>
+        <div class="erd-field"><span class="erd-fname">photo_url</span><span class="erd-ftype">TEXT (Storage URL)</span></div>
+        <div class="erd-field"><span class="erd-fname">updated_by</span><span class="erd-ftype">UUID → auth.users</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-suc">
+      <div class="erd-th"><span class="erd-pk">PK</span>lease_contracts <span class="pill p-suc" style="margin-left:auto">신규</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">building_id</span><span class="erd-fk">FK → buildings</span></div>
+        <div class="erd-field"><span class="erd-fname">tenant_name / type</span><span class="erd-ftype">VARCHAR</span></div>
+        <div class="erd-field"><span class="erd-fname">floor_unit</span><span class="erd-ftype">VARCHAR(30)</span></div>
+        <div class="erd-field"><span class="erd-fname">area_sqm</span><span class="erd-ftype">DECIMAL</span></div>
+        <div class="erd-field"><span class="erd-fname">monthly_rent / deposit</span><span class="erd-ftype">BIGINT</span></div>
+        <div class="erd-field"><span class="erd-fname">contract_start / end</span><span class="erd-ftype">DATE NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">auto_renew</span><span class="erd-ftype">BOOLEAN</span></div>
+        <div class="erd-field"><span class="erd-fname">status</span><span class="erd-ftype">active|expiring|expired</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-inf">
+      <div class="erd-th"><span class="erd-pk">PK</span>maintenance_logs <span class="pill p-inf" style="margin-left:auto">신규</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">building_id</span><span class="erd-fk">FK → buildings</span></div>
+        <div class="erd-field"><span class="erd-fname">category</span><span class="erd-ftype">전기|소방|구조|수선|청소</span></div>
+        <div class="erd-field"><span class="erd-fname">title / description</span><span class="erd-ftype">VARCHAR / TEXT</span></div>
+        <div class="erd-field"><span class="erd-fname">work_date</span><span class="erd-ftype">DATE NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">cost</span><span class="erd-ftype">BIGINT</span></div>
+        <div class="erd-field"><span class="erd-fname">vendor</span><span class="erd-ftype">VARCHAR(100)</span></div>
+        <div class="erd-field"><span class="erd-fname">status</span><span class="erd-ftype">scheduled|in_progress|done</span></div>
+        <div class="erd-field"><span class="erd-fname">invoice_url</span><span class="erd-ftype">TEXT (영수증 첨부)</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-vio">
+      <div class="erd-th"><span class="erd-pk">PK</span>equipment_items <span class="pill p-vio" style="margin-left:auto">확장</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">legacy_id</span><span class="erd-ftype">VARCHAR eq_001 (호환)</span></div>
+        <div class="erd-field"><span class="erd-fname">name</span><span class="erd-ftype">VARCHAR(100) NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">category</span><span class="erd-ftype">IT|소방|사무|물류|가전</span></div>
+        <div class="erd-field"><span class="erd-fname">unit_price</span><span class="erd-ftype">BIGINT 🆕</span></div>
+        <div class="erd-field"><span class="erd-fname">lifespan_years</span><span class="erd-ftype">INT 🆕</span></div>
+        <div class="erd-field"><span class="erd-fname">is_active</span><span class="erd-ftype">BOOLEAN</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-vio">
+      <div class="erd-th"><span class="erd-pk">PK</span>equipment_ledger <span class="pill p-vio" style="margin-left:auto">신규 (원장)</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">equipment_id</span><span class="erd-fk">FK → equipment_items</span></div>
+        <div class="erd-field"><span class="erd-fname">transaction_type</span><span class="erd-ftype">purchase|transfer|disposal</span></div>
+        <div class="erd-field"><span class="erd-fname">location_type</span><span class="erd-ftype">hq|store|logistics</span></div>
+        <div class="erd-field"><span class="erd-fname">location_from</span><span class="erd-ftype">VARCHAR (이동 출발지)</span></div>
+        <div class="erd-field"><span class="erd-fname">amount</span><span class="erd-ftype">BIGINT NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">quantity</span><span class="erd-ftype">INT</span></div>
+        <div class="erd-field"><span class="erd-fname">recorded_date</span><span class="erd-ftype">DATE NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">created_by</span><span class="erd-fk">FK → auth.users</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-acc">
+      <div class="erd-th"><span class="erd-pk">PK</span>asset_snapshots <span class="pill p-acc" style="margin-left:auto">신규 (자동)</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">snapshot_date</span><span class="erd-ftype">DATE PK (월말)</span></div>
+        <div class="erd-field"><span class="erd-fname">total_asset</span><span class="erd-ftype">BIGINT NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">tangible / intangible</span><span class="erd-ftype">BIGINT</span></div>
+        <div class="erd-field"><span class="erd-fname">equipment</span><span class="erd-ftype">BIGINT</span></div>
+        <div class="erd-field"><span class="erd-fname">location_hq/store/logistics</span><span class="erd-ftype">BIGINT</span></div>
+        <div class="erd-field"><span class="erd-fname">⚙ 트리거</span><span class="erd-ftype">Edge Function 월말 자동 INSERT</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-war">
+      <div class="erd-th"><span class="erd-pk">PK</span>depreciation_schedules <span class="pill p-war" style="margin-left:auto">신규</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">asset_type</span><span class="erd-ftype">building|equipment</span></div>
+        <div class="erd-field"><span class="erd-fname">asset_id</span><span class="erd-ftype">UUID (다형성 FK)</span></div>
+        <div class="erd-field"><span class="erd-fname">acquisition_price</span><span class="erd-ftype">BIGINT NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">lifespan_years</span><span class="erd-ftype">INT NOT NULL</span></div>
+        <div class="erd-field"><span class="erd-fname">method</span><span class="erd-ftype">straight_line|declining</span></div>
+        <div class="erd-field"><span class="erd-fname">annual_depreciation</span><span class="erd-ftype">BIGINT (계산값)</span></div>
+        <div class="erd-field"><span class="erd-fname">book_value</span><span class="erd-ftype">BIGINT (장부가)</span></div>
+        <div class="erd-field"><span class="erd-fname">fully_depreciated_at</span><span class="erd-ftype">DATE</span></div>
+      </div>
+    </div>
+
+    <div class="erd-table erd-gray">
+      <div class="erd-th"><span class="erd-pk">PK</span>audit_logs <span class="pill p-gray" style="margin-left:auto">신규 (트리거 자동)</span></div>
+      <div class="erd-fields">
+        <div class="erd-field"><span class="erd-fname">id</span><span class="erd-ftype">UUID PK</span></div>
+        <div class="erd-field"><span class="erd-fname">table_name</span><span class="erd-ftype">VARCHAR(50)</span></div>
+        <div class="erd-field"><span class="erd-fname">record_id</span><span class="erd-ftype">UUID</span></div>
+        <div class="erd-field"><span class="erd-fname">action</span><span class="erd-ftype">INSERT|UPDATE|DELETE</span></div>
+        <div class="erd-field"><span class="erd-fname">old_data / new_data</span><span class="erd-ftype">JSONB</span></div>
+        <div class="erd-field"><span class="erd-fname">changed_by</span><span class="erd-fk">FK → auth.users</span></div>
+        <div class="erd-field"><span class="erd-fname">changed_at</span><span class="erd-ftype">TIMESTAMPTZ</span></div>
+        <div class="erd-field"><span class="erd-fname">⚙ 트리거</span><span class="erd-ftype">모든 테이블 변경 시 자동</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- 8. 기술 스택 · API · 마이그레이션             -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="sec" id="s8">
+  <div class="sec-hd"><div class="sec-num">8</div><div class="sec-title">기술 스택 · API 패턴 · 마이그레이션 전략</div></div>
+  <p class="sec-desc">Stage 3 독립 플랫폼의 전체 기술 구성과 핵심 API 패턴, 현재 데이터 마이그레이션 전략입니다.</p>
+
+  <!-- 기술 스택 아키텍처 -->
+  <div class="arch">
+    <div class="arch-inner">
+      <div class="alayer">
+        <div class="alayer-lbl">클라이언트 (aims.vercel.app)</div>
+        <div class="arow">
+          <div class="anode n-acc" style="flex:2">Next.js 14 App Router<div class="nsub">SSR · SSG · RSC</div></div>
+          <div class="anode n-acc">shadcn/ui<div class="nsub">컴포넌트 라이브러리</div></div>
+          <div class="anode n-acc">Tailwind CSS<div class="nsub">유틸리티 스타일</div></div>
+          <div class="anode n-acc">Zustand<div class="nsub">전역 상태</div></div>
+          <div class="anode n-acc">TanStack Table<div class="nsub">고성능 테이블</div></div>
+          <div class="anode n-acc">Recharts<div class="nsub">차트</div></div>
+          <div class="anode n-acc">Kakao Maps<div class="nsub">건물 지도</div></div>
+        </div>
+      </div>
+      <div class="arr-row"><div class="arr-line"></div>HTTPS · Supabase JS SDK · WebSocket(Realtime)<div class="arr-line"></div></div>
+      <div class="alayer">
+        <div class="alayer-lbl">Supabase (ap-northeast-2 · Seoul)</div>
+        <div class="arow">
+          <div class="anode n-suc" style="flex:2">PostgreSQL 15<div class="nsub">8개 테이블 · RLS · 트리거</div></div>
+          <div class="anode n-suc">Auth<div class="nsub">이메일 · Google SSO</div></div>
+          <div class="anode n-suc">Storage<div class="nsub">건물사진 · 영수증</div></div>
+          <div class="anode n-suc">Realtime<div class="nsub">다중 편집자 동기화</div></div>
+          <div class="anode n-suc">Edge Functions<div class="nsub">Deno · 월말 스케줄러</div></div>
+        </div>
+      </div>
+      <div class="arr-row"><div class="arr-line"></div>Prisma ORM · 월말 cron<div class="arr-line"></div></div>
+      <div class="alayer">
+        <div class="alayer-lbl">자동화 계층 (Edge Functions)</div>
+        <div class="arow">
+          <div class="anode n-suc">월말 스냅샷<div class="nsub">cron '0 0 L * *'</div></div>
+          <div class="anode n-suc">만료 경보<div class="nsub">90일 전 이메일 발송</div></div>
+          <div class="anode n-suc">PDF 생성<div class="nsub">보고서 렌더링</div></div>
+          <div class="anode n-suc">SMTP 발송<div class="nsub">Resend API</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API 패턴 -->
+  <div class="card">
+    <div class="card-sub">핵심 API 패턴 (Supabase JS SDK)</div>
+    <div class="code-label">건물 목록 + 임대 계약 수 조회</div>
+    <div class="codeblock"><pre><span class="ck">const</span> { data } = <span class="ck">await</span> supabase
+  .from(<span class="cs">'buildings'</span>)
+  .select(<span class="cs">'*, lease_contracts(count), maintenance_logs(count)'</span>)
+  .eq(<span class="cs">'is_active'</span>, <span class="ck">true</span>)
+  .order(<span class="cs">'acquisition_price'</span>, { ascending: <span class="ck">false</span> });</pre></div>
+    <div class="code-label">임박 만료 계약 조회 (90일 이내)</div>
+    <div class="codeblock"><pre><span class="ck">const</span> d90 = <span class="ck">new</span> Date(); d90.setDate(d90.getDate() + <span class="cn">90</span>);
+<span class="ck">const</span> { data: expiring } = <span class="ck">await</span> supabase
+  .from(<span class="cs">'lease_contracts'</span>)
+  .select(<span class="cs">'*, buildings(name, region)'</span>)
+  .lte(<span class="cs">'contract_end'</span>, d90.toISOString().slice(<span class="cn">0</span>,<span class="cn">10</span>))
+  .eq(<span class="cs">'status'</span>, <span class="cs">'active'</span>)
+  .order(<span class="cs">'contract_end'</span>);</pre></div>
+    <div class="code-label">비품 재고 계산 (RPC)</div>
+    <div class="codeblock"><pre><span class="cm">-- PostgreSQL 함수 (서버사이드)</span>
+<span class="ck">CREATE OR REPLACE FUNCTION</span> get_equipment_inventory(as_of DATE)
+<span class="ck">RETURNS TABLE</span>(equipment_id UUID, location_type TEXT, balance BIGINT) <span class="ck">AS</span> $$
+  <span class="ck">SELECT</span> equipment_id, location_type,
+    <span class="ck">SUM</span>(<span class="ck">CASE WHEN</span> transaction_type = <span class="cs">'purchase'</span> <span class="ck">THEN</span> amount
+         <span class="ck">WHEN</span> transaction_type = <span class="cs">'disposal'</span> <span class="ck">THEN</span> -amount <span class="ck">ELSE</span> <span class="cn">0</span> <span class="ck">END</span>) <span class="ck">AS</span> balance
+  <span class="ck">FROM</span> equipment_ledger
+  <span class="ck">WHERE</span> recorded_date &lt;= as_of
+  <span class="ck">GROUP BY</span> equipment_id, location_type;
+$$ <span class="ck">LANGUAGE sql</span>;</pre></div>
+    <div class="code-label">실시간 동기화</div>
+    <div class="codeblock"><pre>supabase.channel(<span class="cs">'buildings'</span>)
+  .on(<span class="cs">'postgres_changes'</span>, { event: <span class="cs">'*'</span>, schema: <span class="cs">'public'</span>, table: <span class="cs">'buildings'</span> },
+    (payload) => { <span class="cm">/* Zustand store 업데이트 */</span> queryClient.invalidateQueries([<span class="cs">'buildings'</span>]); })
+  .subscribe();</pre></div>
+  </div>
+
+  <!-- 마이그레이션 전략 -->
+  <div class="card">
+    <div class="card-sub">Stage 0 → Stage 1 마이그레이션 전략</div>
+    <div class="tw"><table>
+      <thead><tr><th>단계</th><th>작업</th><th>기존 코드 변경</th><th>리스크</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="lbl">① Supabase 프로젝트 생성</td>
+          <td>DB 인스턴스 생성 · 테이블 생성 · RLS 설정</td>
+          <td>없음</td>
+          <td style="color:var(--suc)">없음</td>
+        </tr>
+        <tr>
+          <td class="lbl">② JSON 내보내기</td>
+          <td>현재 HTML에서 dashboard_2026xxxx.json 1회 추출</td>
+          <td>없음</td>
+          <td style="color:var(--suc)">없음</td>
+        </tr>
+        <tr>
+          <td class="lbl">③ 마이그레이션 스크립트</td>
+          <td>JSON → PostgreSQL INSERT (Node.js 1회성 스크립트)</td>
+          <td>없음</td>
+          <td style="color:var(--war)">데이터 검증 필요</td>
+        </tr>
+        <tr>
+          <td class="lbl">④ 함수 4개 교체</td>
+          <td><code>init()</code> <code>saveAll()</code> <code>exportJSON()</code> <code>importJSON()</code></td>
+          <td>4개 함수 (나머지 58개 무변경)</td>
+          <td style="color:var(--war)">로컬 테스트 후 배포</td>
+        </tr>
+        <tr>
+          <td class="lbl">⑤ 검증</td>
+          <td>소화기 재고 합계 765,902,874원 일치 확인 (기존 검증 기준)</td>
+          <td>없음</td>
+          <td style="color:var(--suc)">없음</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="code-label" style="margin-top:16px">마이그레이션 스크립트 패턴</div>
+    <div class="codeblock"><pre><span class="cm">// migrate.js — 1회성 실행</span>
+<span class="ck">const</span> data = JSON.parse(fs.readFileSync(<span class="cs">'dashboard_20260428.json'</span>));
+
+<span class="cm">// 비품 items</span>
+<span class="ck">for</span> (<span class="ck">const</span> eq <span class="ck">of</span> data.eq) {
+  <span class="ck">await</span> supabase.from(<span class="cs">'equipment_items'</span>).upsert({
+    legacy_id: eq.id, name: eq.name
+  }, { onConflict: <span class="cs">'legacy_id'</span> });
+}
+
+<span class="cm">// 비품 스냅샷 → 초기 원장 1건 INSERT</span>
+<span class="ck">for</span> (<span class="ck">const</span> eq <span class="ck">of</span> data.eq) {
+  <span class="ck">await</span> supabase.from(<span class="cs">'equipment_ledger'</span>).insert({
+    equipment_id: ..., transaction_type: <span class="cs">'inventory_check'</span>,
+    location_type: <span class="cs">'hq'</span>, amount: eq.inventory.hq,
+    recorded_date: <span class="cs">'2026-02-28'</span>
+  });
+}
+
+<span class="cm">// 건물</span>
+<span class="ck">for</span> (<span class="ck">const</span> bd <span class="ck">of</span> data.bd) {
+  <span class="ck">await</span> supabase.from(<span class="cs">'buildings'</span>).upsert({
+    name: bd.name, address: bd.address, ...
+  }, { onConflict: <span class="cs">'name'</span> });
+}</pre></div>
+  </div>
+
+  <!-- Stage 3 개발 전략 -->
+  <div class="card">
+    <div class="card-sub">Stage 3 Next.js 개발 전략</div>
+    <div class="tw"><table>
+      <thead><tr><th>현재 HTML</th><th>→ Next.js 변환</th><th>우선순위</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">전역 <code>S</code> 객체</td><td>Zustand store (<code>useAssetStore</code>)</td><td>1순위 — 기반</td></tr>
+        <tr><td class="lbl"><code>init()</code> 함수</td><td>Next.js <code>layout.tsx</code> + React Query 초기 fetch</td><td>1순위</td></tr>
+        <tr><td class="lbl"><code>renderBuildings()</code></td><td><code>BuildingCard.tsx</code> 컴포넌트</td><td>2순위</td></tr>
+        <tr><td class="lbl"><code>renderHero()</code></td><td><code>AssetHero.tsx</code> 컴포넌트</td><td>2순위</td></tr>
+        <tr><td class="lbl">Chart.js 차트 5개</td><td>Recharts (<code>AreaChart</code>, <code>BarChart</code>, <code>PieChart</code>)</td><td>3순위</td></tr>
+        <tr><td class="lbl"><code>tbl</code> 편집 테이블</td><td>TanStack Table v8 + 인라인 편집</td><td>3순위</td></tr>
+        <tr><td class="lbl">사진 base64 저장</td><td>Supabase Storage URL (이미 Stage 1에서 해소)</td><td>완료</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+</div>
+
+<div class="footnote">
+  AIMS 통합 자산 관리 플랫폼 아키텍처 전체 설계서<br>
+  작성 2026.04 · Agent-1 (코드분석) · Agent-2 (인프라설계) · Agent-3 (DB ERD) · Agent-4 (화면IA) · Agent-5 (마이그레이션) 분석 기반<br>
+  현황 기준: 대시보드 v5 · 건물 15개 · 비품 41종 · 총자산 ₩1,185,916,820,759 · 함수 62개
+</div>
+
+</div>
+</body>
+</html>

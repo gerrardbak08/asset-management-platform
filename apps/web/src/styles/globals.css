@@ -1,0 +1,192 @@
+/* DESIGN.md 시맨틱 토큰 + V16 다이소 다크네이비 brand 톤 + 앰버 accent. 라이트 기본 + 다크 토글 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── 라이트 (기본) — V16 흰 캔버스 + 다이소 네이비 brand */
+    --background: 240 9% 98%;
+    --card: 0 0% 100%;
+    --foreground: 240 6% 10%;
+    --muted-foreground: 240 5% 34%;
+    --border: 240 5% 90%;
+    --muted: 240 9% 96%;
+
+    /* 다이소 다크네이비 #1E3A5F → HSL(213 53% 25%) */
+    --primary: 213 53% 25%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 9% 95%;
+    --secondary-foreground: 240 6% 10%;
+
+    /* 앰버 accent #F59E0B → HSL(38 92% 50%) — V16 비품 카테고리 톤 */
+    --accent: 38 92% 50%;
+    --accent-foreground: 240 6% 10%;
+    --accent-subtle: 38 92% 95%;
+    --accent-border: 38 92% 80%;
+
+    /* danger — 다이소 레드 진한 톤 #991B1B */
+    --danger: 0 70% 35%;
+    --danger-foreground: 0 0% 100%;
+    --danger-subtle: 0 80% 96%;
+    --danger-border: 0 70% 85%;
+
+    /* warning — 앰버 다크 톤 */
+    --warning: 30 90% 45%;
+    --warning-foreground: 0 0% 100%;
+    --warning-subtle: 30 95% 95%;
+    --warning-border: 30 90% 80%;
+
+    --info: 213 90% 50%;
+    --info-foreground: 0 0% 100%;
+    --info-subtle: 213 90% 95%;
+    --info-border: 213 90% 85%;
+
+    --success: 152 50% 32%;
+    --success-foreground: 0 0% 100%;
+    --success-subtle: 152 60% 92%;
+    --success-border: 152 50% 75%;
+
+    /* 사이드바 — 라이트·다크 모두 다이소 다크네이비 chrome */
+    --sidebar: 213 53% 18%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-muted-foreground: 213 15% 70%;
+    --sidebar-accent: 38 92% 50%; /* 앰버 — 활성 메뉴 액센트 */
+    --sidebar-accent-foreground: 213 53% 18%;
+    --sidebar-border: 213 40% 30%;
+
+    /* 외부 (DESIGN.md §2 — 변경 불가) */
+    --kakao-bg: #fee500;
+    --kakao-fg: #3c1e1e;
+  }
+
+  .dark {
+    --background: 213 30% 9%;
+    --card: 213 25% 14%;
+    --foreground: 0 0% 96%;
+    --muted-foreground: 213 10% 70%;
+    --border: 213 20% 22%;
+    --muted: 213 22% 16%;
+
+    --primary: 213 70% 55%; /* 다크에선 살짝 밝게 */
+    --primary-foreground: 213 30% 9%;
+    --secondary: 213 22% 18%;
+    --secondary-foreground: 0 0% 96%;
+
+    --accent: 38 92% 55%;
+    --accent-foreground: 213 30% 9%;
+    --accent-subtle: 38 50% 16%;
+    --accent-border: 38 60% 30%;
+
+    --danger: 0 70% 55%;
+    --danger-foreground: 0 0% 100%;
+    --danger-subtle: 0 50% 16%;
+    --danger-border: 0 60% 30%;
+
+    --warning: 30 90% 55%;
+    --warning-foreground: 213 30% 9%;
+    --warning-subtle: 30 50% 16%;
+    --warning-border: 30 60% 30%;
+
+    --info: 213 90% 60%;
+    --info-foreground: 0 0% 100%;
+    --info-subtle: 213 50% 16%;
+    --info-border: 213 60% 30%;
+
+    --success: 152 60% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-subtle: 152 30% 14%;
+    --success-border: 152 40% 28%;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased text-body;
+    letter-spacing: -0.015em;
+    /* Pretendard Variable OpenType 기능 활성화 */
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  /* 테이블/폼/버튼 — Pretendard 상속 강제 + 디자인 시스템 크기 적용 */
+  table {
+    font-size: inherit;
+    font-family: inherit;
+  }
+
+  input, select, textarea {
+    @apply font-sans text-body;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  button {
+    @apply font-sans;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1, 'kern' 1, 'ss06' 1;
+  }
+
+  /* 인쇄 — 라이트 강제 + 사이드바·헤더 숨기기 + 페이지 분리 */
+  @media print {
+    :root,
+    :root.dark {
+      --background: 0 0% 100%;
+      --card: 0 0% 100%;
+      --foreground: 240 6% 10%;
+      --muted-foreground: 240 5% 34%;
+      --border: 240 5% 88%;
+      --muted: 240 9% 96%;
+    }
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+    aside,
+    header,
+    .no-print {
+      display: none !important;
+    }
+    main {
+      overflow: visible !important;
+      height: auto !important;
+    }
+    section,
+    .rounded-2xl {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+}
+
+/* ── 한국 다이소 분위기 보조 클래스 (절제된 사용) */
+@layer components {
+  .brand-stripe {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary)) 60%,
+      hsl(var(--accent)) 60%,
+      hsl(var(--accent)) 100%
+    );
+  }
+  .brand-stripe-vertical {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary)) 60%,
+      hsl(var(--accent)) 60%,
+      hsl(var(--accent)) 100%
+    );
+  }
+}

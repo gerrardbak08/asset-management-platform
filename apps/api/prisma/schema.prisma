@@ -1,0 +1,120 @@
+// 자산관리 플랫폼 1단계 스키마 — docs/spec.md §2 참조
+// SQLite 시작 → 운영 전환 시 provider 만 PostgreSQL 로 변경
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String // 'admin' | 'editor' | 'viewer' | 'auditor'
+  createdAt    DateTime @default(now())
+
+  buildingsUpdated  Building[]          @relation("BuildingUpdater")
+  memosUpdated      BuildingMemo[]
+  snapshotsCreated  EquipmentSnapshot[]
+}
+
+model Building {
+  id               String    @id @default(uuid())
+  legacyId         String    @unique
+  name             String
+  address          String
+  use              String
+  areaSqm          Float
+  areaPyeong       Float
+  floors           String
+  approvalDate     DateTime?
+  acquisitionDate  DateTime
+  acquisitionPrice BigInt
+  rentalArea       Float     @default(0)
+  rentalRate       Float     @default(0)
+  vacancy          Float     @default(0)
+  tenant           String    @default("-")
+  lat              Float
+  lng              Float
+  photoUrl         String?
+  detailPhotoUrl   String?
+  updatedById      String?
+  updatedBy        User?     @relation("BuildingUpdater", fields: [updatedById], references: [id])
+  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now())
+
+  memo BuildingMemo?
+}
+
+model EquipmentItem {
+  id        String              @id @default(uuid())
+  legacyId  String              @unique
+  name      String
+  isActive  Boolean             @default(true)
+  createdAt DateTime            @default(now())
+  snapshots EquipmentSnapshot[]
+}
+
+model EquipmentSnapshot {
+  id              String        @id @default(uuid())
+  equipmentId     String
+  equipment       EquipmentItem @relation(fields: [equipmentId], references: [id])
+  period          String // YYYY-MM
+  locationType    String // hq | store | logistics
+  purchaseAmount  BigInt        @default(0)
+  transferAmount  BigInt        @default(0)
+  disposalAmount  BigInt        @default(0)
+  inventoryAmount BigInt        @default(0)
+  createdById     String?
+  createdBy       User?         @relation(fields: [createdById], references: [id])
+  createdAt       DateTime      @default(now())
+
+  @@unique([equipmentId, period, locationType])
+  @@index([period])
+}
+
+model Store {
+  id                        String   @id @default(uuid())
+  name                      String
+  siteType                  String?
+  period                    String
+  assetValue                BigInt
+  assetCount                Int
+  supplyValue               BigInt
+  assetByTypeJson           String // JSON 직렬화 (SQLite 호환)
+  supplyByCategoryJson      String
+  supplyByCategoryCountJson String
+  createdAt                 DateTime @default(now())
+
+  @@unique([name, period])
+  @@index([period])
+  @@index([name])
+}
+
+model MonthlySnapshot {
+  id         String   @id @default(uuid())
+  period     String   @unique
+  totalAsset BigInt
+  tangible   BigInt
+  intangible BigInt
+  equipment  BigInt
+  hq         BigInt
+  store      BigInt
+  logistics  BigInt
+  kpiJson    String // AssetKPI JSON 직렬화
+  rawJson    String // M0Data 원형 JSON 직렬화
+  createdAt  DateTime @default(now())
+}
+
+model BuildingMemo {
+  buildingId  String   @id
+  building    Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  body        String
+  updatedById String?
+  updatedBy   User?    @relation(fields: [updatedById], references: [id])
+  updatedAt   DateTime @updatedAt
+}

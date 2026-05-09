@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+out
+.next
+.turbo
+coverage
+*.log
+*.db
+*.db-journal
+.omc
+.claude
+DB
+uploads
+prisma/dev.db
+SJ_대시보드_V*.html

@@ -1,0 +1,90 @@
+// 좌측 사이드바 — 다이소 다크네이비 chrome + 활성 항목 좌측 앰버 accent strip
+import { NavLink } from 'react-router-dom';
+import { Building2, Building, Store, Database, Shield } from 'lucide-react';
+import type { ComponentType } from 'react';
+import { cn } from '@/lib/utils';
+
+type MenuItem = {
+  to: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  group: '운영' | '관리';
+};
+
+const MENU: MenuItem[] = [
+  { to: '/dashboard', label: '자산현황', icon: Building2, group: '운영' },
+  { to: '/buildings', label: '건물', icon: Building, group: '운영' },
+  { to: '/stores', label: '사업장', icon: Store, group: '운영' },
+  { to: '/data', label: '데이터', icon: Database, group: '관리' },
+  { to: '/admin', label: '관리자', icon: Shield, group: '관리' },
+];
+
+export function Sidebar() {
+  const operations = MENU.filter((m) => m.group === '운영');
+  const management = MENU.filter((m) => m.group === '관리');
+
+  return (
+    <aside className="hidden w-[240px] shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
+      <div className="flex h-14 items-center gap-2 border-b border-sidebar-border px-4">
+        <span aria-hidden="true" className="brand-stripe-vertical h-5 w-1 rounded-full" />
+        <span className="text-heading-md font-semibold tracking-tight">자산관리</span>
+      </div>
+
+      <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
+        <SidebarGroup label="운영" items={operations} />
+        <SidebarGroup label="관리" items={management} />
+      </nav>
+
+      <div className="border-t border-sidebar-border px-4 py-3 text-micro text-sidebar-muted-foreground">
+        v0.1.0 · 1단계
+      </div>
+    </aside>
+  );
+}
+
+function SidebarGroup({ label, items }: { label: string; items: MenuItem[] }) {
+  return (
+    <div>
+      <div className="px-2 py-1.5 text-micro uppercase tracking-wider text-sidebar-muted-foreground">
+        {label}
+      </div>
+      <ul className="space-y-0.5">
+        {items.map((m) => (
+          <li key={m.to} className="relative">
+            <NavLink
+              to={m.to}
+              className={({ isActive }) =>
+                cn(
+                  'group flex items-center gap-2 rounded-lg px-3 py-2 text-body font-medium transition-colors duration-150',
+                  isActive
+                    ? 'bg-white/5 text-white'
+                    : 'text-sidebar-foreground/85 hover:bg-white/5 hover:text-white',
+                )
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full transition-colors duration-150',
+                      isActive ? 'bg-sidebar-accent' : 'bg-transparent',
+                    )}
+                  />
+                  <m.icon
+                    className={cn(
+                      'h-4 w-4 transition-colors duration-150',
+                      isActive ? 'text-sidebar-accent' : 'text-sidebar-foreground/60',
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span>{m.label}</span>
+                </>
+              )}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}

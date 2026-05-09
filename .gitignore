@@ -1,0 +1,62 @@
+# 의존성
+node_modules/
+.pnpm-store/
+
+# 빌드 결과
+dist/
+build/
+out/
+.next/
+.turbo/
+*.tsbuildinfo
+
+# 환경
+.env
+.env.local
+.env.*.local
+.env.production
+
+# 업로드 (운영 데이터)
+uploads/
+
+# DB
+*.db
+*.db-journal
+prisma/dev.db
+prisma/dev.db-journal
+prisma/migrations/dev/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# 로그
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 캐시
+.eslintcache
+.cache/
+.parcel-cache/
+
+# 테스트
+coverage/
+.vitest/
+
+# Playwright
+test-results/
+playwright-report/
+
+# OMC 도구
+.omc/
+
+# Claude Code
+.claude/
+
+# 디버그 산출물 (스크린샷·Playwright)
+screen-*.png
+.playwright-mcp/

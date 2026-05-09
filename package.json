@@ -1,0 +1,22 @@
+{
+  "name": "asset-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "전사 자산관리 플랫폼 — V16 단일 HTML 대시보드를 다중 사용자 서버 기반 플랫폼으로 전환",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "typescript": "^5.5.4"
+  }
+}
