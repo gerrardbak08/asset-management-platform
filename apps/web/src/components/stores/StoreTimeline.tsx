@@ -97,10 +97,7 @@ export function StoreTimeline({ detail }: Props) {
 
   return (
     <Card className="p-5">
-      <SectionHeader
-        title="활동 타임라인"
-        description="V16 동등 — 1단계는 현재 데이터 기반 합성. 2단계에 audit_logs 도입"
-      />
+      <SectionHeader title="활동 타임라인" />
       <ol className="relative space-y-3 border-l-2 border-border pl-5">
         {events.map((e, i) => (
           <li key={i} className="relative">

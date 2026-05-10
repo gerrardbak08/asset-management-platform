@@ -1,6 +1,7 @@
 // 개요 Hero — 총자산 KPI + 자산유형별 도넛(우측 범례) + 이슈사항 (V16 동등 재구성)
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'motion/react';
 import { AlertTriangle } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import type { M0Data } from '@aims/shared';
@@ -9,6 +10,7 @@ import { MomBadge } from './MomBadge';
 import { buildingsApi } from '@/lib/api/buildings';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { fmtKR, fmtKRfull } from '@/lib/format';
+import { cardItemVariants, staggerContainerVariants, CHART_ANIM_MS } from '@/lib/motion';
 
 const PERIOD = '2026-03';
 
@@ -45,10 +47,15 @@ export function HeroKPI({ m0 }: Props) {
       : topItems;
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <motion.div
+      variants={staggerContainerVariants}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-3"
+    >
       {/* 총자산 KPI */}
-      <Card className="relative overflow-hidden p-5">
-        <span aria-hidden="true" className="brand-stripe absolute left-0 right-0 top-0 h-1" />
+      <motion.div variants={cardItemVariants} className="h-full">
+      <Card className="flex h-full flex-col p-5">
         <p className="text-caption font-medium uppercase tracking-wider text-muted-foreground">
           총 자산 규모 · {m0.meta.current_period}
         </p>
@@ -68,9 +75,11 @@ export function HeroKPI({ m0 }: Props) {
           {m0.meta.previous_period})
         </p>
       </Card>
+      </motion.div>
 
       {/* 도넛 차트 — 그래프 좌측 + 범례 우측 */}
-      <Card className="p-5">
+      <motion.div variants={cardItemVariants} className="h-full">
+      <Card className="flex h-full flex-col p-5">
         <p className="mb-3 text-body-strong text-muted-foreground">자산 유형별 구성</p>
         <div className="flex items-center gap-3">
           <div className="h-[160px] w-[140px] shrink-0">
@@ -85,6 +94,9 @@ export function HeroKPI({ m0 }: Props) {
                   paddingAngle={2}
                   stroke="hsl(var(--card))"
                   strokeWidth={2}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
                 >
                   {donutData.map((_, i) => (
                     <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} />
@@ -125,10 +137,13 @@ export function HeroKPI({ m0 }: Props) {
           </ul>
         </div>
       </Card>
+      </motion.div>
 
       {/* 이슈사항 패널 */}
-      <IssuePanel />
-    </div>
+      <motion.div variants={cardItemVariants} className="h-full">
+        <IssuePanel />
+      </motion.div>
+    </motion.div>
   );
 }
 

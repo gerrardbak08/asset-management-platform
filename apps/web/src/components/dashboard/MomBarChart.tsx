@@ -12,6 +12,7 @@ import type { M0Data } from '@aims/shared';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR } from '@/lib/format';
+import { CHART_ANIM_MS } from '@/lib/motion';
 
 type Props = { m0: M0Data };
 
@@ -73,6 +74,9 @@ export function MomBarChart({ m0 }: Props) {
               radius={[0, 4, 4, 0]}
               maxBarSize={20}
               fill="hsl(var(--info))"
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
               label={{
                 position: 'right',
                 fontSize: 11,

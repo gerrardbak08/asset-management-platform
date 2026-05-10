@@ -1,34 +1,33 @@
 // 자산 유형 3분할 KPI 카드 + 세부 드릴다운 패널 (V16 동등)
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import type { M0Data } from '@aims/shared';
 import { Card } from '@/components/ui/Card';
 import { MomBadge } from './MomBadge';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR, fmtKRfull, fmtPct } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { cardItemVariants, staggerContainerVariants } from '@/lib/motion';
 
 type AssetCategory = 'tangible' | 'intangible' | 'supplies';
 
 const CAT_META: Record<
   AssetCategory,
-  { label: string; matrixLabel: string; accentClass: string; desc: string }
+  { label: string; matrixLabel: string; desc: string }
 > = {
   tangible: {
     label: '유형자산',
     matrixLabel: '유형자산',
-    accentClass: 'bg-primary',
     desc: '건물·토지·집기비품·기계장치·차량운반구',
   },
   intangible: {
     label: '무형자산',
     matrixLabel: '무형자산',
-    accentClass: 'bg-info',
     desc: '소프트웨어·영업권·임차권리금·상표권·특허권',
   },
   supplies: {
     label: '비품',
     matrixLabel: '비품',
-    accentClass: 'bg-accent',
     desc: '비품',
   },
 };
@@ -101,15 +100,23 @@ export function AssetKpiCards({ m0 }: Props) {
   return (
     <div className="space-y-3">
       {/* 3분할 카드 */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <motion.div
+        variants={staggerContainerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 gap-3 sm:auto-rows-fr sm:grid-cols-3"
+      >
         {cards.map((c) => {
           const m = CAT_META[c.key];
           const isSelected = selected === c.key;
           const isOpen = isSelected && panelOpen;
           return (
-            <button
+            <motion.button
               key={c.key}
               type="button"
+              variants={cardItemVariants}
+              whileHover={{ y: -2 }}
+              transition={{ y: { duration: 0.15, ease: 'easeOut' } }}
               onClick={() => {
                 if (isSelected && panelOpen) {
                   setPanelOpen(false);
@@ -119,31 +126,27 @@ export function AssetKpiCards({ m0 }: Props) {
                 }
               }}
               className={cn(
-                'relative overflow-hidden rounded-2xl border p-5 text-left transition-all duration-150',
+                'h-full rounded-2xl border p-5 text-left transition-colors duration-150',
                 isOpen
                   ? 'border-primary bg-card shadow-elev-2'
                   : 'border-border bg-card hover:border-primary/40 hover:bg-muted/30',
               )}
             >
-              <span
-                aria-hidden="true"
-                className={cn('absolute left-0 top-0 h-full w-1', m.accentClass)}
-              />
               <div className="flex items-start justify-between gap-2">
                 <span className="text-heading-sm text-muted-foreground">● {m.label}</span>
                 <MomBadge ratio={c.momRatio} />
               </div>
-              <div className="mt-2 flex items-baseline gap-1">
+              <div className="mt-3 flex items-baseline gap-1">
                 <span className="font-kpi-metric font-mono tabular-nums text-foreground">
                   {fmtKR(c.current)}
                 </span>
                 <span className="text-caption text-muted-foreground">원</span>
               </div>
-              <div className="mt-1 text-body text-muted-foreground">
+              <div className="mt-1.5 text-body text-muted-foreground">
                 전월비 {c.momVal >= 0 ? '+' : ''}
                 {fmtKR(Math.abs(c.momVal))}원
               </div>
-              <div className="mt-3 flex justify-end">
+              <div className="mt-4 flex justify-end">
                 <span
                   className={cn(
                     'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-caption transition-colors',
@@ -155,24 +158,33 @@ export function AssetKpiCards({ m0 }: Props) {
                   세부 현황 {isOpen ? '▲' : '→'}
                 </span>
               </div>
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* 드릴다운 패널 */}
+      <AnimatePresence initial={false}>
       {panelOpen && (
+        <motion.div
+          key="drilldown"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          style={{ overflow: 'hidden' }}
+        >
         <Card className="overflow-hidden">
           <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
             <div className="min-w-0 flex-1">
               <SectionHeader title={`${meta.label} 세부 현황`} description={meta.desc} />
-              <ul className="mt-1 space-y-0.5">
+              <ul className="mt-1 space-y-1 text-body leading-relaxed text-muted-foreground">
                 {summaryLines.map((line, i) => (
-                  <li key={i} className="text-body text-muted-foreground">
-                    <span className="mr-2 font-semibold text-foreground/60">
+                  <li key={i} className="flex gap-2">
+                    <span className="w-9 shrink-0 text-caption font-semibold uppercase tracking-wider text-foreground/60">
                       {(['규모', '구성', '변동'] as const)[i]}
                     </span>
-                    {line}
+                    <span className="min-w-0 flex-1">{line}</span>
                   </li>
                 ))}
               </ul>
@@ -285,7 +297,9 @@ export function AssetKpiCards({ m0 }: Props) {
             </table>
           </div>
         </Card>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import {
 import { dashboardApi } from '@/lib/api/dashboard';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
+import { CHART_ANIM_MS } from '@/lib/motion';
 
 export function AssetTrendChart() {
   const q = useQuery({ queryKey: ['snapshots'], queryFn: dashboardApi.snapshots });
@@ -79,6 +80,9 @@ export function AssetTrendChart() {
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 5 }}
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
             />
             <Line
               type="monotone"
@@ -87,6 +91,9 @@ export function AssetTrendChart() {
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 5 }}
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
             />
             <Line
               type="monotone"
@@ -95,6 +102,9 @@ export function AssetTrendChart() {
               strokeWidth={1.5}
               strokeDasharray="5 3"
               dot={{ r: 3 }}
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
             />
             <Line
               type="monotone"
@@ -103,6 +113,9 @@ export function AssetTrendChart() {
               strokeWidth={1.5}
               strokeDasharray="3 3"
               dot={{ r: 3 }}
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
             />
           </LineChart>
         </ResponsiveContainer>

@@ -49,9 +49,14 @@ export function ExecInsight({ m0 }: Props) {
           경영 요약 · {m0.meta.current_period}
         </span>
       </div>
-      <p className="text-body leading-relaxed text-foreground">
-        {lines.join(' ')}
-      </p>
+      <ul className="space-y-1.5 text-body leading-relaxed text-foreground">
+        {lines.map((line, i) => (
+          <li key={i} className="flex gap-2">
+            <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-info" />
+            <span className="min-w-0 flex-1">{line}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR, fmtKRfull, fmtPct } from '@/lib/format';
 import { MomBadge } from './MomBadge';
 import { cn } from '@/lib/utils';
+import { CHART_ANIM_MS } from '@/lib/motion';
 
 type FlowKind = 'inventory' | 'purchase' | 'transfer' | 'disposal';
 const FLOW_LABEL: Record<FlowKind, string> = {
@@ -359,7 +360,15 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
                 }}
                 cursor={{ fill: 'hsl(var(--muted))' }}
               />
-              <Bar dataKey="value" fill={FLOW_COLOR[flowKind]} radius={[0, 6, 6, 0]} maxBarSize={20} />
+              <Bar
+                dataKey="value"
+                fill={FLOW_COLOR[flowKind]}
+                radius={[0, 6, 6, 0]}
+                maxBarSize={20}
+                isAnimationActive
+                animationDuration={CHART_ANIM_MS}
+                animationEasing="ease-out"
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>

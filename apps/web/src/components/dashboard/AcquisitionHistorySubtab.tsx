@@ -16,6 +16,7 @@ import { buildingsApi } from '@/lib/api/buildings';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR } from '@/lib/format';
+import { CHART_ANIM_MS } from '@/lib/motion';
 
 export function AcquisitionHistorySubtab() {
   const q = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
@@ -92,6 +93,9 @@ export function AcquisitionHistorySubtab() {
               fill="hsl(var(--primary))"
               radius={[6, 6, 0, 0]}
               maxBarSize={48}
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
             />
             <Line
               yAxisId="right"
@@ -101,6 +105,9 @@ export function AcquisitionHistorySubtab() {
               stroke="hsl(var(--accent))"
               strokeWidth={2}
               dot={{ fill: 'hsl(var(--accent))', r: 4 }}
+              isAnimationActive
+              animationDuration={CHART_ANIM_MS}
+              animationEasing="ease-out"
             />
           </ComposedChart>
         </ResponsiveContainer>
