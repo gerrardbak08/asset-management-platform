@@ -8,7 +8,7 @@ import {
   type SortKey,
   type UseGroup,
   regionBucketOf,
-  useGroupOf,
+  groupOf,
 } from '@/lib/buildingHelpers';
 import { cn } from '@/lib/utils';
 
@@ -37,7 +37,7 @@ export function BuildingFilters({
 }: Props) {
   const buckets = Array.from(new Set(buildings.map((b) => regionBucketOf(b.address))));
   const orderedBuckets = ALL_REGION_BUCKETS.filter((b) => buckets.includes(b));
-  const groups = Array.from(new Set(buildings.map((b) => useGroupOf(b.use))));
+  const groups = Array.from(new Set(buildings.map((b) => groupOf(b.use))));
   const orderedGroups = ALL_USE_GROUPS.filter((g) => groups.includes(g));
 
   return (
@@ -67,7 +67,7 @@ export function BuildingFilters({
           전체
         </Chip>
         {orderedGroups.map((g) => {
-          const count = buildings.filter((b) => useGroupOf(b.use) === g).length;
+          const count = buildings.filter((b) => groupOf(b.use) === g).length;
           return (
             <Chip key={g} active={useGroup === g} onClick={() => setUseGroup(g)}>
               {g} ({count})

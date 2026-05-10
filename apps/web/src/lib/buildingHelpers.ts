@@ -32,7 +32,7 @@ export function regionBucketOf(addr: string): RegionBucket {
 
 export type UseGroup = '창고시설' | '판매시설' | '공동주택·업무시설' | '제1종근린생활시설' | '기타';
 
-export function useGroupOf(use: string): UseGroup {
+export function groupOf(use: string): UseGroup {
   if (!use) return '기타';
   if (use.includes('창고')) return '창고시설';
   if (use.includes('판매')) return '판매시설';
