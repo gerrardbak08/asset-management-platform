@@ -7,17 +7,40 @@
     <meta name="description" content="15개 건물·1조 1,915억 규모 통합 자산 대시보드" />
     <meta name="theme-color" content="#0f172a" />
 
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Pretendard Variable -->
+    <!-- Pretendard Variable woff2 (display:swap + size-adjust fallback) -->
     <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2"
+      crossorigin
     />
+    <style>
+      @font-face {
+        font-family: 'Pretendard Variable';
+        font-weight: 45 920;
+        font-style: normal;
+        font-display: swap;
+        src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2')
+          format('woff2-variations');
+      }
+      /* fallback metric override — Pretendard 로딩 전후 글자 폭 차이 최소화 */
+      @font-face {
+        font-family: 'Pretendard Fallback';
+        src: local('Apple SD Gothic Neo'), local('Malgun Gothic'), local('Noto Sans KR'),
+          local('system-ui'), local('Arial');
+        size-adjust: 100.5%;
+        ascent-override: 92%;
+        descent-override: 24%;
+        line-gap-override: 0%;
+      }
+    </style>
 
-    <!-- DM Mono -->
+    <!-- DM Mono (이미 display:swap) -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap"

@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
+        sans: ['Pretendard Variable', 'Pretendard Fallback', 'Pretendard', 'system-ui', 'sans-serif'],
         mono: ['"DM Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
