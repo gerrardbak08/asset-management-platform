@@ -3,6 +3,8 @@
 > 작성일 2026-05-09. 기준 구현은 `SJ_대시보드_V16.html` (라이브 https://gerrardbak08.github.io/asset-dashboard/).
 > 본 계획은 Supabase 와 Vercel 을 사용하지 않는 자체 호스팅 전제하의 1단계 설계서.
 > 코드는 사용자가 승인한 뒤에만 추가한다.
+>
+> **2026-05-10 업데이트** — 1단계 거의 완료. 2단계 이후 전체 설계는 [docs/system-design-2026-05-10.md](docs/system-design-2026-05-10.md), 2단계 실행 체크리스트는 [docs/checklist-phase2.md](docs/checklist-phase2.md), 1단계 잔존(1.5단계) 정리는 system-design §1 참조.
 
 ---
 
