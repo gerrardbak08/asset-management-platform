@@ -1,6 +1,5 @@
 // 임대 현황 — V16 1:1 (KPI 4 + 임대율 바 + 면적 비교 + 취득가 산점도) + 수도권/지방 · 용도 4압축 행 펼침 → Drawer
 import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
   BarChart,
   Bar,
@@ -15,7 +14,8 @@ import {
   Cell,
   Legend,
 } from 'recharts';
-import { buildingsApi, type Building } from '@/lib/api/buildings';
+import { type Building } from '@/lib/api/buildings';
+import { useBuildings } from '@/lib/queries';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { BuildingDrawer } from '@/components/buildings/BuildingDrawer';
@@ -63,7 +63,7 @@ type GroupRow = {
 };
 
 export function LeaseStatusSubtab() {
-  const q = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
+  const q = useBuildings();
   const items: Building[] = q.data ?? [];
 
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);

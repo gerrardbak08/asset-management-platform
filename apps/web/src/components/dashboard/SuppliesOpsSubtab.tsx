@@ -1,10 +1,9 @@
 // 비품 — 운영(KPI·TOP5)과 흐름(TOP10 차트) 통합 (V16 비품 운영+흐름 동등)
 import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { AlertTriangle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import type { M0Data } from '@aims/shared';
-import { dashboardApi } from '@/lib/api/dashboard';
+import { useEquipmentSnapshots } from '@/lib/queries';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR, fmtKRfull, fmtPct } from '@/lib/format';
@@ -35,10 +34,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
   const [selectedEq, setSelectedEq] = useState<string | null>(null);
   const [flowKind, setFlowKind] = useState<FlowKind>('inventory');
 
-  const eqSnapshots = useQuery({
-    queryKey: ['equipments', 'snapshots', PERIOD],
-    queryFn: () => dashboardApi.equipmentSnapshots(PERIOD),
-  });
+  const eqSnapshots = useEquipmentSnapshots(PERIOD);
 
   const snapshots = eqSnapshots.data ?? [];
 

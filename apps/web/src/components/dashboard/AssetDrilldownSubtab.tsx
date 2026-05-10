@@ -1,7 +1,6 @@
 // 자산 드릴다운 — V16 3단 계층 탐색 (좌 300px 네비 · 우 원장 테이블)
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { dashboardApi } from '@/lib/api/dashboard';
+import { useEquipmentSnapshots } from '@/lib/queries';
 import { fmtKRfull } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { M0Data } from '@aims/shared';
@@ -47,11 +46,7 @@ export function AssetDrilldownSubtab({ m0 }: Props) {
     };
   }, [m0]);
 
-  const eqQuery = useQuery({
-    queryKey: ['equipments', 'snapshots', PERIOD],
-    queryFn: () => dashboardApi.equipmentSnapshots(PERIOD),
-    enabled: drillType === 'equipment',
-  });
+  const eqQuery = useEquipmentSnapshots(PERIOD, drillType === 'equipment');
 
   const handleTypeChange = (type: DrillType) => {
     setDrillType(type);

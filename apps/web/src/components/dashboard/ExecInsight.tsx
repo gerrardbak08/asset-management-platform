@@ -1,8 +1,7 @@
 // 임원용 인사이트 — 경영 요약 (V16 renderExecInsight 동등). DESIGN.md AI 블록 패턴
 import { Lightbulb } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
 import type { M0Data } from '@aims/shared';
-import { buildingsApi } from '@/lib/api/buildings';
+import { useBuildings } from '@/lib/queries';
 import { fmtKR, fmtPct } from '@/lib/format';
 import { LEASE_RATE, SUPPLIES_MOM } from '@/lib/thresholds';
 
@@ -12,7 +11,7 @@ export function ExecInsight({ m0 }: Props) {
   const total = m0.mom.total;
   const supplies = m0.mom.supplies_kpi;
   const top = m0.movers?.top_up?.[0];
-  const bldQ = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
+  const bldQ = useBuildings();
 
   const lowRentBuildings = (bldQ.data ?? []).filter(
     (b) => b.rental.rate < LEASE_RATE.CAUTION_MIN,

@@ -1,8 +1,7 @@
 // 자산현황 페이지 — Radix Tabs 5개: 개요/드릴다운/비품/취득연혁/임대현황
 import * as Tabs from '@radix-ui/react-tabs';
-import { useQuery } from '@tanstack/react-query';
 import { Database } from 'lucide-react';
-import { dashboardApi } from '@/lib/api/dashboard';
+import { useMom } from '@/lib/queries';
 import { PageShell } from '@/components/ui/PageShell';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DashboardOverviewSkeleton } from '@/components/ui/Skeleton';
@@ -27,10 +26,7 @@ const SUBTABS = [
 ] as const;
 
 export default function Dashboard() {
-  const q = useQuery({
-    queryKey: ['mom', PERIOD],
-    queryFn: () => dashboardApi.mom(PERIOD),
-  });
+  const q = useMom(PERIOD);
 
   return (
     <PageShell title="자산현황" description={`${PERIOD} 기준 (전월 대비)`}>

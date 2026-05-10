@@ -1,5 +1,4 @@
 // 자산 유형별 추이 꺾은선 차트 — 기준월=100 지수화 (V16 동등)
-import { useQuery } from '@tanstack/react-query';
 import {
   LineChart,
   Line,
@@ -10,12 +9,12 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { dashboardApi } from '@/lib/api/dashboard';
+import { useAssetSnapshots } from '@/lib/queries';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 
 export function AssetTrendChart() {
-  const q = useQuery({ queryKey: ['snapshots'], queryFn: dashboardApi.snapshots });
+  const q = useAssetSnapshots();
   const raw = q.data ?? [];
   const base = raw[0];
 

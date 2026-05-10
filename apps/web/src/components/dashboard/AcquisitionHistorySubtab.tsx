@@ -1,6 +1,5 @@
 // 취득 연혁 — 연도별 취득 건수 + 누적 취득가 (V16 renderAcquisition 동등)
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
   Bar,
   Line,
@@ -12,13 +11,13 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { buildingsApi } from '@/lib/api/buildings';
+import { useBuildings } from '@/lib/queries';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR } from '@/lib/format';
 
 export function AcquisitionHistorySubtab() {
-  const q = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
+  const q = useBuildings();
 
   const data = useMemo(() => {
     const items = q.data ?? [];

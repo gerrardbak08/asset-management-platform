@@ -1,10 +1,9 @@
 // PDF 보고서 미리보기 — Radix Dialog 풀스크린 + 역할별 섹션 분기 + window.print()
 import * as Dialog from '@radix-ui/react-dialog';
-import { useQuery } from '@tanstack/react-query';
 import { Printer, X } from 'lucide-react';
 import type { M0Data } from '@aims/shared';
-import { dashboardApi } from '@/lib/api/dashboard';
-import { buildingsApi, type Building } from '@/lib/api/buildings';
+import { type Building } from '@/lib/api/buildings';
+import { useBuildings, useMom } from '@/lib/queries';
 import { useAuthStore } from '@/store/auth';
 import { fmtKRfull, fmtKR, fmtPct } from '@/lib/format';
 import type { AdminRole } from '@/lib/api/admin';
@@ -26,16 +25,8 @@ export function ReportPreviewDialog({ open, onClose }: Props) {
   const userEmail = useAuthStore((s) => s.user?.email);
   const sections = role ? SECTIONS_BY_ROLE[role] : SECTIONS_BY_ROLE.viewer;
 
-  const m0Q = useQuery({
-    queryKey: ['mom', PERIOD],
-    queryFn: () => dashboardApi.mom(PERIOD),
-    enabled: open,
-  });
-  const bldQ = useQuery({
-    queryKey: ['buildings'],
-    queryFn: buildingsApi.list,
-    enabled: open,
-  });
+  const m0Q = useMom(PERIOD, open);
+  const bldQ = useBuildings(open);
 
   return (
     <Dialog.Root open={open} onOpenChange={(o) => !o && onClose()}>

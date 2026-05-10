@@ -1,8 +1,8 @@
 // 건물 목록 페이지 — 카드/표 모드 토글 + 필터/정렬 + admin/editor 인라인 편집 + 5탭 드로어
 import { useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Building as BuildingIcon, LayoutGrid, Table2 } from 'lucide-react';
-import { buildingsApi, type Building } from '@/lib/api/buildings';
+import { type Building } from '@/lib/api/buildings';
+import { useBuildings } from '@/lib/queries';
 import { useAuthStore } from '@/store/auth';
 import { PageShell } from '@/components/ui/PageShell';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
@@ -27,7 +27,7 @@ export default function Buildings() {
   const [q, setQ] = useState('');
   const [view, setView] = useState<ViewMode>('cards');
 
-  const query = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
+  const query = useBuildings();
 
   const items = useMemo(() => {
     let arr = query.data ?? [];

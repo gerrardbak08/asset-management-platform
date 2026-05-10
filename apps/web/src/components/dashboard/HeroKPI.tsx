@@ -1,13 +1,11 @@
 // 개요 Hero — 총자산 KPI + 자산유형별 도넛(우측 범례) + 이슈사항 (V16 동등 재구성)
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { AlertTriangle } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import type { M0Data } from '@aims/shared';
 import { Card } from '@/components/ui/Card';
 import { MomBadge } from './MomBadge';
-import { buildingsApi } from '@/lib/api/buildings';
-import { dashboardApi } from '@/lib/api/dashboard';
+import { useBuildings, useEquipmentSnapshots } from '@/lib/queries';
 import { fmtKR, fmtKRfull } from '@/lib/format';
 import { CURRENT_PERIOD as PERIOD } from '@/lib/period';
 import { VACANCY_RATE } from '@/lib/thresholds';
@@ -135,11 +133,8 @@ export function HeroKPI({ m0 }: Props) {
 function IssuePanel() {
   const [vacancyExpanded, setVacancyExpanded] = useState(false);
 
-  const bldQ = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
-  const eqQ = useQuery({
-    queryKey: ['equipments', 'snapshots', PERIOD],
-    queryFn: () => dashboardApi.equipmentSnapshots(PERIOD),
-  });
+  const bldQ = useBuildings();
+  const eqQ = useEquipmentSnapshots(PERIOD);
 
   const vacantBuildings = (bldQ.data ?? []).filter(
     (b) => b.rental.vacancy > VACANCY_RATE.ALERT_GT,
