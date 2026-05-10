@@ -79,7 +79,12 @@ export async function loadKakaoMaps(): Promise<KakaoNamespace | null> {
       s.async = true;
       s.dataset.kakaoSdk = 'true';
       s.onload = () => resolve();
-      s.onerror = () => reject(new Error('Kakao SDK 로드 실패'));
+      s.onerror = () =>
+        reject(
+          new Error(
+            'Kakao SDK 로드 실패 — 카카오 개발자 콘솔(https://developers.kakao.com)에서 이 앱의 "Web 플랫폼"에 현재 도메인이 등록돼 있어야 합니다.',
+          ),
+        );
       document.head.appendChild(s);
     });
     if (!window.kakao?.maps) throw new Error('Kakao SDK 초기화 실패');
