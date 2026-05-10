@@ -1,18 +1,12 @@
-// 건물 카드 — 좌측 brand strip + 사진 + KPI + 임대율 progress bar (V16 다이소 풍 감각 + DESIGN.md 토큰)
+// 건물 카드 — 사진 + KPI + 임대율 progress bar (위험도는 우측 Badge + progress bar 색으로 표현)
 import { MapPin, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { Building } from '@/lib/api/buildings';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { regionOf } from '@/lib/buildingHelpers';
 import { PhotoFallback } from './PhotoFallback';
+import { fmtKRprice } from '@/lib/format';
 import { cn } from '@/lib/utils';
-
-function fmtKR(n: number): string {
-  if (n >= 1e12) return (n / 1e12).toFixed(2) + '조';
-  if (n >= 1e8) return (n / 1e8).toFixed(0) + '억';
-  if (n >= 1e4) return (n / 1e4).toFixed(0) + '만';
-  return n.toLocaleString('ko-KR');
-}
 
 function getRiskTone(b: Building) {
   const photoMissing = !b.photoUrl && !b.detailPhotoUrl;
@@ -35,14 +29,6 @@ type Props = { building: Building; onClick: () => void };
 
 export function BuildingCard({ building: b, onClick }: Props) {
   const risk = getRiskTone(b);
-  const stripeColor =
-    risk?.tone === 'danger'
-      ? 'bg-danger'
-      : risk?.tone === 'warning'
-        ? 'bg-warning'
-        : risk?.tone === 'success'
-          ? 'bg-success'
-          : 'bg-primary';
 
   return (
     <Card
@@ -57,7 +43,6 @@ export function BuildingCard({ building: b, onClick }: Props) {
       }}
       className="group relative cursor-pointer overflow-hidden transition-all duration-150 hover:-translate-y-0.5 hover:shadow-elev-2"
     >
-      <span aria-hidden="true" className={cn('absolute left-0 top-0 h-full w-1', stripeColor)} />
       <span className="absolute right-3 top-3 z-10 inline-flex items-center rounded-md bg-foreground/80 px-2 py-0.5 text-micro font-bold text-background backdrop-blur">
         {regionOf(b.address)}
       </span>
@@ -82,7 +67,7 @@ export function BuildingCard({ building: b, onClick }: Props) {
         </div>
 
         <div className="grid grid-cols-2 gap-2 pt-1">
-          <KpiCell label="취득가" value={fmtKR(Number(b.acquisitionPrice)) + '원'} />
+          <KpiCell label="취득가" value={fmtKRprice(Number(b.acquisitionPrice)) + '원'} />
           <KpiCell label="연면적" value={Math.round(b.area.pyeong).toLocaleString('ko-KR') + '평'} />
         </div>
 

@@ -1,12 +1,14 @@
 // 건물 드로어 — Radix Dialog + Tabs. V16 의 5탭 (기본·임대·관리이력·메모·지도) 그대로
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Upload, X } from 'lucide-react';
+import { Maximize2, Upload, X } from 'lucide-react';
 import { buildingsApi, type Building } from '@/lib/api/buildings';
 import { useAuthStore } from '@/store/auth';
+import { fmtKRprice } from '@/lib/format';
 import { PhotoFallback } from './PhotoFallback';
+import { PhotoLightbox, type LightboxPhoto } from './PhotoLightbox';
 import { BuildingMap } from './BuildingMap';
 
 const TAB_LABELS: Record<TabValue, string> = {
@@ -49,6 +51,17 @@ export function BuildingDrawer({ building, open, onClose }: Props) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['buildings'] }),
   });
 
+  // 라이트박스 — 대표/상세 사진 중 존재하는 것만 표시
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const photos = useMemo<LightboxPhoto[]>(() => {
+    const list: LightboxPhoto[] = [];
+    if (building.photoUrl) list.push({ url: building.photoUrl, label: '대표' });
+    if (building.detailPhotoUrl) list.push({ url: building.detailPhotoUrl, label: '상세' });
+    return list;
+  }, [building.photoUrl, building.detailPhotoUrl]);
+  const hasPhotos = photos.length > 0;
+
   return (
     <Dialog.Root open={open} onOpenChange={(o) => !o && onClose()}>
       <Dialog.Portal>
@@ -64,12 +77,35 @@ export function BuildingDrawer({ building, open, onClose }: Props) {
             </Dialog.Close>
           </header>
 
-          <PhotoFallback
-            primary={building.photoUrl}
-            fallback={building.detailPhotoUrl}
-            alt={building.name}
-            className="h-44 w-full shrink-0"
-          />
+          <button
+            type="button"
+            onClick={() => {
+              if (!hasPhotos) return;
+              setLightboxIndex(0);
+              setLightboxOpen(true);
+            }}
+            disabled={!hasPhotos}
+            aria-label={hasPhotos ? `${building.name} 사진 확대 보기` : '사진 미등록'}
+            className="group relative shrink-0 cursor-zoom-in disabled:cursor-default"
+          >
+            <PhotoFallback
+              primary={building.photoUrl}
+              fallback={building.detailPhotoUrl}
+              alt={building.name}
+              className="h-44 w-full"
+            />
+            {hasPhotos ? (
+              <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 text-caption font-medium text-white opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <Maximize2 className="h-3 w-3" aria-hidden="true" />
+                {photos.length === 2 ? '대표 + 상세' : '확대 보기'}
+              </span>
+            ) : null}
+            {photos.length === 2 ? (
+              <span className="pointer-events-none absolute bottom-3 left-3 inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-micro font-bold text-primary-foreground shadow-elev-1">
+                상세 사진 있음
+              </span>
+            ) : null}
+          </button>
 
           <Tabs.Root defaultValue="info" className="flex min-h-0 flex-1 flex-col">
             <Tabs.List className="flex shrink-0 gap-1 border-b border-border px-2 pt-1">
@@ -97,7 +133,7 @@ export function BuildingDrawer({ building, open, onClose }: Props) {
                 <Row k="취득일" v={building.acquisitionDate} />
                 <Row
                   k="취득가"
-                  v={`${Number(building.acquisitionPrice).toLocaleString('ko-KR')}원`}
+                  v={`${fmtKRprice(Number(building.acquisitionPrice))}원`}
                 />
                 {canEdit ? (
                   <div className="pt-3">
@@ -176,6 +212,14 @@ export function BuildingDrawer({ building, open, onClose }: Props) {
           </Tabs.Root>
         </Dialog.Content>
       </Dialog.Portal>
+
+      <PhotoLightbox
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        photos={photos}
+        initialIndex={lightboxIndex}
+        alt={building.name}
+      />
     </Dialog.Root>
   );
 }
