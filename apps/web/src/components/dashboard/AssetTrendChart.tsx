@@ -17,8 +17,9 @@ import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 export function AssetTrendChart() {
   const q = useQuery({ queryKey: ['snapshots'], queryFn: dashboardApi.snapshots });
   const raw = q.data ?? [];
+  const base = raw[0];
 
-  if (raw.length < 2 || !raw[0]) {
+  if (raw.length < 2 || !base) {
     return (
       <Card className="p-5">
         <SectionHeader title="자산 유형별 추이" description="데이터 2개월 이상 시 표시" />
@@ -29,9 +30,6 @@ export function AssetTrendChart() {
     );
   }
 
-  // raw.length >= 2 and raw[0] checked above
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const base = raw[0]!;
   const data = raw.map((s) => ({
     period: s.period.slice(2).replace('-', '.'),
     총자산: base.totalAsset > 0 ? +((s.totalAsset / base.totalAsset) * 100).toFixed(1) : 100,

@@ -239,26 +239,22 @@ function EquipmentTable({
         </tr>
       </thead>
       <tbody>
-        {rows.map((r) => {
-          const inv = r.hq + r.store + r.logistics;
-          return (
-            <tr key={r.legacyId} className="border-t border-border hover:bg-muted/40">
-              <td
-                className="max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-2 font-medium text-foreground"
-                title={r.name}
-              >
-                {r.name}
-              </td>
-              <td className="px-3 py-2 text-center text-micro text-muted-foreground">{r.legacyId}</td>
-              <NumTd>{fmtKRfull(r.hq)}</NumTd>
-              <NumTd>{fmtKRfull(r.store)}</NumTd>
-              <NumTd>{fmtKRfull(r.logistics)}</NumTd>
-              <NumTd>{fmtKRfull(r.purchase)}</NumTd>
-              <NumTd>{fmtKRfull(r.disposal)}</NumTd>
-            </tr>
-          );
-          void inv;
-        })}
+        {rows.map((r) => (
+          <tr key={r.legacyId} className="border-t border-border hover:bg-muted/40">
+            <td
+              className="max-w-[180px] overflow-hidden text-ellipsis whitespace-nowrap px-3 py-2 font-medium text-foreground"
+              title={r.name}
+            >
+              {r.name}
+            </td>
+            <td className="px-3 py-2 text-center text-micro text-muted-foreground">{r.legacyId}</td>
+            <NumTd>{fmtKRfull(r.hq)}</NumTd>
+            <NumTd>{fmtKRfull(r.store)}</NumTd>
+            <NumTd>{fmtKRfull(r.logistics)}</NumTd>
+            <NumTd>{fmtKRfull(r.purchase)}</NumTd>
+            <NumTd>{fmtKRfull(r.disposal)}</NumTd>
+          </tr>
+        ))}
         {rows.length === 0 && (
           <tr>
             <td colSpan={7} className="p-6 text-center text-muted-foreground">
