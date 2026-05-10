@@ -8,6 +8,7 @@ import { buildingsApi, type Building } from '@/lib/api/buildings';
 import { useAuthStore } from '@/store/auth';
 import { fmtKRfull, fmtKR, fmtPct } from '@/lib/format';
 import type { AdminRole } from '@/lib/api/admin';
+import { CURRENT_PERIOD as PERIOD } from '@/lib/period';
 
 type Section = 'cover' | 'kpi' | 'matrix' | 'buildings' | 'movers' | 'risk' | 'audit';
 
@@ -17,8 +18,6 @@ const SECTIONS_BY_ROLE: Record<AdminRole, Section[]> = {
   admin: ['cover', 'kpi', 'matrix', 'buildings', 'movers', 'risk', 'audit'],
   auditor: ['cover', 'kpi', 'matrix', 'risk', 'audit'],
 };
-
-const PERIOD = '2026-03';
 
 type Props = { open: boolean; onClose: () => void };
 

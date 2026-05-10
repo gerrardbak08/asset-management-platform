@@ -10,6 +10,8 @@ import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR, fmtKRfull, fmtPct } from '@/lib/format';
 import { MomBadge } from './MomBadge';
 import { cn } from '@/lib/utils';
+import { CURRENT_PERIOD as PERIOD } from '@/lib/period';
+import { LOCATION_CONCENTRATION } from '@/lib/thresholds';
 
 type FlowKind = 'inventory' | 'purchase' | 'transfer' | 'disposal';
 const FLOW_LABEL: Record<FlowKind, string> = {
@@ -26,8 +28,6 @@ const FLOW_COLOR: Record<FlowKind, string> = {
 };
 
 type Props = { m0: M0Data };
-
-const PERIOD = '2026-03';
 
 const LOC_LABEL: Record<string, string> = { hq: '본사', store: '매장', logistics: '물류' };
 
@@ -287,7 +287,8 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
                     )}
 
                     {/* 이상 감지 메시지 */}
-                    {selectedDetail.maxLocPct > 80 && selectedDetail.maxLocEntry && (
+                    {selectedDetail.maxLocPct > LOCATION_CONCENTRATION.WARN_GT &&
+                      selectedDetail.maxLocEntry && (
                       <div className="mt-3 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning-subtle px-3 py-2">
                         <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" />
                         <p className="text-caption text-warning">

@@ -9,8 +9,8 @@ import { MomBadge } from './MomBadge';
 import { buildingsApi } from '@/lib/api/buildings';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { fmtKR, fmtKRfull } from '@/lib/format';
-
-const PERIOD = '2026-03';
+import { CURRENT_PERIOD as PERIOD } from '@/lib/period';
+import { VACANCY_RATE } from '@/lib/thresholds';
 
 const DONUT_COLORS = [
   'hsl(var(--primary))',
@@ -141,7 +141,9 @@ function IssuePanel() {
     queryFn: () => dashboardApi.equipmentSnapshots(PERIOD),
   });
 
-  const vacantBuildings = (bldQ.data ?? []).filter((b) => b.rental.vacancy > 5);
+  const vacantBuildings = (bldQ.data ?? []).filter(
+    (b) => b.rental.vacancy > VACANCY_RATE.ALERT_GT,
+  );
   const shownBuildings = vacancyExpanded ? vacantBuildings : vacantBuildings.slice(0, 3);
   const extraCount = vacantBuildings.length - 3;
 

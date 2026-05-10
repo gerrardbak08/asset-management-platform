@@ -16,8 +16,7 @@ import { AcquisitionHistorySubtab } from '@/components/dashboard/AcquisitionHist
 import { LeaseStatusSubtab } from '@/components/dashboard/LeaseStatusSubtab';
 import { ExecInsight } from '@/components/dashboard/ExecInsight';
 import { cn } from '@/lib/utils';
-
-const PERIOD = '2026-03';
+import { CURRENT_PERIOD as PERIOD } from '@/lib/period';
 
 const SUBTABS = [
   { value: 'overview', label: '개요' },

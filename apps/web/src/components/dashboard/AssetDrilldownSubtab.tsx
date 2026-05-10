@@ -5,8 +5,7 @@ import { dashboardApi } from '@/lib/api/dashboard';
 import { fmtKRfull } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { M0Data } from '@aims/shared';
-
-const PERIOD = '2026-03';
+import { CURRENT_PERIOD as PERIOD } from '@/lib/period';
 
 type DrillType = 'tangible' | 'intangible' | 'equipment';
 
@@ -140,7 +139,7 @@ export function AssetDrilldownSubtab({ m0 }: Props) {
           {breadcrumb.map((chip, i) => (
             <span
               key={i}
-              className="inline-flex items-center rounded-full bg-[rgba(30,58,95,0.06)] px-2.5 py-1 text-micro font-extrabold text-[#1E3A5F]"
+              className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-micro font-extrabold text-primary"
             >
               {chip}
               {i < breadcrumb.length - 1 && (
@@ -205,7 +204,7 @@ function DrillBtn({
       className={cn(
         'rounded-md border px-2.5 py-2 text-left text-caption font-bold transition-colors duration-150',
         active
-          ? 'border-[#1E3A5F] bg-[#1E3A5F] text-white'
+          ? 'border-primary bg-primary text-primary-foreground'
           : 'border-border bg-muted text-muted-foreground hover:text-foreground',
         !onClick && 'cursor-default',
       )}
@@ -269,9 +268,9 @@ function EquipmentTable({
 
 function LocationTable({ item }: { item: GroupItem }) {
   const locs: [string, number, string][] = [
-    ['본사', item.hq, '#1E3A5F'],
-    ['매장', item.store, '#059669'],
-    ['물류', item.logistics, '#7C3AED'],
+    ['본사', item.hq, 'text-primary'],
+    ['매장', item.store, 'text-success'],
+    ['물류', item.logistics, 'text-info'],
   ];
   return (
     <table className="w-full border-collapse text-caption">
@@ -283,23 +282,21 @@ function LocationTable({ item }: { item: GroupItem }) {
         </tr>
       </thead>
       <tbody>
-        {locs.map(([loc, val, color]) => (
+        {locs.map(([loc, val, toneClass]) => (
           <tr key={loc} className="border-t border-border hover:bg-muted/40">
-            <td className="px-3 py-2 font-medium" style={{ color }}>
-              {loc}
-            </td>
+            <td className={cn('px-3 py-2 font-medium', toneClass)}>{loc}</td>
             <NumTd>{fmtKRfull(val)}</NumTd>
             <NumTd>
               {item.total > 0 ? `${((val / item.total) * 100).toFixed(1)}%` : '-'}
             </NumTd>
           </tr>
         ))}
-        <tr className="border-t border-border bg-[rgba(30,58,95,0.06)]">
-          <td className="px-3 py-2 font-extrabold text-[#1E3A5F]">합계</td>
-          <td className="px-3 py-2 text-right font-mono font-extrabold tabular-nums text-[#1E3A5F]">
+        <tr className="border-t border-border bg-primary/10">
+          <td className="px-3 py-2 font-extrabold text-primary">합계</td>
+          <td className="px-3 py-2 text-right font-mono font-extrabold tabular-nums text-primary">
             {fmtKRfull(item.total)}
           </td>
-          <td className="px-3 py-2 text-right font-mono font-extrabold tabular-nums text-[#1E3A5F]">
+          <td className="px-3 py-2 text-right font-mono font-extrabold tabular-nums text-primary">
             100%
           </td>
         </tr>
