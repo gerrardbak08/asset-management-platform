@@ -1,7 +1,8 @@
 // 관리자 패널 — 시스템 통계 + 사용자 관리 (admin 전용) + 본인 비밀번호 변경
 import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Trash2, KeyRound, UserPlus } from 'lucide-react';
+import { Trash2, KeyRound, UserPlus, Database, ArrowRight, Shield } from 'lucide-react';
 import { adminApi, type AdminRole, type AdminUser } from '@/lib/api/admin';
 import { useAuthStore } from '@/store/auth';
 import { PageShell } from '@/components/ui/PageShell';
@@ -9,8 +10,6 @@ import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ChangePasswordDialog } from '@/components/admin/ChangePasswordDialog';
-import { AdminDataCards } from '@/components/admin/AdminDataCards';
-import { Shield } from 'lucide-react';
 
 const ROLES: AdminRole[] = ['admin', 'editor', 'viewer', 'auditor'];
 
@@ -95,7 +94,26 @@ export default function Admin() {
             )}
           </Card>
 
-          <AdminDataCards />
+          <Card className="flex items-center justify-between gap-4 p-5">
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Database className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <div className="text-heading-sm font-semibold text-foreground">데이터 업로드</div>
+                <p className="mt-0.5 text-caption text-muted-foreground">
+                  자산·원장·비품·건물 5종 CSV 업로드와 양식 다운로드는 별도 페이지에서 진행합니다.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/data"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-primary px-3 py-2 text-caption font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary/90"
+            >
+              데이터 업로드 페이지
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </Link>
+          </Card>
 
           <Card className="p-5">
             <SectionHeader title="사용자 추가" description="역할별 계정 생성" />

@@ -1,4 +1,4 @@
-// 좌측 사이드바 — 다이소 다크네이비 chrome + 활성 항목 좌측 앰버 accent strip
+// 좌측 사이드바 — 다이소 다크네이비 chrome. 활성 항목은 배경+텍스트 톤만 변화 (좌측 strip / 아이콘 앰버 컬러 모두 제거)
 import { NavLink } from 'react-router-dom';
 import { Building2, Building, Store, Database, Shield } from 'lucide-react';
 import type { ComponentType } from 'react';
@@ -15,8 +15,8 @@ const MENU: MenuItem[] = [
   { to: '/dashboard', label: '자산현황', icon: Building2, group: '운영' },
   { to: '/buildings', label: '건물', icon: Building, group: '운영' },
   { to: '/stores', label: '사업장', icon: Store, group: '운영' },
-  { to: '/data', label: '데이터', icon: Database, group: '관리' },
-  { to: '/admin', label: '관리자', icon: Shield, group: '관리' },
+  { to: '/data', label: '데이터 업로드', icon: Database, group: '관리' },
+  { to: '/admin', label: '시스템 관리', icon: Shield, group: '관리' },
 ];
 
 export function Sidebar() {
@@ -64,17 +64,10 @@ function SidebarGroup({ label, items }: { label: string; items: MenuItem[] }) {
             >
               {({ isActive }) => (
                 <>
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      'absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full transition-colors duration-150',
-                      isActive ? 'bg-sidebar-accent' : 'bg-transparent',
-                    )}
-                  />
                   <m.icon
                     className={cn(
                       'h-4 w-4 transition-colors duration-150',
-                      isActive ? 'text-sidebar-accent' : 'text-sidebar-foreground/60',
+                      isActive ? 'text-white' : 'text-sidebar-foreground/60',
                     )}
                     aria-hidden="true"
                   />
