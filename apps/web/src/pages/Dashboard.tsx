@@ -1,8 +1,10 @@
 // 자산현황 페이지 — Radix Tabs 5개: 개요/드릴다운/비품/취득연혁/임대현황
 import * as Tabs from '@radix-ui/react-tabs';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'motion/react';
 import { Database } from 'lucide-react';
 import { dashboardApi } from '@/lib/api/dashboard';
+import { tabFadeVariants } from '@/lib/motion';
 import { PageShell } from '@/components/ui/PageShell';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { HeroKPI } from '@/components/dashboard/HeroKPI';
@@ -59,30 +61,45 @@ export default function Dashboard() {
             ))}
           </Tabs.List>
 
-          <Tabs.Content value="overview" className="space-y-4 outline-none">
-            <HeroKPI m0={q.data} />
-            <AssetKpiCards m0={q.data} />
-            <ExecInsight m0={q.data} />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <AssetTrendChart />
-              <MomBarChart m0={q.data} />
-            </div>
+          <Tabs.Content value="overview" className="outline-none">
+            <motion.div
+              variants={tabFadeVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-4"
+            >
+              <HeroKPI m0={q.data} />
+              <AssetKpiCards m0={q.data} />
+              <ExecInsight m0={q.data} />
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <AssetTrendChart />
+                <MomBarChart m0={q.data} />
+              </div>
+            </motion.div>
           </Tabs.Content>
 
           <Tabs.Content value="drill" className="outline-none">
-            <AssetDrilldownSubtab m0={q.data} />
+            <motion.div variants={tabFadeVariants} initial="hidden" animate="visible">
+              <AssetDrilldownSubtab m0={q.data} />
+            </motion.div>
           </Tabs.Content>
 
           <Tabs.Content value="supplies" className="outline-none">
-            <SuppliesOpsSubtab m0={q.data} />
+            <motion.div variants={tabFadeVariants} initial="hidden" animate="visible">
+              <SuppliesOpsSubtab m0={q.data} />
+            </motion.div>
           </Tabs.Content>
 
           <Tabs.Content value="acquisition" className="outline-none">
-            <AcquisitionHistorySubtab />
+            <motion.div variants={tabFadeVariants} initial="hidden" animate="visible">
+              <AcquisitionHistorySubtab />
+            </motion.div>
           </Tabs.Content>
 
           <Tabs.Content value="lease" className="outline-none">
-            <LeaseStatusSubtab />
+            <motion.div variants={tabFadeVariants} initial="hidden" animate="visible">
+              <LeaseStatusSubtab />
+            </motion.div>
           </Tabs.Content>
         </Tabs.Root>
       )}
