@@ -10,6 +10,13 @@ out/
 .turbo/
 *.tsbuildinfo
 
+# TypeScript 컴파일 아티팩트 (src/ 내 .js/.d.ts — tsc outDir 미설정 시 생성)
+apps/web/src/**/*.js
+apps/web/tailwind.config.js
+apps/web/tailwind.config.d.ts
+apps/web/vite.config.js
+apps/web/vite.config.d.ts
+
 # 환경
 .env
 .env.local
