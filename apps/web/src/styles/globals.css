@@ -130,7 +130,9 @@
 
   .tabular-nums {
     font-variant-numeric: tabular-nums;
-    font-feature-settings: 'tnum' 1, 'kern' 1, 'ss06' 1;
+    /* DM Mono / Pretendard 모두에서 0 글리프가 일관되도록 stylistic set(ss06) 제거.
+       모든 숫자 0이 폰트 기본 형태로 표시된다. */
+    font-feature-settings: 'tnum' 1, 'kern' 1;
   }
 
   /* 인쇄 — 라이트 강제 + 사이드바·헤더 숨기기 + 페이지 분리 */

@@ -2,7 +2,7 @@
 import type { Transition, Variants } from 'motion/react';
 
 // 기본 ease — 시각적으로 차분한 ease-out (Material Standard 곡선과 유사)
-const EASE_OUT: Transition['ease'] = [0.22, 1, 0.36, 1];
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
 // 페이지/탭 전환 — 빠르고 짧은 fade
 export const fadeTransition: Transition = {
@@ -10,24 +10,24 @@ export const fadeTransition: Transition = {
   ease: EASE_OUT,
 };
 
-// 카드 entrance — fade + 6px 위로 슬라이드
+// 카드 entrance — opacity 페이드만 (y 슬라이드 제거: 메뉴/탭 전환 시 layout jitter 유발)
 export const cardItemVariants: Variants = {
-  hidden: { opacity: 0, y: 6 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: EASE_OUT } },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.22, ease: EASE_OUT } },
 };
 
-// 카드 grid stagger — 자식들을 60ms 간격으로 순차 등장
+// 카드 grid stagger — 자식들을 50ms 간격으로 순차 fade-in
 export const staggerContainerVariants: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.06, delayChildren: 0.04 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
-// 탭 콘텐츠 fade
+// 탭 콘텐츠 fade — opacity 만 (y 슬라이드 제거)
 export const tabFadeVariants: Variants = {
-  hidden: { opacity: 0, y: 4 },
-  visible: { opacity: 1, y: 0, transition: fadeTransition },
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: fadeTransition },
 };
 
 // Recharts 차트 애니메이션 길이 (ms) — 일관된 곡선/막대 그리기 시간

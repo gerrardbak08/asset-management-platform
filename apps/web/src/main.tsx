@@ -6,6 +6,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import { queryClient } from './lib/queryClient';
 import { useThemeStore } from './store/theme';
+
+// 폰트 로컬 번들 — CDN 의존 제거. 첫 페인트부터 Pretendard/DM Mono 적용 → FOUT/layout shift 방지
+import 'pretendard/dist/web/variable/pretendardvariable.css';
+import '@fontsource/dm-mono/400.css';
+import '@fontsource/dm-mono/500.css';
+
 import './styles/globals.css';
 
 // 부팅 시 localStorage 의 theme 즉시 적용 (FOUC 방지)
