@@ -57,8 +57,8 @@ function SidebarGroup({ label, items }: { label: string; items: MenuItem[] }) {
                 cn(
                   'group flex items-center gap-2 rounded-lg px-3 py-2 text-body font-medium transition-colors duration-150',
                   isActive
-                    ? 'bg-white/5 text-white'
-                    : 'text-sidebar-foreground/85 hover:bg-white/5 hover:text-white',
+                    ? 'bg-sidebar-foreground/10 text-sidebar-foreground'
+                    : 'text-sidebar-foreground/85 hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground',
                 )
               }
             >
