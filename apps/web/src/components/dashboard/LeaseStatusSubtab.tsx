@@ -21,6 +21,7 @@ import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { BuildingDrawer } from '@/components/buildings/BuildingDrawer';
 import { fmtKR, fmtKRfull } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { leaseRiskOf, type RiskLevel } from '@/lib/thresholds';
 
 // ── 분류 함수 ──
 function regionBucket(addr: string): '수도권' | '지방' {
@@ -37,12 +38,6 @@ function useBucket(use: string): UseBucket {
   if (u.includes('공동주택') || u.includes('업무시설')) return '공동주택·업무시설';
   if (u.includes('근린생활')) return '제1종근린생활시설';
   return '기타';
-}
-
-function riskOf(rate: number): 'danger' | 'warning' | 'success' {
-  if (rate < 85) return 'danger';
-  if (rate < 95) return 'warning';
-  return 'success';
 }
 
 const RISK_LABEL = { danger: '위험', warning: '주의', success: '안정' } as const;
@@ -86,9 +81,9 @@ export function LeaseStatusSubtab() {
     const totalRentArea = items.reduce((s, b) => s + (b.rental?.area ?? 0), 0);
     const totalArea = items.reduce((s, b) => s + b.area.sqm, 0);
     const totalPrice = items.reduce((s, b) => s + parsePrice(b.acquisitionPrice), 0);
-    const stable = items.filter((b) => riskOf(b.rental.rate) === 'success').length;
-    const caution = items.filter((b) => riskOf(b.rental.rate) === 'warning').length;
-    const danger = items.filter((b) => riskOf(b.rental.rate) === 'danger').length;
+    const stable = items.filter((b) => leaseRiskOf(b.rental.rate) === 'success').length;
+    const caution = items.filter((b) => leaseRiskOf(b.rental.rate) === 'warning').length;
+    const danger = items.filter((b) => leaseRiskOf(b.rental.rate) === 'danger').length;
     return { rented, noVac, hasVac, totalRentArea, totalArea, totalPrice, stable, caution, danger };
   }, [items]);
 
@@ -421,7 +416,7 @@ function KpiCard({ label, value, sub }: { label: string; value: string; sub: str
   );
 }
 
-function RiskChip({ risk, text }: { risk: 'danger' | 'warning' | 'success'; text: string }) {
+function RiskChip({ risk, text }: { risk: RiskLevel; text: string }) {
   return (
     <span
       className={cn(
@@ -435,7 +430,7 @@ function RiskChip({ risk, text }: { risk: 'danger' | 'warning' | 'success'; text
   );
 }
 
-function RiskBadge({ risk }: { risk: 'danger' | 'warning' | 'success' }) {
+function RiskBadge({ risk }: { risk: RiskLevel }) {
   return (
     <span
       className={cn(
@@ -481,7 +476,7 @@ function GroupTable({
           </thead>
           <tbody>
             {groups.map((g) => {
-              const risk = riskOf(g.avgRate);
+              const risk = leaseRiskOf(g.avgRate);
               const isOpen = expanded === g.key;
               return (
                 <GroupRowFragment
@@ -509,7 +504,7 @@ function GroupRowFragment({
   onPickBuilding,
 }: {
   g: GroupRow;
-  risk: 'danger' | 'warning' | 'success';
+  risk: RiskLevel;
   isOpen: boolean;
   onToggle: () => void;
   onPickBuilding: (b: Building) => void;
@@ -560,7 +555,7 @@ function GroupRowFragment({
                 </thead>
                 <tbody>
                   {g.buildings.map((b) => {
-                    const r = riskOf(b.rental.rate);
+                    const r = leaseRiskOf(b.rental.rate);
                     return (
                       <tr key={b.id} className="border-t border-border/50">
                         <td className="py-1.5 pr-3">

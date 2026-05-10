@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { M0Data } from '@aims/shared';
 import { buildingsApi } from '@/lib/api/buildings';
 import { fmtKR, fmtPct } from '@/lib/format';
+import { LEASE_RATE, SUPPLIES_MOM } from '@/lib/thresholds';
 
 type Props = { m0: M0Data };
 
@@ -13,7 +14,9 @@ export function ExecInsight({ m0 }: Props) {
   const top = m0.movers?.top_up?.[0];
   const bldQ = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
 
-  const lowRentBuildings = (bldQ.data ?? []).filter((b) => b.rental.rate < 85);
+  const lowRentBuildings = (bldQ.data ?? []).filter(
+    (b) => b.rental.rate < LEASE_RATE.CAUTION_MIN,
+  );
   const avgLowRent =
     lowRentBuildings.length > 0
       ? (
@@ -37,7 +40,7 @@ export function ExecInsight({ m0 }: Props) {
   }
 
   // 비품 폐기 이상
-  if (Math.abs(supplies.disposal.ratio) > 0.1) {
+  if (Math.abs(supplies.disposal.ratio) > SUPPLIES_MOM.DISPOSAL_NOTABLE) {
     lines.push(`비품 폐기 ${fmtPct(supplies.disposal.ratio)} 주목.`);
   }
 
