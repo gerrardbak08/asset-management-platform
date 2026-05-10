@@ -42,16 +42,21 @@ export function ExecInsight({ m0 }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-info/30 bg-info-subtle p-4">
+    <div className="min-h-[88px] rounded-2xl border border-info/30 bg-info-subtle p-4">
       <div className="mb-2 flex items-center gap-2">
         <Lightbulb className="h-4 w-4 text-info" aria-hidden="true" />
         <span className="text-caption font-semibold text-info">
           경영 요약 · {m0.meta.current_period}
         </span>
       </div>
-      <p className="text-body leading-relaxed text-foreground">
-        {lines.join(' ')}
-      </p>
+      {bldQ.isLoading ? (
+        <div className="space-y-1.5" aria-hidden="true">
+          <div className="h-3 w-full animate-pulse rounded bg-info/15" />
+          <div className="h-3 w-2/3 animate-pulse rounded bg-info/15" />
+        </div>
+      ) : (
+        <p className="text-body leading-relaxed text-foreground">{lines.join(' ')}</p>
+      )}
     </div>
   );
 }

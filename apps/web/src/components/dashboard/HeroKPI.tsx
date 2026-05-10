@@ -157,49 +157,62 @@ function IssuePanel() {
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 3);
 
+  const isLoading = bldQ.isLoading || eqQ.isLoading;
+
   return (
-    <Card className="p-5">
+    <Card className="min-h-[180px] p-5">
       <div className="mb-3 flex items-center gap-2">
         <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" />
         <span className="text-heading-sm text-foreground">이슈 사항</span>
       </div>
 
-      {vacantBuildings.length > 0 ? (
-        <div className="mb-3">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-full bg-warning-subtle px-2 py-0.5 text-caption font-medium text-warning">
-              공실률 5% 이상 {vacantBuildings.length}곳
-            </span>
-          </div>
-          <p className="mt-1 text-caption text-muted-foreground">
-            {shownBuildings.map((b) => `${b.name} ${b.rental.vacancy}%`).join(' · ')}
-          </p>
-          {vacantBuildings.length > 3 && (
-            <button
-              type="button"
-              onClick={() => setVacancyExpanded((v) => !v)}
-              className="mt-1 text-caption text-primary transition-colors hover:underline"
-            >
-              {vacancyExpanded ? '접기 ▲' : `+${extraCount}곳 더 ▼`}
-            </button>
+      {isLoading ? (
+        <div className="space-y-2" aria-hidden="true">
+          <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+          <div className="h-3 w-full animate-pulse rounded bg-muted" />
+          <div className="mt-3 h-4 w-40 animate-pulse rounded bg-muted" />
+          <div className="h-3 w-3/4 animate-pulse rounded bg-muted" />
+        </div>
+      ) : (
+        <>
+          {vacantBuildings.length > 0 ? (
+            <div className="mb-3">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="inline-flex items-center gap-1 rounded-full bg-warning-subtle px-2 py-0.5 text-caption font-medium text-warning">
+                  공실률 5% 이상 {vacantBuildings.length}곳
+                </span>
+              </div>
+              <p className="mt-1 text-caption text-muted-foreground">
+                {shownBuildings.map((b) => `${b.name} ${b.rental.vacancy}%`).join(' · ')}
+              </p>
+              {vacantBuildings.length > 3 && (
+                <button
+                  type="button"
+                  onClick={() => setVacancyExpanded((v) => !v)}
+                  className="mt-1 text-caption text-primary transition-colors hover:underline"
+                >
+                  {vacancyExpanded ? '접기 ▲' : `+${extraCount}곳 더 ▼`}
+                </button>
+              )}
+            </div>
+          ) : (
+            <p className="mb-3 text-body text-success">공실률 5% 이상 건물 없음</p>
           )}
-        </div>
-      ) : (
-        <p className="mb-3 text-body text-success">공실률 5% 이상 건물 없음</p>
-      )}
 
-      {topDisposal.length > 0 ? (
-        <div className="flex items-start gap-2">
-          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-info" aria-hidden="true" />
-          <div>
-            <p className="text-body-strong text-foreground">월 폐기액 상위 품목</p>
-            <p className="mt-0.5 text-caption text-muted-foreground">
-              {topDisposal.map((d) => `${d.name} ${fmtKR(d.amount)}원`).join(' · ')}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <p className="text-body text-muted-foreground">이번 달 폐기 항목 없음</p>
+          {topDisposal.length > 0 ? (
+            <div className="flex items-start gap-2">
+              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-info" aria-hidden="true" />
+              <div>
+                <p className="text-body-strong text-foreground">월 폐기액 상위 품목</p>
+                <p className="mt-0.5 text-caption text-muted-foreground">
+                  {topDisposal.map((d) => `${d.name} ${fmtKR(d.amount)}원`).join(' · ')}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-body text-muted-foreground">이번 달 폐기 항목 없음</p>
+          )}
+        </>
       )}
     </Card>
   );
