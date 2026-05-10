@@ -5,6 +5,7 @@ import { Database } from 'lucide-react';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { PageShell } from '@/components/ui/PageShell';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { DashboardOverviewSkeleton } from '@/components/ui/Skeleton';
 import { HeroKPI } from '@/components/dashboard/HeroKPI';
 import { AssetKpiCards } from '@/components/dashboard/AssetKpiCards';
 import { AssetTrendChart } from '@/components/dashboard/AssetTrendChart';
@@ -35,7 +36,7 @@ export default function Dashboard() {
   return (
     <PageShell title="자산현황" description={`${PERIOD} 기준 (전월 대비)`}>
       {q.isLoading ? (
-        <p className="text-caption text-muted-foreground">로딩 중…</p>
+        <DashboardOverviewSkeleton />
       ) : q.isError ? (
         <EmptyState
           icon={Database}
