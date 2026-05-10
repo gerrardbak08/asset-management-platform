@@ -59,7 +59,11 @@ export default function Dashboard() {
             ))}
           </Tabs.List>
 
-          <Tabs.Content value="overview" className="space-y-4 outline-none">
+          <Tabs.Content
+            value="overview"
+            forceMount
+            className="space-y-4 outline-none data-[state=inactive]:hidden"
+          >
             <HeroKPI m0={q.data} />
             <AssetKpiCards m0={q.data} />
             <ExecInsight m0={q.data} />
@@ -69,19 +73,35 @@ export default function Dashboard() {
             </div>
           </Tabs.Content>
 
-          <Tabs.Content value="drill" className="outline-none">
+          <Tabs.Content
+            value="drill"
+            forceMount
+            className="outline-none data-[state=inactive]:hidden"
+          >
             <AssetDrilldownSubtab m0={q.data} />
           </Tabs.Content>
 
-          <Tabs.Content value="supplies" className="outline-none">
+          <Tabs.Content
+            value="supplies"
+            forceMount
+            className="outline-none data-[state=inactive]:hidden"
+          >
             <SuppliesOpsSubtab m0={q.data} />
           </Tabs.Content>
 
-          <Tabs.Content value="acquisition" className="outline-none">
+          <Tabs.Content
+            value="acquisition"
+            forceMount
+            className="outline-none data-[state=inactive]:hidden"
+          >
             <AcquisitionHistorySubtab />
           </Tabs.Content>
 
-          <Tabs.Content value="lease" className="outline-none">
+          <Tabs.Content
+            value="lease"
+            forceMount
+            className="outline-none data-[state=inactive]:hidden"
+          >
             <LeaseStatusSubtab />
           </Tabs.Content>
         </Tabs.Root>
