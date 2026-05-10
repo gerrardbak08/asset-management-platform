@@ -15,6 +15,16 @@ export function fmtKRfull(n: number): string {
   return n.toLocaleString('ko-KR') + '원';
 }
 
+// 취득가 전용 — 단위 축약 시 항상 소수점 1자리. 사용자 요청 (2026-05-10).
+// 입력 단위는 '원' (raw).
+export function fmtKRprice(n: number): string {
+  if (!n || n === 0) return '-';
+  if (n >= 1e12) return (n / 1e12).toFixed(1) + '조';
+  if (n >= 1e8) return (n / 1e8).toFixed(1) + '억';
+  if (n >= 1e4) return (n / 1e4).toFixed(1) + '만';
+  return n.toLocaleString('ko-KR');
+}
+
 export function fmtPct(ratio: number, digits = 2): string {
   const pct = ratio * 100;
   const sign = pct > 0 ? '+' : '';

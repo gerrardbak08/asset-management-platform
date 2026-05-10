@@ -6,7 +6,7 @@ import type { M0Data } from '@aims/shared';
 import { dashboardApi } from '@/lib/api/dashboard';
 import { buildingsApi, type Building } from '@/lib/api/buildings';
 import { useAuthStore } from '@/store/auth';
-import { fmtKRfull, fmtKR, fmtPct } from '@/lib/format';
+import { fmtKRfull, fmtKR, fmtKRprice, fmtPct } from '@/lib/format';
 import type { AdminRole } from '@/lib/api/admin';
 
 type Section = 'cover' | 'kpi' | 'matrix' | 'buildings' | 'movers' | 'risk' | 'audit';
@@ -228,7 +228,7 @@ function BuildingsSection({ items }: { items: Building[] }) {
               <td className="px-2 py-1.5">{b.name}</td>
               <td className="px-2 py-1.5">{b.address}</td>
               <td className="px-2 py-1.5 text-right font-mono tabular-nums">
-                {fmtKR(Number(b.acquisitionPrice))}원
+                {fmtKRprice(Number(b.acquisitionPrice))}원
               </td>
               <td className="px-2 py-1.5 text-right font-mono tabular-nums">{b.rental.rate}%</td>
               <td className="px-2 py-1.5">{b.tenant}</td>
@@ -323,15 +323,15 @@ function AuditSection({ role, email }: { role: string | null; email: string | nu
       <div className="mt-4 space-y-2 text-caption">
         <div className="flex items-center justify-between gap-2">
           <span className="text-muted-foreground">발행자</span>
-          <span className="font-mono text-foreground">{email ?? '-'}</span>
+          <span className="font-mono tabular-nums text-foreground">{email ?? '-'}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
           <span className="text-muted-foreground">발행 역할</span>
-          <span className="font-mono text-foreground">{role ?? '-'}</span>
+          <span className="font-mono tabular-nums text-foreground">{role ?? '-'}</span>
         </div>
         <div className="flex items-center justify-between gap-2">
           <span className="text-muted-foreground">발행 시각</span>
-          <span className="font-mono text-foreground">{new Date().toISOString()}</span>
+          <span className="font-mono tabular-nums text-foreground">{new Date().toISOString()}</span>
         </div>
         <p className="mt-3 text-muted-foreground">
           상세 audit_logs 는 2단계에 도입되며, 본 보고서는 발행 시각 기준의 데이터만 포함합니다.

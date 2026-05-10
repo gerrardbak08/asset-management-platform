@@ -19,8 +19,9 @@ import { buildingsApi, type Building } from '@/lib/api/buildings';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { BuildingDrawer } from '@/components/buildings/BuildingDrawer';
-import { fmtKR, fmtKRfull } from '@/lib/format';
+import { fmtKRfull } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { CHART_ANIM_MS } from '@/lib/motion';
 
 // ── 분류 함수 ──
 function regionBucket(addr: string): '수도권' | '지방' {
@@ -243,6 +244,9 @@ export function LeaseStatusSubtab() {
                 dataKey="rate"
                 radius={[0, 6, 6, 0]}
                 maxBarSize={18}
+                isAnimationActive
+                animationDuration={CHART_ANIM_MS}
+                animationEasing="ease-out"
                 onClick={(d: unknown) => {
                   const b = (d as { payload?: { building?: Building } })?.payload?.building;
                   if (b) setDrawerBd(b);
@@ -293,12 +297,23 @@ export function LeaseStatusSubtab() {
                   formatter={(v) => `${Number(v).toLocaleString('ko-KR')}㎡`}
                 />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="전체연면적" fill="hsl(var(--muted-foreground) / 0.4)" radius={[0, 4, 4, 0]} maxBarSize={14} />
+                <Bar
+                  dataKey="전체연면적"
+                  fill="hsl(var(--muted-foreground) / 0.4)"
+                  radius={[0, 4, 4, 0]}
+                  maxBarSize={14}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
+                />
                 <Bar
                   dataKey="임대면적"
                   fill="hsl(var(--success))"
                   radius={[0, 4, 4, 0]}
                   maxBarSize={14}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
                   onClick={(d: unknown) => {
                     const b = (d as { payload?: { building?: Building } })?.payload?.building;
                     if (b) setDrawerBd(b);
@@ -355,6 +370,9 @@ export function LeaseStatusSubtab() {
                 />
                 <Scatter
                   data={scatterData}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
                   onClick={(d: unknown) => {
                     const b = (d as { payload?: { building?: Building } })?.payload?.building;
                     if (b) setDrawerBd(b);
@@ -532,7 +550,7 @@ function GroupRowFragment({
           {g.count}동
         </td>
         <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
-          {fmtKR(g.totalPrice)}억원
+          {g.totalPrice.toFixed(1)}억원
         </td>
         <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground">
           {g.avgRate.toFixed(1)}%
@@ -579,7 +597,7 @@ function GroupRowFragment({
                           {b.rental.vacancy}%
                         </td>
                         <td className="py-1.5 text-right font-mono tabular-nums text-muted-foreground">
-                          {fmtKR(parsePrice(b.acquisitionPrice))}억원
+                          {parsePrice(b.acquisitionPrice).toFixed(1)}억원
                         </td>
                         <td className="py-1.5 text-center">
                           <RiskBadge risk={r} />
