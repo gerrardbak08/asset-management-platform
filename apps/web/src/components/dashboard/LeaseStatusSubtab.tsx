@@ -536,9 +536,8 @@ function GroupRowFragment({
           <RiskBadge risk={risk} />
         </td>
       </tr>
-      {isOpen && (
-        <tr>
-          <td colSpan={5} className="border-t border-border bg-muted/10 p-0">
+      <tr>
+          <td colSpan={5} className={cn('border-t border-border bg-muted/10 p-0', !isOpen && 'hidden')}>
             <div className="px-4 py-3">
               <p className="mb-2 text-caption text-muted-foreground">
                 건물명을 클릭하면 상세 정보가 열립니다.
@@ -587,7 +586,6 @@ function GroupRowFragment({
             </div>
           </td>
         </tr>
-      )}
     </>
   );
 }

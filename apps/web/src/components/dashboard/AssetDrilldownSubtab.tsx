@@ -96,7 +96,7 @@ export function AssetDrilldownSubtab({ m0 }: Props) {
         : '원장_무형자산 기준';
 
   return (
-    <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-4">
+    <div className="grid grid-cols-[300px_minmax(0,1fr)] gap-4 items-start">
       {/* ── 좌: 3단 네비 ── */}
       <div className="rounded-xl border border-border bg-card p-4">
         {/* 1 DEPTH */}
