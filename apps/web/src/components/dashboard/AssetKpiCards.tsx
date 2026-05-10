@@ -110,6 +110,8 @@ export function AssetKpiCards({ m0 }: Props) {
             <button
               key={c.key}
               type="button"
+              aria-expanded={isOpen}
+              aria-controls="asset-kpi-detail-panel"
               onClick={() => {
                 if (isSelected && panelOpen) {
                   setPanelOpen(false);
@@ -162,7 +164,7 @@ export function AssetKpiCards({ m0 }: Props) {
 
       {/* 드릴다운 패널 */}
       {panelOpen && (
-        <Card className="overflow-hidden">
+        <Card id="asset-kpi-detail-panel" className="overflow-hidden">
           <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
             <div className="min-w-0 flex-1">
               <SectionHeader title={`${meta.label} 세부 현황`} description={meta.desc} />

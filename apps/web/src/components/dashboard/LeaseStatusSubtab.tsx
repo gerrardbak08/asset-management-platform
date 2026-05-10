@@ -512,11 +512,15 @@ function GroupRowFragment({
   return (
     <>
       <tr
+        role="button"
+        tabIndex={0}
+        aria-expanded={isOpen}
         className={cn(
           'cursor-pointer border-t border-border transition-colors',
           isOpen ? 'bg-muted/30' : 'hover:bg-muted/20',
         )}
         onClick={onToggle}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); } }}
       >
         <td className="px-4 py-2.5 font-medium text-foreground">
           <span className="flex items-center gap-1.5">
