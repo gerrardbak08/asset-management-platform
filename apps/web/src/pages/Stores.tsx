@@ -294,7 +294,7 @@ function SelectedPanel({
                       />
                       <span className="truncate text-caption text-muted-foreground">{d.name}</span>
                     </span>
-                    <span className="shrink-0 font-mono tabular-nums text-caption text-foreground">
+                    <span className="shrink-0 tabular-nums text-caption text-foreground">
                       {fmtKRfull(d.value)}
                     </span>
                   </li>
@@ -316,7 +316,7 @@ function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-muted/30 p-3">
       <div className="text-caption text-muted-foreground">{label}</div>
-      <div className="mt-1 font-kpi-inline font-mono tabular-nums text-foreground">{value}</div>
+      <div className="mt-1 font-kpi-inline tabular-nums text-foreground">{value}</div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { Printer } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { ReportPreviewDialog } from '@/components/report/ReportPreviewDialog';
+import { AsungSymbol } from './AsungLogo';
 
 type Props = {
   title: string;
@@ -14,7 +15,15 @@ export function Header({ title, description, action }: Props) {
   const [reportOpen, setReportOpen] = useState(false);
   return (
     <header style={{ minHeight: 56 }} className="sticky top-0 z-30 flex shrink-0 items-center justify-between gap-4 border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/80 md:px-5">
-      <div className="min-w-0">
+      {/* 모바일 전용 CI (사이드바 숨김 < md) */}
+      <div className="flex min-w-0 items-center gap-2.5 md:hidden">
+        <AsungSymbol />
+        <span className="truncate text-[15px] font-bold leading-snug tracking-tight text-[#1B3A7A] dark:text-primary">
+          전사 자산관리 시스템
+        </span>
+      </div>
+      {/* 데스크탑 전용 페이지 제목 */}
+      <div className="hidden min-w-0 md:block">
         <h1 className="truncate text-heading-md font-semibold tracking-tight text-foreground">
           {title}
         </h1>

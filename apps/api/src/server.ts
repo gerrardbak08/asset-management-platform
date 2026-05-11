@@ -49,6 +49,33 @@ export async function buildServer() {
     decorateReply: false,
   });
 
+  // 프로덕션: 빌드된 웹 정적 파일 서빙 + SPA fallback
+  const webDist = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../public',
+  );
+  try {
+    const { existsSync } = await import('node:fs');
+    if (existsSync(webDist)) {
+      await app.register(staticPlugin, {
+        root: webDist,
+        prefix: '/',
+        wildcard: false,
+        decorateReply: false,
+        index: false,
+      });
+      // SPA fallback — /api·/files 이외 GET 요청은 index.html 반환
+      app.setNotFoundHandler(async (req, reply) => {
+        if (!req.url.startsWith('/api') && !req.url.startsWith('/files')) {
+          return reply.sendFile('index.html', webDist);
+        }
+        reply.status(404).send({ ok: false, code: 'NOT_FOUND', message: '경로를 찾을 수 없습니다.' });
+      });
+    }
+  } catch {
+    // 개발 환경 또는 public 폴더 없을 때 무시
+  }
+
   // 모든 요청에 대해 user 데코레이션 (있으면 req.user 채움, 없으면 그대로)
   app.addHook('preHandler', attachUser);
 

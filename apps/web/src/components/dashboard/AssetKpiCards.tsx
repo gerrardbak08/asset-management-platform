@@ -133,16 +133,16 @@ export function AssetKpiCards({ m0 }: Props) {
               )}
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-heading-sm text-muted-foreground">● {m.label}</span>
+                <span className="text-heading-md text-muted-foreground">● {m.label}</span>
                 <MomBadge ratio={c.momRatio} />
               </div>
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="font-kpi-metric font-mono tabular-nums text-foreground">
+                <span className="tabular-nums text-foreground" style={{ fontSize: '22px', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
                   {fmtKR(c.current)}
                 </span>
-                <span className="text-caption text-muted-foreground">원</span>
+                <span className="text-body text-muted-foreground">원</span>
               </div>
-              <div className="mt-1.5 text-body text-muted-foreground">
+              <div className="mt-1.5 text-body-strong text-muted-foreground">
                 전월비 {c.momVal >= 0 ? '+' : ''}
                 {fmtKR(Math.abs(c.momVal))}원
               </div>

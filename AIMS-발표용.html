@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>전사 자산관리 시스템 — AIMS</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=790bcd3cb7e52eab060568aa47a1fe8e&libraries=services&autoload=false"></script>
 <style>
@@ -17,11 +17,11 @@
   --info:#1a7edb;--success:#27784E;--warn:#D97706;--danger:#9B1111;--accent:#F59E0B;
   --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--r:14px;--r-sm:10px;
 }
-html{font-family:'Noto Sans KR',sans-serif;font-size:14px}
+html{font-family:'Noto Sans KR',sans-serif;font-size:14px;font-variant-numeric:tabular-nums}
 body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hidden;word-break:keep-all}
 .sb{width:240px;flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;height:100vh}
 .sb-logo{height:56px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid #e5e7eb;background:#fff;flex-shrink:0}
-.logo-mark{width:34px;height:26px;background:var(--primary);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;font-family:'DM Mono',monospace;flex-shrink:0}
+.logo-mark{width:34px;height:26px;background:var(--primary);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;flex-shrink:0}
 .logo-title{font-size:15px;font-weight:700;color:#1B3A7A;letter-spacing:-0.02em;line-height:1.2}
 .logo-sub{font-size:11px;color:#9CA3AF;margin-top:2px}
 .sb-nav{flex:1;padding:16px 12px;overflow-y:auto}
@@ -41,7 +41,7 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .gap4>*+*{margin-top:16px}
-.badge{display:inline-flex;align-items:center;gap:2px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
+.badge{display:inline-flex;align-items:center;gap:2px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600;}
 .up{background:rgba(39,120,78,.1);color:#27784E}.down{background:rgba(155,17,17,.1);color:#9B1111}
 .stabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
 .stab{padding:8px 14px;font-size:13px;font-weight:500;color:var(--muted-fg);border-bottom:2px solid transparent;cursor:pointer;transition:color .15s;margin-bottom:-1px}
@@ -53,11 +53,11 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
 .sl-scroll{flex:1;overflow-y:auto;min-height:0}
 .si{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
 .si:hover,.si.on{background:var(--muted)}
-.si-name{font-size:13px;font-weight:500;color:var(--fg)}.si-type{font-size:11px;color:var(--muted-fg)}.si-val{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted-fg);flex-shrink:0}
+.si-name{font-size:13px;font-weight:500;color:var(--fg)}.si-type{font-size:11px;color:var(--muted-fg)}.si-val{font-size:12px;color:var(--muted-fg);flex-shrink:0}
 .sd{display:flex;flex-direction:column;gap:12px;height:100%;min-height:0}
 .sk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .sk{padding:12px;background:rgba(240,240,246,.4);border:1px solid var(--border);border-radius:var(--r-sm)}
-.sk-lbl{font-size:10px;color:var(--muted-fg)}.sk-val{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--fg);margin-top:3px}
+.sk-lbl{font-size:10px;color:var(--muted-fg)}.sk-val{font-size:15px;font-weight:700;color:var(--fg);margin-top:3px}
 .tl{border-left:2px solid var(--border);padding-left:20px}
 .tl-item{position:relative;padding-bottom:14px}
 .tl-dot{position:absolute;left:-27px;top:0;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;box-shadow:0 0 0 4px var(--card)}
@@ -67,12 +67,12 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
 .bld-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;overflow-y:auto;height:100%}
 .bld-card{overflow:hidden;cursor:pointer;transition:box-shadow .15s,border-color .15s}
 .bld-card:hover,.bld-card.on{border-color:var(--primary);box-shadow:0 0 0 2px rgba(30,58,95,.15)}
-.bld-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace}
+.bld-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:rgba(255,255,255,.35);}
 .bld-body{padding:12px}
 .bld-name{font-size:13px;font-weight:700;color:var(--fg)}.bld-addr{font-size:10px;color:var(--muted-fg);margin-top:1px}
 .bld-kpis{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
 .bk{background:var(--muted);border-radius:6px;padding:6px 8px}
-.bk-lbl{font-size:10px;color:var(--muted-fg)}.bk-val{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--fg);margin-top:1px}
+.bk-lbl{font-size:10px;color:var(--muted-fg)}.bk-val{font-size:12px;font-weight:700;color:var(--fg);margin-top:1px}
 /* map panel */
 .map-panel{display:flex;flex-direction:column;gap:10px;height:100%;position:sticky;top:0}
 .map-tabs{display:flex;gap:1px;background:var(--muted);border-radius:8px;padding:3px;width:fit-content}
@@ -85,10 +85,10 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
 .adj{width:100%;border-collapse:collapse;font-size:12px}
 .adj th{background:var(--muted);font-weight:600;color:var(--muted-fg);padding:8px 10px;text-align:right;border:1px solid var(--border)}
 .adj th:first-child{text-align:left}
-.adj td{padding:6px 10px;border:1px solid var(--border);text-align:right;font-family:'DM Mono',monospace}
+.adj td{padding:6px 10px;border:1px solid var(--border);text-align:right;}
 .adj td:first-child{text-align:left;font-family:inherit;font-weight:500}
 .adj tr:hover td{background:var(--muted)}
-.adj input{width:78px;border:none;background:none;text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:var(--fg);outline:none}
+.adj input{width:78px;border:none;background:none;text-align:right;font-size:12px;color:var(--fg);outline:none}
 .insight{background:rgba(30,58,95,.04);border:1px solid rgba(30,58,95,.12);border-radius:var(--r-sm);padding:14px 16px}
 .ins-title{font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px}
 .ins-item{font-size:12px;color:var(--muted-fg);padding:2px 0}.ins-item::before{content:'• ';color:var(--primary)}
@@ -145,9 +145,9 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
               <span class="badge up">▲ +1.11%</span>
             </div>
             <div style="margin-top:12px;line-height:1">
-              <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--muted-fg)">₩</span>
-              <span style="font-family:'DM Mono',monospace;font-size:46px;font-weight:700;letter-spacing:-0.03em">1조 2,345</span>
-              <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--muted-fg)">억</span>
+              <span style="font-size:18px;font-weight:500;color:var(--muted-fg)">₩</span>
+              <span style="font-size:46px;font-weight:700;letter-spacing:-0.03em">1조 2,345</span>
+              <span style="font-size:18px;font-weight:500;color:var(--muted-fg)">억</span>
             </div>
             <div style="height:1px;background:var(--border);margin:14px 0 10px"></div>
             <div style="font-size:12px;color:var(--muted-fg)">1조 2,345억 4,200만원 · 전월 <strong>2026-02</strong> 대비</div>
@@ -180,7 +180,7 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
               </div>
               <div style="border-bottom:1px solid var(--border);padding:8px 0">
                 <div style="font-size:12px;font-weight:600;margin-bottom:3px">월 폐기액 상위 품목</div>
-                <div style="font-size:11px;color:var(--muted-fg)">PDA <strong style="color:var(--fg);font-family:'DM Mono',monospace">12억원</strong> · 냉장고 4억원 · 선반 2억원</div>
+                <div style="font-size:11px;color:var(--muted-fg)">PDA <strong style="color:var(--fg);">12억원</strong> · 냉장고 4억원 · 선반 2억원</div>
               </div>
               <div style="padding:8px 0 0">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
@@ -193,10 +193,10 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
           </div>
         </div>
         <div class="g4">
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">건물 자산</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">8,247억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +0.8%</span></div></div>
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">비품 재고액</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">3,456억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +1.4%</span></div></div>
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 취득</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">234억</div><div style="margin-top:5px"><span class="badge down" style="font-size:10px">▼ -3.2%</span></div></div>
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">사업장 수</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">2,015<span style="font-size:13px;font-weight:400;color:var(--muted-fg)">개</span></div><div style="margin-top:5px;font-size:11px;color:var(--muted-fg)">전월 동일</div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">건물 자산</div><div style="font-size:20px;font-weight:700;margin-top:3px">8,247억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +0.8%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">비품 재고액</div><div style="font-size:20px;font-weight:700;margin-top:3px">3,456억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +1.4%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 취득</div><div style="font-size:20px;font-weight:700;margin-top:3px">234억</div><div style="margin-top:5px"><span class="badge down" style="font-size:10px">▼ -3.2%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">사업장 수</div><div style="font-size:20px;font-weight:700;margin-top:3px">2,015<span style="font-size:13px;font-weight:400;color:var(--muted-fg)">개</span></div><div style="margin-top:5px;font-size:11px;color:var(--muted-fg)">전월 동일</div></div>
         </div>
         <div class="insight">
           <div class="ins-title">📊 경영진 인사이트 — 2026년 3월</div>
@@ -220,11 +220,11 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
               <table style="width:100%;border-collapse:collapse;font-size:12px">
                 <thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:6px;color:var(--muted-fg)">유형</th><th style="text-align:right;padding:6px;color:var(--muted-fg)">장부가</th><th style="text-align:right;padding:6px;color:var(--muted-fg)">비중</th><th style="text-align:right;padding:6px;color:var(--muted-fg)">전월비</th></tr></thead>
                 <tbody>
-                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">토지</td><td style="padding:7px 6px;text-align:right;font-family:'DM Mono',monospace">4,938억</td><td style="padding:7px 6px;text-align:right">39.8%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+0.5%</td></tr>
-                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">건물</td><td style="padding:7px 6px;text-align:right;font-family:'DM Mono',monospace">4,321억</td><td style="padding:7px 6px;text-align:right">35.1%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+0.9%</td></tr>
-                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">기계장치</td><td style="padding:7px 6px;text-align:right;font-family:'DM Mono',monospace">1,251억</td><td style="padding:7px 6px;text-align:right">10.1%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+2.1%</td></tr>
-                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">집기비품</td><td style="padding:7px 6px;text-align:right;font-family:'DM Mono',monospace">987억</td><td style="padding:7px 6px;text-align:right">8.0%</td><td style="padding:7px 6px;text-align:right;color:var(--danger)">-0.3%</td></tr>
-                  <tr><td style="padding:7px 6px">기타</td><td style="padding:7px 6px;text-align:right;font-family:'DM Mono',monospace">848억</td><td style="padding:7px 6px;text-align:right">7.0%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+1.8%</td></tr>
+                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">토지</td><td style="padding:7px 6px;text-align:right;">4,938억</td><td style="padding:7px 6px;text-align:right">39.8%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+0.5%</td></tr>
+                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">건물</td><td style="padding:7px 6px;text-align:right;">4,321억</td><td style="padding:7px 6px;text-align:right">35.1%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+0.9%</td></tr>
+                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">기계장치</td><td style="padding:7px 6px;text-align:right;">1,251억</td><td style="padding:7px 6px;text-align:right">10.1%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+2.1%</td></tr>
+                  <tr style="border-bottom:1px solid var(--border)"><td style="padding:7px 6px">집기비품</td><td style="padding:7px 6px;text-align:right;">987억</td><td style="padding:7px 6px;text-align:right">8.0%</td><td style="padding:7px 6px;text-align:right;color:var(--danger)">-0.3%</td></tr>
+                  <tr><td style="padding:7px 6px">기타</td><td style="padding:7px 6px;text-align:right;">848억</td><td style="padding:7px 6px;text-align:right">7.0%</td><td style="padding:7px 6px;text-align:right;color:var(--success)">+1.8%</td></tr>
                 </tbody>
               </table>
             </div>
@@ -234,10 +234,10 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
 
       <div id="d-supplies" style="display:none" class="gap4">
         <div class="g4">
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">총 재고액</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">3,456억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +1.4%</span></div></div>
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 구매</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">234억</div><div style="margin-top:5px"><span class="badge down" style="font-size:10px">▼ -3.2%</span></div></div>
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 이동</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">89억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +5.6%</span></div></div>
-          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 폐기</div><div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;margin-top:3px">18억</div><div style="margin-top:5px"><span class="badge down" style="font-size:10px">▼ -8.2%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">총 재고액</div><div style="font-size:20px;font-weight:700;margin-top:3px">3,456억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +1.4%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 구매</div><div style="font-size:20px;font-weight:700;margin-top:3px">234억</div><div style="margin-top:5px"><span class="badge down" style="font-size:10px">▼ -3.2%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 이동</div><div style="font-size:20px;font-weight:700;margin-top:3px">89억</div><div style="margin-top:5px"><span class="badge up" style="font-size:10px">▲ +5.6%</span></div></div>
+          <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted-fg)">당월 폐기</div><div style="font-size:20px;font-weight:700;margin-top:3px">18억</div><div style="margin-top:5px"><span class="badge down" style="font-size:10px">▼ -8.2%</span></div></div>
         </div>
         <div class="g2">
           <div class="card" style="padding:20px"><div style="font-size:13px;font-weight:700;margin-bottom:12px">재고 상위 카테고리 TOP 5</div><div style="height:260px"><canvas id="cTop5"></canvas></div></div>
@@ -277,11 +277,11 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
           <table style="width:100%;border-collapse:collapse;font-size:12px">
             <thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:8px;color:var(--muted-fg)">건물명</th><th style="text-align:right;padding:8px;color:var(--muted-fg)">전용면적(㎡)</th><th style="text-align:right;padding:8px;color:var(--muted-fg)">임대면적</th><th style="text-align:right;padding:8px;color:var(--muted-fg)">공실률</th><th style="text-align:right;padding:8px;color:var(--muted-fg)">월 임대료</th></tr></thead>
             <tbody>
-              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">부산물류센터</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">12,450</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">11,679</td><td style="text-align:right;padding:8px;color:var(--warn)">6.2%</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">2.3억</td></tr>
-              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">인천물류센터</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">9,870</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">9,298</td><td style="text-align:right;padding:8px;color:var(--warn)">5.8%</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">1.8억</td></tr>
-              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">대구지점</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">3,200</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">3,037</td><td style="text-align:right;padding:8px;color:var(--warn)">5.1%</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">0.6억</td></tr>
-              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">본사 사옥</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">8,920</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">8,920</td><td style="text-align:right;padding:8px;color:var(--success)">0.0%</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">—</td></tr>
-              <tr><td style="padding:8px">서울물류센터</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">15,670</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">15,670</td><td style="text-align:right;padding:8px;color:var(--success)">0.0%</td><td style="text-align:right;padding:8px;font-family:'DM Mono',monospace">—</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">부산물류센터</td><td style="text-align:right;padding:8px;">12,450</td><td style="text-align:right;padding:8px;">11,679</td><td style="text-align:right;padding:8px;color:var(--warn)">6.2%</td><td style="text-align:right;padding:8px;">2.3억</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">인천물류센터</td><td style="text-align:right;padding:8px;">9,870</td><td style="text-align:right;padding:8px;">9,298</td><td style="text-align:right;padding:8px;color:var(--warn)">5.8%</td><td style="text-align:right;padding:8px;">1.8억</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">대구지점</td><td style="text-align:right;padding:8px;">3,200</td><td style="text-align:right;padding:8px;">3,037</td><td style="text-align:right;padding:8px;color:var(--warn)">5.1%</td><td style="text-align:right;padding:8px;">0.6억</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">본사 사옥</td><td style="text-align:right;padding:8px;">8,920</td><td style="text-align:right;padding:8px;">8,920</td><td style="text-align:right;padding:8px;color:var(--success)">0.0%</td><td style="text-align:right;padding:8px;">—</td></tr>
+              <tr><td style="padding:8px">서울물류센터</td><td style="text-align:right;padding:8px;">15,670</td><td style="text-align:right;padding:8px;">15,670</td><td style="text-align:right;padding:8px;color:var(--success)">0.0%</td><td style="text-align:right;padding:8px;">—</td></tr>
             </tbody>
           </table>
         </div>
@@ -407,7 +407,7 @@ body{background:var(--bg);color:var(--fg);display:flex;height:100vh;overflow:hid
         <div class="stab on" onclick="stab('a','adjust',this)">데이터 조정</div>
       </div>
       <div id="a-data" style="display:none"><div class="card" style="padding:20px"><div style="font-size:13px;font-weight:700;margin-bottom:14px">데이터 현황</div><div class="g4"><div class="sk"><div class="sk-lbl">총 레코드</div><div class="sk-val">847,234</div></div><div class="sk"><div class="sk-lbl">마지막 업로드</div><div class="sk-val">2026-03-31</div></div><div class="sk"><div class="sk-lbl">처리 기간</div><div class="sk-val">6개월</div></div><div class="sk"><div class="sk-lbl">오류 레코드</div><div class="sk-val" style="color:var(--success)">0건</div></div></div></div></div>
-      <div id="a-system" style="display:none"><div class="card" style="padding:20px"><div style="font-size:13px;font-weight:700;margin-bottom:14px">시스템 정보</div><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 12px;color:var(--muted-fg)">버전</td><td style="padding:10px 12px;font-family:'DM Mono',monospace">v0.1.0 — 1단계</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 12px;color:var(--muted-fg)">데이터베이스</td><td style="padding:10px 12px;font-family:'DM Mono',monospace">PostgreSQL 15 (Neon)</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 12px;color:var(--muted-fg)">API 서버</td><td style="padding:10px 12px;font-family:'DM Mono',monospace">Hono + Prisma</td></tr><tr><td style="padding:10px 12px;color:var(--muted-fg)">프론트엔드</td><td style="padding:10px 12px;font-family:'DM Mono',monospace">React 18 + Vite 5 + Tailwind CSS</td></tr></table></div></div>
+      <div id="a-system" style="display:none"><div class="card" style="padding:20px"><div style="font-size:13px;font-weight:700;margin-bottom:14px">시스템 정보</div><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 12px;color:var(--muted-fg)">버전</td><td style="padding:10px 12px;">v0.1.0 — 1단계</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 12px;color:var(--muted-fg)">데이터베이스</td><td style="padding:10px 12px;">PostgreSQL 15 (Neon)</td></tr><tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 12px;color:var(--muted-fg)">API 서버</td><td style="padding:10px 12px;">Hono + Prisma</td></tr><tr><td style="padding:10px 12px;color:var(--muted-fg)">프론트엔드</td><td style="padding:10px 12px;">React 18 + Vite 5 + Tailwind CSS</td></tr></table></div></div>
       <div id="a-adjust">
         <div class="card" style="padding:20px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -553,7 +553,7 @@ function pickStore(el,name,type,v1,v2,v3,v4,typeTxt){
   const cols=['#1E3A5F','#1a7edb','#D97706','#27784E','#9B1111'];
   document.getElementById('sTypeLegend').innerHTML=parts.map((p,i)=>{
     const[label,...rest]=p.split(' ');
-    return `<li style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted-fg);display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${cols[i%cols.length]};display:inline-block"></span>${label}</span><span style="font-family:'DM Mono',monospace">${rest.join(' ')}</span></li>`;
+    return `<li style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted-fg);display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${cols[i%cols.length]};display:inline-block"></span>${label}</span><span style="">${rest.join(' ')}</span></li>`;
   }).join('');
   const typeVals=parts.map(p=>{const m=p.match(/[\d,]+/);return m?parseInt(m[0].replace(',','')):1});
   const typeLabels=parts.map(p=>p.split(' ')[0]);
@@ -580,8 +580,8 @@ const adjBody=document.getElementById('adjBody');
 adjRows.forEach(r=>{
   const tr=document.createElement('tr');
   let html=`<td>${r.label}</td>`;
-  r.vals.forEach((v,i)=>{html+=i===5?`<td style="font-weight:700;color:var(--primary)">${v}</td>`:`<td><input type="text" value="${v}" style="width:78px;border:none;background:none;text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:var(--fg);outline:none"></td>`;});
-  for(let i=0;i<6;i++)html+=`<td><input type="text" placeholder="—" style="width:78px;border:none;background:none;text-align:right;font-family:'DM Mono',monospace;font-size:12px;color:var(--muted-fg);outline:none"></td>`;
+  r.vals.forEach((v,i)=>{html+=i===5?`<td style="font-weight:700;color:var(--primary)">${v}</td>`:`<td><input type="text" value="${v}" style="width:78px;border:none;background:none;text-align:right;font-size:12px;color:var(--fg);outline:none"></td>`;});
+  for(let i=0;i<6;i++)html+=`<td><input type="text" placeholder="—" style="width:78px;border:none;background:none;text-align:right;font-size:12px;color:var(--muted-fg);outline:none"></td>`;
   tr.innerHTML=html;adjBody.appendChild(tr);
 });
 
@@ -619,7 +619,7 @@ new Chart(ctx('cStoreCat'),{type:'bar',data:{labels:['PDA','복합기'],datasets
 storeTypeChart=new Chart(ctx('cStoreType'),{type:'doughnut',data:{labels:['토지','건물','기계장치','집기비품'],datasets:[{data:[76630,45210,4,4],backgroundColor:C,borderWidth:2,borderColor:'#fff'}]},options:{cutout:'60%',plugins:{legend:{display:false}},animation:{duration:600}}});
 
 // Default legend & timeline
-document.getElementById('sTypeLegend').innerHTML=['토지 766억원','건물 452억원','기계장치 4천원','집기비품 4천원'].map((p,i)=>{const[label,...rest]=p.split(' ');return `<li style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted-fg);display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${C[i]};display:inline-block"></span>${label}</span><span style="font-family:'DM Mono',monospace">${rest.join(' ')}</span></li>`;}).join('');
+document.getElementById('sTypeLegend').innerHTML=['토지 766억원','건물 452억원','기계장치 4천원','집기비품 4천원'].map((p,i)=>{const[label,...rest]=p.split(' ');return `<li style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--muted-fg);display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${C[i]};display:inline-block"></span>${label}</span><span style="">${rest.join(' ')}</span></li>`;}).join('');
 document.getElementById('sTl').innerHTML=`<div class="tl-item"><div class="tl-dot" style="background:rgba(30,58,95,.1);color:#1E3A5F">🏢</div><div class="tl-t">사업장 등록</div><div class="tl-d">2026-03 기준 자산 1218.3억원 · 항목 11건</div></div><div class="tl-item"><div class="tl-dot" style="background:rgba(245,158,11,.12);color:#D97706">📦</div><div class="tl-t">최대 카테고리 — PDA</div><div class="tl-d">525만원</div></div><div class="tl-item"><div class="tl-dot" style="background:rgba(26,126,219,.1);color:#1a7edb">↑</div><div class="tl-t">자산 유형 1순위 — 토지</div><div class="tl-d">766억원</div></div><div class="tl-item"><div class="tl-dot" style="background:rgba(39,120,78,.1);color:#27784E">📦</div><div class="tl-t">비품 재고 보유</div><div class="tl-d">525만원 · 2 카테고리</div></div><div class="tl-item"><div class="tl-dot" style="background:var(--muted);color:var(--muted-fg)">🕐</div><div class="tl-t">데이터 기준</div><div class="tl-d">2026-03 마감 (수동 또는 xlsb 업로드)</div></div>`;
 
 // 카카오맵 링크 초기화

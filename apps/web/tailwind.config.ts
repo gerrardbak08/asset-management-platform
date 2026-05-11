@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
-        mono: ['"DM Mono"', 'ui-monospace', 'monospace'],
+        mono: ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'],
       },
       colors: {
         // ── 기반 서피스 (DESIGN.md §2)

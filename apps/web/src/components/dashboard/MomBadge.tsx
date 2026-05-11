@@ -17,7 +17,7 @@ export function MomBadge({ ratio, className, positiveIsGood = true, showLabel = 
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-caption font-mono tabular-nums',
+        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-caption font-sans tabular-nums',
         tone,
         className,
       )}

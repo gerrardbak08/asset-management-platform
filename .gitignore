@@ -67,3 +67,4 @@ playwright-report/
 # 디버그 산출물 (스크린샷·Playwright)
 screen-*.png
 .playwright-mcp/
+db_export.json

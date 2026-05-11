@@ -71,16 +71,13 @@ export function HeroKPI({ m0 }: Props) {
 
           {/* 핵심 숫자 */}
           <div className="mt-4 flex items-end gap-2">
-            <span className="font-mono text-[20px] font-semibold leading-none text-muted-foreground">
-              ₩
-            </span>
             <span
-              className="font-mono tabular-nums leading-none text-foreground"
+              className="tabular-nums leading-none text-foreground"
               style={{ fontSize: '52px', fontWeight: 700, letterSpacing: '-0.02em' }}
             >
               {fmtKR(cur.total)}
             </span>
-            <span className="mb-1 font-mono text-[20px] font-semibold leading-none text-muted-foreground">
+            <span className="mb-1 text-[20px] font-semibold leading-none text-muted-foreground">
               원
             </span>
           </div>
@@ -199,44 +196,56 @@ function IssuePanel() {
         <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" />
         <span className="text-heading-sm text-foreground">이슈 사항</span>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto">
-      {vacantBuildings.length > 0 ? (
-        <div className="mb-3">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-full bg-warning-subtle px-2 py-0.5 text-caption font-medium text-warning">
-              공실률 5% 이상 {vacantBuildings.length}곳
-            </span>
-          </div>
-          <p className="mt-1 text-caption text-muted-foreground">
-            {shownBuildings.map((b) => `${b.name} ${b.rental.vacancy}%`).join(' · ')}
-          </p>
-          {vacantBuildings.length > 3 && (
-            <button
-              type="button"
-              onClick={() => setVacancyExpanded((v) => !v)}
-              className="mt-1 text-caption text-primary transition-colors hover:underline"
-            >
-              {vacancyExpanded ? '접기 ▲' : `+${extraCount}곳 더 ▼`}
-            </button>
+
+      <div className="min-h-0 flex-1 divide-y divide-border overflow-y-auto">
+        {/* 공실률 섹션 */}
+        <div className="pb-3">
+          <span className="inline-flex items-center rounded-full bg-warning-subtle px-2 py-0.5 text-caption font-semibold text-warning">
+            공실률 5% 이상
+          </span>
+          {vacantBuildings.length > 0 ? (
+            <>
+              <ul className="mt-2 space-y-1">
+                {shownBuildings.map((b) => (
+                  <li key={b.id} className="flex items-center justify-between text-caption">
+                    <span className="text-foreground">{b.name}</span>
+                    <span className="tabular-nums text-warning">{b.rental.vacancy}%</span>
+                  </li>
+                ))}
+              </ul>
+              {vacantBuildings.length > 3 && (
+                <button
+                  type="button"
+                  onClick={() => setVacancyExpanded((v) => !v)}
+                  className="mt-1.5 text-caption text-primary hover:underline"
+                >
+                  {vacancyExpanded ? '접기 ▲' : `+${extraCount}곳 더 ▼`}
+                </button>
+              )}
+            </>
+          ) : (
+            <p className="mt-1.5 text-caption text-muted-foreground">해당 없음</p>
           )}
         </div>
-      ) : (
-        <p className="mb-3 text-body text-success">공실률 5% 이상 건물 없음</p>
-      )}
 
-      {topDisposal.length > 0 ? (
-        <div className="flex items-start gap-2">
-          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-info" aria-hidden="true" />
-          <div>
-            <p className="text-body-strong text-foreground">월 폐기액 상위 품목</p>
-            <p className="mt-0.5 text-caption text-muted-foreground">
-              {topDisposal.map((d) => `${d.name} ${fmtKR(d.amount)}원`).join(' · ')}
-            </p>
-          </div>
+        {/* 폐기 섹션 */}
+        <div className="pt-3">
+          <span className="inline-flex items-center rounded-full bg-info-subtle px-2 py-0.5 text-caption font-semibold text-info">
+            월 폐기액 상위
+          </span>
+          {topDisposal.length > 0 ? (
+            <ul className="mt-2 space-y-1">
+              {topDisposal.map((d) => (
+                <li key={d.name} className="flex items-center justify-between text-caption">
+                  <span className="text-foreground">{d.name}</span>
+                  <span className="tabular-nums text-muted-foreground">{fmtKR(d.amount)}원</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-1.5 text-caption text-muted-foreground">이번 달 폐기 없음</p>
+          )}
         </div>
-      ) : (
-        <p className="text-body text-muted-foreground">이번 달 폐기 항목 없음</p>
-      )}
       </div>
     </Card>
   );
