@@ -305,7 +305,7 @@ function SelectedPanel({
         </Card>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-hidden">
+      <div className="min-w-0 flex-1">
         <StoreTimeline detail={detail} />
       </div>
     </div>
