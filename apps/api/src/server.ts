@@ -63,7 +63,6 @@ export async function buildServer() {
         root: webDist,
         prefix: '/',
         wildcard: true,
-        decorateReply: false,
         index: 'index.html',
       });
       // SPA fallback — /api·/files 이외 GET 요청은 index.html 반환
