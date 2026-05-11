@@ -321,8 +321,8 @@ function SystemTab({ isAdmin, me }: { isAdmin: boolean; me: { id: string; email:
         <div className="p-5 pb-3">
           <SectionHeader title="사용자 목록" description={`${users.data?.length ?? 0} 명`} />
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full whitespace-nowrap">
             <thead className="bg-muted/40 text-caption text-muted-foreground">
               <tr>
                 <Th>이메일</Th><Th>역할</Th><Th>생성일</Th><Th align="right">작업</Th>
@@ -466,11 +466,11 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
             title="2026년 월별 실적 입력"
             description="각 항목의 월별 금액(백만원)을 입력하세요. 저장 후 자산 현황 탭의 추이 그래프에 즉시 반영됩니다."
           />
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-[900px] w-full border-collapse">
+          <div className="mt-4 overflow-x-auto custom-scrollbar">
+            <table className="min-w-[900px] w-full border-collapse whitespace-nowrap">
               <thead>
                 <tr className="bg-muted/40">
-                  <th className="sticky left-0 bg-muted/40 px-3 py-2.5 text-left text-caption font-semibold text-muted-foreground">항목</th>
+                  <th className="sticky left-0 z-10 bg-muted/40 px-3 py-2.5 text-left text-caption font-semibold text-muted-foreground shadow-[1px_0_0_0_hsl(var(--border))]">항목</th>
                   {Array.from({ length: 12 }, (_, i) => (
                     <th key={i} className="px-2 py-2.5 text-center text-caption font-semibold text-muted-foreground">{i + 1}월</th>
                   ))}
@@ -479,7 +479,7 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
               <tbody>
                 {ADJUST_ROWS.map((row, ri) => (
                   <tr key={row.key} className={cn('border-t border-border', ri % 2 !== 0 && 'bg-muted/20')}>
-                    <td className="sticky left-0 bg-card px-3 py-2 text-body font-medium text-foreground">{row.label}</td>
+                    <td className="sticky left-0 z-10 bg-card px-3 py-2 text-body font-medium text-foreground shadow-[1px_0_0_0_hsl(var(--border))]">{row.label}</td>
                     {Array.from({ length: 12 }, (_, mi) => (
                       <td key={mi} className="px-1 py-1.5 text-center">
                         {canEdit ? (

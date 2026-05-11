@@ -36,8 +36,8 @@ export function BuildingEditTable({ items }: Props) {
 
   return (
     <Card className="overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-caption">
+      <div className="overflow-x-auto custom-scrollbar">
+        <table className="w-full whitespace-nowrap text-caption">
           <thead className="bg-muted/40 text-muted-foreground">
             <tr>
               <Th>코드</Th>

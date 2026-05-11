@@ -597,8 +597,8 @@ function DrilldownPanel({
           닫기 ✕
         </button>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[600px]">
+      <div className="overflow-x-auto custom-scrollbar">
+        <table className="w-full min-w-[600px] whitespace-nowrap">
           <thead className="bg-muted/40 text-caption text-muted-foreground">
             <tr>
               <th className="px-4 py-2.5 text-left font-semibold">건물명</th>
@@ -692,8 +692,8 @@ function GroupTable({
       <div className="px-5 py-4">
         <SectionHeader title={title} description={description} />
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto custom-scrollbar">
+        <table className="w-full whitespace-nowrap">
           <thead className="bg-muted/40 text-caption text-muted-foreground">
             <tr>
               <th className="px-4 py-2 text-left font-semibold">분류</th>
