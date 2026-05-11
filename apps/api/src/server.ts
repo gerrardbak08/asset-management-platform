@@ -51,23 +51,6 @@ export async function buildServer() {
 
   const webDist = path.join(process.cwd(), 'public');
 
-  // 디버그 엔드포인트
-  app.get('/api/debug-uploads', async () => {
-    const fs = await import('node:fs');
-    const udir = path.join(webDist, 'files');
-    let files: string[] = [];
-    let bfiles: string[] = [];
-    try { files = fs.readdirSync(udir); } catch(e) {}
-    try { bfiles = fs.readdirSync(path.join(udir, 'buildings')); } catch(e) {}
-    return {
-      cwd: process.cwd(),
-      udir,
-      files,
-      bfiles,
-      publicExists: fs.existsSync(webDist)
-    };
-  });
-
   // 정적 파일 서빙 (웹 + /files)
   try {
     const { existsSync } = await import('node:fs');
