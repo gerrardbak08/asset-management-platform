@@ -46,16 +46,29 @@ export async function buildServer() {
     },
   });
 
-  // 업로드된 사진 정적 노출 — /files/*
-  await app.register(staticPlugin, {
-    root: path.resolve(config.UPLOADS_DIR),
-    prefix: '/files/',
-    decorateReply: false,
+  // 모든 요청에 대해 user 데코레이션 (있으면 req.user 채움, 없으면 그대로)
+  app.addHook('preHandler', attachUser);
+
+  const webDist = path.join(process.cwd(), 'public');
+
+  // 디버그 엔드포인트
+  app.get('/api/debug-uploads', async () => {
+    const fs = await import('node:fs');
+    const udir = path.join(webDist, 'files');
+    let files = [];
+    let bfiles = [];
+    try { files = fs.readdirSync(udir); } catch(e) {}
+    try { bfiles = fs.readdirSync(path.join(udir, 'buildings')); } catch(e) {}
+    return {
+      cwd: process.cwd(),
+      udir,
+      files,
+      bfiles,
+      publicExists: fs.existsSync(webDist)
+    };
   });
 
-  // 프로덕션: 빌드된 웹 정적 파일 서빙 + SPA fallback
-  const webDist = path.join(process.cwd(), 'public');
-  app.log.info({ webDist }, 'Static files path');
+  // 정적 파일 서빙 (웹 + /files)
   try {
     const { existsSync } = await import('node:fs');
     if (existsSync(webDist)) {
@@ -65,7 +78,7 @@ export async function buildServer() {
         wildcard: true,
         index: 'index.html',
       });
-      // SPA fallback — /api·/files 이외 GET 요청은 index.html 반환
+      // SPA fallback
       app.setNotFoundHandler(async (req, reply) => {
         if (!req.url.startsWith('/api') && !req.url.startsWith('/files')) {
           return reply.sendFile('index.html', webDist);
@@ -73,12 +86,7 @@ export async function buildServer() {
         reply.status(404).send({ ok: false, code: 'NOT_FOUND', message: '경로를 찾을 수 없습니다.' });
       });
     }
-  } catch {
-    // 개발 환경 또는 public 폴더 없을 때 무시
-  }
-
-  // 모든 요청에 대해 user 데코레이션 (있으면 req.user 채움, 없으면 그대로)
-  app.addHook('preHandler', attachUser);
+  } catch (e) {}
 
   // 라우트
   await app.register(healthRoutes, { prefix: '/api' });
