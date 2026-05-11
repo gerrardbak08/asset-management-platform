@@ -61,12 +61,12 @@
   }
 
   .dark {
-    --background: 213 30% 9%;
-    --card: 213 25% 14%;
-    --foreground: 0 0% 96%;
-    --muted-foreground: 213 10% 70%;
-    --border: 213 20% 22%;
-    --muted: 213 22% 16%;
+    --background: 213 53% 18%;
+    --card: 213 50% 12%;
+    --foreground: 0 0% 100%;
+    --muted-foreground: 213 15% 75%;
+    --border: 213 40% 25%;
+    --muted: 213 40% 15%;
 
     --primary: 213 70% 55%; /* 다크에선 살짝 밝게 */
     --primary-foreground: 213 30% 9%;

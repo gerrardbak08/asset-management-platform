@@ -29,13 +29,13 @@ export function Sidebar() {
 
   return (
     <aside className="hidden w-[240px] shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
-      <div className="flex h-14 items-center gap-2.5 border-b border-gray-200 bg-white px-4">
+      <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border bg-sidebar px-4">
         <AsungSymbol />
         <div className="min-w-0">
-          <div className="text-[18px] font-bold leading-snug tracking-tight text-[#1B3A7A]">
+          <div className="text-[18px] font-bold leading-snug tracking-tight text-sidebar-foreground">
             전사 자산관리 시스템
           </div>
-          <div className="mt-0.5 text-micro text-gray-400">2026년 3월 · 전사 자산 현황</div>
+          <div className="mt-0.5 text-micro text-sidebar-muted-foreground">2026년 3월 · 전사 자산 현황</div>
         </div>
       </div>
 
