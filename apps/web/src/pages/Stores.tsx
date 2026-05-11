@@ -167,7 +167,7 @@ function SelectedPanel({
           ) : null}
         </div>
         <div className="mt-1 text-caption text-muted-foreground">{detail.period} 기준</div>
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <Kpi label="자산 장부가" value={fmtKRfull(detail.assetValue)} />
           <Kpi label="자산 항목 수" value={detail.assetCount.toLocaleString('ko-KR') + ' 건'} />
           <Kpi label="비품 재고액" value={fmtKRfull(detail.supplyValue)} />
@@ -178,9 +178,9 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid h-[260px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex flex-col p-5">
+        <Card className="flex flex-col p-4">
           <div className="mb-3 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
@@ -243,7 +243,7 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex flex-col p-5">
+        <Card className="flex flex-col p-4">
           <div className="mb-3 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
@@ -314,9 +314,9 @@ function SelectedPanel({
 
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-muted/30 p-3">
-      <div className="text-caption text-muted-foreground">{label}</div>
-      <div className="mt-1 font-kpi-inline tabular-nums text-foreground">{value}</div>
+    <div className="rounded-lg border border-border bg-muted/30 p-2.5">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="mt-0.5 font-kpi-inline text-heading-sm tabular-nums text-foreground">{value}</div>
     </div>
   );
 }

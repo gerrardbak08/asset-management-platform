@@ -96,9 +96,9 @@ export function StoreTimeline({ detail }: Props) {
   }, [detail]);
 
   return (
-    <Card className="flex h-full min-h-[180px] w-full max-w-full flex-col p-5 shadow-sm">
+    <Card className="flex h-full min-h-[150px] w-full max-w-full flex-col p-4 shadow-sm">
       <SectionHeader title="활동 타임라인" />
-      <ol className="relative mt-2 flex min-h-0 flex-1 w-full gap-4 overflow-x-auto border-t-2 border-border pt-12 pb-2 custom-scrollbar">
+      <ol className="relative mt-1 flex min-h-0 flex-1 w-full gap-4 overflow-x-auto border-t-2 border-border pt-12 pb-2 custom-scrollbar">
         {events.map((e, i) => (
           <li key={i} className="relative w-[160px] shrink-0">
             {/* 타임라인 연결 점선 및 점 */}
