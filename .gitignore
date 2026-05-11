@@ -24,8 +24,8 @@ apps/web/vite.config.d.ts
 .env.production
 
 # 업로드 (운영 데이터)
-uploads/*
-!uploads/buildings/
+# (Railway 배포 시 Nixpacks가 ! 구문을 무시하고 전체 폴더를 누락하는 현상 방지)
+uploads/temp/
 
 # DB
 *.db
