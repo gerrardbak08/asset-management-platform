@@ -245,40 +245,36 @@ async function main() {
   console.log('\n[3] Stores 적재…');
   let storeCount = 0;
   // 2,015 건이라 트랜잭션으로 빠르게
-  await prisma.$transaction(async (tx) => {
-    for (const s of json.stores) {
-      await tx.store.upsert({
-        where: { name_period: { name: s.name, period } },
-        create: {
-          name: s.name,
-          siteType: s.site_type ?? null,
-          period,
-          assetValue: BigInt(Math.round(s.asset_value ?? 0)),
-          assetCount: Math.round(s.asset_count ?? 0),
-          supplyValue: BigInt(Math.round(s.supply_value ?? 0)),
-          assetByTypeJson: JSON.stringify(s.asset_by_type ?? {}),
-          supplyByCategoryJson: JSON.stringify(s.supply_by_category ?? {}),
-          supplyByCategoryCountJson: JSON.stringify(s.supply_by_category_count ?? {}),
-        },
-        update: {
-          siteType: s.site_type ?? null,
-          assetValue: BigInt(Math.round(s.asset_value ?? 0)),
-          assetCount: Math.round(s.asset_count ?? 0),
-          supplyValue: BigInt(Math.round(s.supply_value ?? 0)),
-          assetByTypeJson: JSON.stringify(s.asset_by_type ?? {}),
-          supplyByCategoryJson: JSON.stringify(s.supply_by_category ?? {}),
-          supplyByCategoryCountJson: JSON.stringify(s.supply_by_category_count ?? {}),
-        },
-      });
-      storeCount++;
-      if (storeCount % 200 === 0) {
-        console.log(`  …${storeCount} / ${json.stores.length}`);
-      }
+  // 2,015 건이라 트랜잭션으로 빠르게 (하려 했으나 원격 DB 타임아웃 문제로 개별 upsert 진행)
+  for (const s of json.stores) {
+    await prisma.store.upsert({
+      where: { name_period: { name: s.name, period } },
+      create: {
+        name: s.name,
+        siteType: s.site_type ?? null,
+        period,
+        assetValue: BigInt(Math.round(s.asset_value ?? 0)),
+        assetCount: Math.round(s.asset_count ?? 0),
+        supplyValue: BigInt(Math.round(s.supply_value ?? 0)),
+        assetByTypeJson: JSON.stringify(s.asset_by_type ?? {}),
+        supplyByCategoryJson: JSON.stringify(s.supply_by_category ?? {}),
+        supplyByCategoryCountJson: JSON.stringify(s.supply_by_category_count ?? {}),
+      },
+      update: {
+        siteType: s.site_type ?? null,
+        assetValue: BigInt(Math.round(s.asset_value ?? 0)),
+        assetCount: Math.round(s.asset_count ?? 0),
+        supplyValue: BigInt(Math.round(s.supply_value ?? 0)),
+        assetByTypeJson: JSON.stringify(s.asset_by_type ?? {}),
+        supplyByCategoryJson: JSON.stringify(s.supply_by_category ?? {}),
+        supplyByCategoryCountJson: JSON.stringify(s.supply_by_category_count ?? {}),
+      },
+    });
+    storeCount++;
+    if (storeCount % 200 === 0) {
+      console.log(`  …${storeCount} / ${json.stores.length}`);
     }
-  }, {
-    maxWait: 100000,
-    timeout: 600000,
-  });
+  }
   console.log(`  ${storeCount} 사업장 upsert 완료`);
 
   // ── 4. MonthlySnapshot (current period 1행)
