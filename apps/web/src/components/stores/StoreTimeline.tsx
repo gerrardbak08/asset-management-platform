@@ -96,21 +96,21 @@ export function StoreTimeline({ detail }: Props) {
   }, [detail]);
 
   return (
-    <Card className="flex h-full min-h-[200px] w-full max-w-full flex-col p-5">
+    <Card className="flex h-full min-h-[160px] w-full max-w-full flex-col p-4">
       <SectionHeader title="활동 타임라인" />
-      <ol className="relative mt-4 flex min-h-0 flex-1 w-full gap-6 overflow-x-auto border-t-2 border-border pt-12 pb-4 custom-scrollbar">
+      <ol className="relative mt-4 flex min-h-0 flex-1 w-full gap-4 overflow-x-auto border-t-2 border-border pt-10 pb-2 custom-scrollbar">
         {events.map((e, i) => (
-          <li key={i} className="relative w-[200px] shrink-0">
+          <li key={i} className="relative w-[160px] shrink-0">
             <span
               aria-hidden="true"
-              className={`absolute -top-[14px] left-0 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-4 ring-card`}
+              className={`absolute -top-[14px] left-0 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-4 ring-card`}
             >
-              <e.icon className="h-4 w-4" />
+              <e.icon className="h-3.5 w-3.5" />
             </span>
-            <div className="text-caption font-bold leading-snug text-foreground">
+            <div className="text-micro font-bold leading-tight text-foreground">
               {e.title}
             </div>
-            <div className="mt-1.5 text-micro leading-relaxed text-muted-foreground">
+            <div className="mt-1 text-[10px] leading-snug text-muted-foreground">
               {e.detail}
             </div>
           </li>
