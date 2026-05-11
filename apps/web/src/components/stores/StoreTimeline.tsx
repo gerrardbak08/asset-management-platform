@@ -98,19 +98,19 @@ export function StoreTimeline({ detail }: Props) {
   return (
     <Card className="flex h-full flex-col overflow-hidden p-5">
       <SectionHeader title="활동 타임라인" />
-      <ol className="relative mt-8 flex h-[84px] w-full gap-4 overflow-x-auto overflow-y-hidden border-t-2 border-border pt-6 custom-scrollbar">
+      <ol className="relative mt-8 flex h-[100px] w-full gap-6 overflow-x-auto overflow-y-hidden border-t-2 border-border pt-8 custom-scrollbar">
         {events.map((e, i) => (
-          <li key={i} className="relative w-[180px] flex-shrink-0">
+          <li key={i} className="relative w-[190px] flex-shrink-0">
             <span
               aria-hidden="true"
-              className={`absolute -top-[33px] left-0 flex h-6 w-6 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-4 ring-card`}
+              className={`absolute -top-[35px] left-0 flex h-7 w-7 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-4 ring-card`}
             >
-              <e.icon className="h-3.5 w-3.5" />
+              <e.icon className="h-4 w-4" />
             </span>
-            <div className="truncate text-caption font-bold text-foreground" title={e.title}>
+            <div className="text-caption font-bold text-foreground">
               {e.title}
             </div>
-            <div className="mt-1 truncate text-micro leading-tight text-muted-foreground" title={e.detail}>
+            <div className="mt-1.5 text-micro leading-relaxed text-muted-foreground">
               {e.detail}
             </div>
           </li>
