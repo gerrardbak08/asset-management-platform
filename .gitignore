@@ -68,3 +68,7 @@ playwright-report/
 screen-*.png
 .playwright-mcp/
 db_export.json
+db_clean.json
+db_full.json
+raw_check.json
+matrix_check.txt
