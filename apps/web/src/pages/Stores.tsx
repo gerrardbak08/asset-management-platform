@@ -73,7 +73,7 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[280px,1fr]">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[280px,1fr] lg:items-start">
         <Card className="overflow-hidden">
           <div className="px-4 py-3 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
@@ -175,7 +175,7 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:items-start">
         <Card className="p-5">
           <div className="mb-3 flex items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />

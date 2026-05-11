@@ -62,6 +62,7 @@ export default {
           'muted-foreground': 'hsl(var(--sidebar-muted-foreground) / <alpha-value>)',
           accent: 'hsl(var(--sidebar-accent) / <alpha-value>)',
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground) / <alpha-value>)',
+          border: 'hsl(var(--sidebar-border) / <alpha-value>)',
         },
       },
       borderRadius: {
