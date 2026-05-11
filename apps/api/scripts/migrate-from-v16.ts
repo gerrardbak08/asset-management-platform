@@ -275,6 +275,9 @@ async function main() {
         console.log(`  …${storeCount} / ${json.stores.length}`);
       }
     }
+  }, {
+    maxWait: 100000,
+    timeout: 600000,
   });
   console.log(`  ${storeCount} 사업장 upsert 완료`);
 
