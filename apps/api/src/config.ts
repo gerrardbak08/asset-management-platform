@@ -10,7 +10,7 @@ const Env = z.object({
   SESSION_SECRET: z.string().min(16, 'SESSION_SECRET 은 16자 이상'),
   AUTH_PEPPER: z.string().min(8, 'AUTH_PEPPER 는 8자 이상'),
   STORAGE_DRIVER: z.enum(['local', 's3']).default('local'),
-  UPLOADS_DIR: z.string().default('./uploads'),
+  UPLOADS_DIR: z.string().default('../../uploads'),
   KAKAO_JS_KEY: z.string().optional().default(''),
   KAKAO_REST_KEY: z.string().optional().default(''),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
