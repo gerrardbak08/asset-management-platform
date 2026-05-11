@@ -24,7 +24,8 @@ apps/web/vite.config.d.ts
 .env.production
 
 # 업로드 (운영 데이터)
-uploads/
+uploads/*
+!uploads/buildings/
 
 # DB
 *.db
