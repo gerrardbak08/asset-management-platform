@@ -76,22 +76,22 @@ export default {
         'elev-3': '0 2px 6px rgb(0 0 0 / 0.08)',
       },
       fontSize: {
-        // ── DESIGN.md §3 UI 텍스트 스케일
-        'display-lg': ['30px', { lineHeight: '1.1', fontWeight: '700' }],
-        'display-md': ['22px', { lineHeight: '1.15', fontWeight: '700' }],
-        'heading-lg': ['18px', { lineHeight: '1.3', fontWeight: '600' }],
-        'heading-md': ['16px', { lineHeight: '1.35', fontWeight: '600' }],
-        'heading-sm': ['14px', { lineHeight: '1.4', fontWeight: '600' }],
-        body: ['13px', { lineHeight: '1.55', fontWeight: '400' }],
-        'body-strong': ['13px', { lineHeight: '1.55', fontWeight: '600' }],
-        caption: ['11px', { lineHeight: '1.4', fontWeight: '500' }],
-        micro: ['10px', { lineHeight: '1.35', fontWeight: '500' }],
+        // ── DESIGN.md §3 UI 텍스트 스케일 (기준 대비 ×1.15)
+        'display-lg': ['34px', { lineHeight: '1.1', fontWeight: '700' }],
+        'display-md': ['25px', { lineHeight: '1.15', fontWeight: '700' }],
+        'heading-lg': ['21px', { lineHeight: '1.3', fontWeight: '600' }],
+        'heading-md': ['18px', { lineHeight: '1.35', fontWeight: '600' }],
+        'heading-sm': ['16px', { lineHeight: '1.4', fontWeight: '600' }],
+        body: ['15px', { lineHeight: '1.55', fontWeight: '400' }],
+        'body-strong': ['15px', { lineHeight: '1.55', fontWeight: '600' }],
+        caption: ['13px', { lineHeight: '1.4', fontWeight: '500' }],
+        micro: ['12px', { lineHeight: '1.35', fontWeight: '500' }],
 
-        // ── KPI 숫자 스케일 (DM Mono + tabular-nums 필수)
-        'kpi-huge': ['40px', { lineHeight: '1.05', fontWeight: '700' }],
-        'kpi-display': ['32px', { lineHeight: '1.1', fontWeight: '700' }],
-        'kpi-metric': ['24px', { lineHeight: '1.15', fontWeight: '700' }],
-        'kpi-inline': ['16px', { lineHeight: '1.3', fontWeight: '600' }],
+        // ── KPI 숫자 스케일 (tabular-nums 필수, ×1.15)
+        'kpi-huge': ['46px', { lineHeight: '1.05', fontWeight: '700' }],
+        'kpi-display': ['37px', { lineHeight: '1.1', fontWeight: '700' }],
+        'kpi-metric': ['28px', { lineHeight: '1.15', fontWeight: '700' }],
+        'kpi-inline': ['18px', { lineHeight: '1.3', fontWeight: '600' }],
       },
       letterSpacing: {
         tight: '-0.02em',

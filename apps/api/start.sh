@@ -5,7 +5,7 @@ set -e
 echo "=== AIMS API 시작 ==="
 
 echo "→ Prisma 마이그레이션..."
-npx prisma migrate deploy
+pnpm exec prisma migrate deploy
 
 echo "→ 서버 시작..."
 exec node dist/server.js

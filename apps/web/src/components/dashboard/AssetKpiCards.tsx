@@ -137,7 +137,7 @@ export function AssetKpiCards({ m0 }: Props) {
                 <MomBadge ratio={c.momRatio} />
               </div>
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="tabular-nums text-foreground" style={{ fontSize: '22px', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+                <span className="tabular-nums text-foreground" style={{ fontSize: '25px', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
                   {fmtKR(c.current)}
                 </span>
                 <span className="text-body text-muted-foreground">원</span>

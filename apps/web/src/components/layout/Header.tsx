@@ -18,7 +18,7 @@ export function Header({ title, description, action }: Props) {
       {/* 모바일 전용 CI (사이드바 숨김 < md) */}
       <div className="flex min-w-0 items-center gap-2.5 md:hidden">
         <AsungSymbol />
-        <span className="truncate text-[15px] font-bold leading-snug tracking-tight text-[#1B3A7A] dark:text-primary">
+        <span className="truncate text-[17px] font-bold leading-snug tracking-tight text-[#1B3A7A] dark:text-primary">
           전사 자산관리 시스템
         </span>
       </div>
