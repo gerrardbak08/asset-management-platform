@@ -55,59 +55,63 @@ export default function Leases() {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-semibold text-muted-foreground max-lg:hidden">
-          <span>건물</span>
-          <span>임차인</span>
-          <span>상태</span>
-          <span>만료</span>
-          <span className="text-right">월 임대료</span>
-        </div>
-        {leasesQ.isLoading ? (
-          <p className="p-4 text-caption text-muted-foreground">로딩 중…</p>
-        ) : leasesQ.isError ? (
-          <p className="p-4 text-caption text-danger">로드 실패 — {leasesQ.error.message}</p>
-        ) : !leasesQ.data?.length ? (
-          <EmptyState
-            icon={FileText}
-            title="임대계약 데이터 없음"
-            description="V16 스냅샷 ETL 또는 신규 계약 등록 후 표시됩니다."
-          />
-        ) : (
-          <div className="divide-y divide-border">
-            {leasesQ.data.map((lease) => {
-              const left = daysUntil(lease.contractEnd);
-              return (
-                <div
-                  key={lease.id}
-                  className="grid gap-2 px-4 py-3 text-body lg:grid-cols-[1.2fr,1fr,120px,120px,140px] lg:items-center"
-                >
-                  <div className="min-w-0">
-                    <div className="truncate font-semibold text-foreground">{lease.buildingName ?? lease.buildingId}</div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className={cn(
-                          'h-full rounded-full',
-                          left <= 7 ? 'bg-danger' : left <= 30 ? 'bg-warning' : 'bg-primary',
-                        )}
-                        style={{ width: `${timelineWidth(lease)}%` }}
-                      />
+        <div className="overflow-x-auto">
+          <div className="min-w-[800px]">
+            <div className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-semibold text-muted-foreground">
+              <span>건물</span>
+              <span>임차인</span>
+              <span>상태</span>
+              <span>만료</span>
+              <span className="text-right">월 임대료</span>
+            </div>
+            {leasesQ.isLoading ? (
+              <p className="p-4 text-caption text-muted-foreground">로딩 중…</p>
+            ) : leasesQ.isError ? (
+              <p className="p-4 text-caption text-danger">로드 실패 — {leasesQ.error.message}</p>
+            ) : !leasesQ.data?.length ? (
+              <EmptyState
+                icon={FileText}
+                title="임대계약 데이터 없음"
+                description="V16 스냅샷 ETL 또는 신규 계약 등록 후 표시됩니다."
+              />
+            ) : (
+              <div className="divide-y divide-border">
+                {leasesQ.data.map((lease) => {
+                  const left = daysUntil(lease.contractEnd);
+                  return (
+                    <div
+                      key={lease.id}
+                      className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] items-center gap-4 px-4 py-3 text-body"
+                    >
+                      <div className="min-w-0">
+                        <div className="truncate font-semibold text-foreground">{lease.buildingName ?? lease.buildingId}</div>
+                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
+                          <div
+                            className={cn(
+                              'h-full rounded-full',
+                              left <= 7 ? 'bg-danger' : left <= 30 ? 'bg-warning' : 'bg-primary',
+                            )}
+                            style={{ width: `${timelineWidth(lease)}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div className="truncate text-muted-foreground whitespace-nowrap">{lease.tenantName}</div>
+                      <span className="w-fit whitespace-nowrap rounded-full bg-muted px-2 py-1 text-caption font-semibold">
+                        {leaseStatusLabel[lease.status]}
+                      </span>
+                      <span className={cn('text-caption whitespace-nowrap', left <= 30 ? 'text-danger' : 'text-muted-foreground')}>
+                        {lease.contractEnd} · {left >= 0 ? `${left}일` : `${Math.abs(left)}일 경과`}
+                      </span>
+                      <span className="whitespace-nowrap text-right font-semibold text-foreground">
+                        {fmtKRprice(Number(lease.monthlyRent))}원
+                      </span>
                     </div>
-                  </div>
-                  <div className="truncate text-muted-foreground">{lease.tenantName}</div>
-                  <span className="w-fit rounded-full bg-muted px-2 py-1 text-caption font-semibold">
-                    {leaseStatusLabel[lease.status]}
-                  </span>
-                  <span className={cn('text-caption', left <= 30 ? 'text-danger' : 'text-muted-foreground')}>
-                    {lease.contractEnd} · {left >= 0 ? `${left}일` : `${Math.abs(left)}일 경과`}
-                  </span>
-                  <span className="text-right font-semibold text-foreground lg:text-right">
-                    {fmtKRprice(Number(lease.monthlyRent))}원
-                  </span>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </Card>
     </PageShell>
   );
