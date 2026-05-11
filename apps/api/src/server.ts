@@ -54,10 +54,7 @@ export async function buildServer() {
   });
 
   // 프로덕션: 빌드된 웹 정적 파일 서빙 + SPA fallback
-  const webDist = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    '../../public',
-  );
+  const webDist = path.join(process.cwd(), 'public');
   app.log.info({ webDist }, 'Static files path');
   try {
     const { existsSync } = await import('node:fs');
