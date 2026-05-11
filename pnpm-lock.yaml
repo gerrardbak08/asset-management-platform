@@ -56,6 +56,9 @@ importers:
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
@@ -87,9 +90,6 @@ importers:
       globals:
         specifier: ^15.11.0
         version: 15.15.0
-      tsx:
-        specifier: ^4.19.1
-        version: 4.21.0
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
