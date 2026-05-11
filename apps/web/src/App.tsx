@@ -2,7 +2,6 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { MobileHeader } from '@/components/layout/MobileHeader';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { AuthGuard } from '@/components/AuthGuard';
 import Login from '@/pages/Login';
@@ -27,7 +26,6 @@ export default function App() {
             <div className="flex h-screen bg-background text-foreground">
               <Sidebar />
               <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-                <MobileHeader />
                 <main className="flex min-w-0 flex-1 flex-col overflow-hidden pb-14 md:pb-0">
                   <Suspense fallback={<div className="p-5 text-caption text-muted-foreground">로딩 중…</div>}>
                     <Routes>
