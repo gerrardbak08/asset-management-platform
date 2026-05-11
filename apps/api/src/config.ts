@@ -5,6 +5,7 @@ import { z } from 'zod';
 const Env = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().default(3001),
+  HOST: z.string().default('::'),
   DATABASE_URL: z.string().min(1),
   SESSION_SECRET: z.string().min(16, 'SESSION_SECRET 은 16자 이상'),
   AUTH_PEPPER: z.string().min(8, 'AUTH_PEPPER 는 8자 이상'),

@@ -18,7 +18,7 @@ export type XlsbParsed = {
 };
 
 function periodFromV16Label(label: string): string {
-  const m = /(\d{2,4})[\-./](\d{1,2})/.exec(label);
+  const m = /(\d{2,4})[-./](\d{1,2})/.exec(label);
   if (!m) return new Date().toISOString().slice(0, 7);
   let y = m[1];
   if (y.length === 2) y = '20' + y;

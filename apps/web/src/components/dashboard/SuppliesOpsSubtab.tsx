@@ -41,7 +41,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
     queryFn: () => dashboardApi.equipmentSnapshots(PERIOD),
   });
 
-  const snapshots = eqSnapshots.data ?? [];
+  const snapshots = useMemo(() => eqSnapshots.data ?? [], [eqSnapshots.data]);
 
   // 흐름 TOP10 (kind 별)
   const flowData = useMemo(() => {

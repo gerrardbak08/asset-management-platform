@@ -11,7 +11,7 @@ import { BuildingCard } from '@/components/buildings/BuildingCard';
 import { BuildingDrawer } from '@/components/buildings/BuildingDrawer';
 import { BuildingFilters } from '@/components/buildings/BuildingFilters';
 import { BuildingEditTable } from '@/components/buildings/BuildingEditTable';
-import { regionBucketOf, useGroupOf, type RegionBucket, type SortKey, type UseGroup } from '@/lib/buildingHelpers';
+import { regionBucketOf, categoryOfUse, type RegionBucket, type SortKey, type UseGroup } from '@/lib/buildingHelpers';
 import { cn } from '@/lib/utils';
 
 type ViewMode = 'cards' | 'table';
@@ -32,7 +32,7 @@ export default function Buildings() {
   const items = useMemo(() => {
     let arr = query.data ?? [];
     if (region) arr = arr.filter((b) => regionBucketOf(b.address) === region);
-    if (useGroup) arr = arr.filter((b) => useGroupOf(b.use) === useGroup);
+    if (useGroup) arr = arr.filter((b) => categoryOfUse(b.use) === useGroup);
     if (q) {
       const ql = q.toLowerCase();
       arr = arr.filter(

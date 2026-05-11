@@ -1,14 +1,20 @@
 // 자산관리 플랫폼 메인 앱 — /login (공개) + AuthGuard 보호 메인 셸 + < md 모바일 하단 네비
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileHeader } from '@/components/layout/MobileHeader';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { AuthGuard } from '@/components/AuthGuard';
-import Dashboard from '@/pages/Dashboard';
-import Buildings from '@/pages/Buildings';
-import Stores from '@/pages/Stores';
-import Admin from '@/pages/Admin';
 import Login from '@/pages/Login';
+
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Buildings = lazy(() => import('@/pages/Buildings'));
+const Stores = lazy(() => import('@/pages/Stores'));
+const Leases = lazy(() => import('@/pages/Leases'));
+const Maintenance = lazy(() => import('@/pages/Maintenance'));
+const Ledger = lazy(() => import('@/pages/Ledger'));
+const Depreciation = lazy(() => import('@/pages/Depreciation'));
+const Admin = lazy(() => import('@/pages/Admin'));
 
 export default function App() {
   return (
@@ -23,14 +29,20 @@ export default function App() {
               <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
                 <MobileHeader />
                 <main className="flex min-w-0 flex-1 flex-col overflow-hidden pb-14 md:pb-0">
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/buildings" element={<Buildings />} />
-                    <Route path="/stores" element={<Stores />} />
-                    <Route path="/data" element={<Admin />} />
-                    <Route path="/admin" element={<Admin />} />
-                  </Routes>
+                  <Suspense fallback={<div className="p-5 text-caption text-muted-foreground">로딩 중…</div>}>
+                    <Routes>
+                      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/buildings" element={<Buildings />} />
+                      <Route path="/stores" element={<Stores />} />
+                      <Route path="/leases" element={<Leases />} />
+                      <Route path="/maintenance" element={<Maintenance />} />
+                      <Route path="/ledger" element={<Ledger />} />
+                      <Route path="/depreciation" element={<Depreciation />} />
+                      <Route path="/data" element={<Admin />} />
+                      <Route path="/admin" element={<Admin />} />
+                    </Routes>
+                  </Suspense>
                 </main>
                 <MobileNav />
               </div>

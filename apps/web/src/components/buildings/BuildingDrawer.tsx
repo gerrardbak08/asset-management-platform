@@ -5,8 +5,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Maximize2, Upload, X } from 'lucide-react';
 import { buildingsApi, type Building } from '@/lib/api/buildings';
+import { phase2Api } from '@/lib/api/phase2';
 import { useAuthStore } from '@/store/auth';
 import { fmtKRprice } from '@/lib/format';
+import {
+  depMethodLabel,
+  leaseStatusLabel,
+  maintenanceCategoryLabel,
+  maintenancePriorityLabel,
+  maintenanceStatusLabel,
+} from '@/lib/phase2Labels';
 import { PhotoFallback } from './PhotoFallback';
 import { PhotoLightbox, type LightboxPhoto } from './PhotoLightbox';
 import { BuildingMap } from './BuildingMap';
@@ -15,11 +23,12 @@ const TAB_LABELS: Record<TabValue, string> = {
   info: '기본정보',
   lease: '임대현황',
   history: '관리이력',
+  depreciation: '감가상각',
   memo: '메모',
   map: '지도',
 };
-type TabValue = 'info' | 'lease' | 'history' | 'memo' | 'map';
-const TABS: TabValue[] = ['info', 'lease', 'history', 'memo', 'map'];
+type TabValue = 'info' | 'lease' | 'history' | 'depreciation' | 'memo' | 'map';
+const TABS: TabValue[] = ['info', 'lease', 'history', 'depreciation', 'memo', 'map'];
 
 type Props = { building: Building; open: boolean; onClose: () => void };
 
@@ -32,6 +41,22 @@ export function BuildingDrawer({ building, open, onClose }: Props) {
     queryKey: ['memo', building.id],
     queryFn: () => buildingsApi.getMemo(building.id),
     enabled: open,
+  });
+  const leasesQ = useQuery({
+    queryKey: ['leases', building.id],
+    queryFn: () => phase2Api.leases(`?buildingId=${encodeURIComponent(building.id)}`),
+    enabled: open,
+  });
+  const maintenanceQ = useQuery({
+    queryKey: ['maintenance', building.id],
+    queryFn: () => phase2Api.maintenance(`?buildingId=${encodeURIComponent(building.id)}`),
+    enabled: open,
+  });
+  const depreciationQ = useQuery({
+    queryKey: ['depreciation', 'building', building.id],
+    queryFn: () => phase2Api.buildingDepreciation(building.id),
+    enabled: open,
+    retry: false,
   });
 
   const [memoBody, setMemoBody] = useState('');
@@ -171,12 +196,86 @@ export function BuildingDrawer({ building, open, onClose }: Props) {
                 <Row k="임대율" v={`${building.rental.rate}%`} />
                 <Row k="공실률" v={`${building.rental.vacancy}%`} />
                 <Row k="임차인" v={building.tenant} />
+                <div className="pt-2">
+                  <div className="mb-2 text-caption font-semibold text-muted-foreground">계약 타임라인</div>
+                  {leasesQ.isLoading ? (
+                    <p className="text-caption text-muted-foreground">로딩 중…</p>
+                  ) : leasesQ.data?.length ? (
+                    <div className="space-y-2">
+                      {leasesQ.data.map((lease) => (
+                        <div key={lease.id} className="rounded-xl border border-border bg-background p-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="truncate text-body font-semibold text-foreground">
+                              {lease.tenantName}
+                            </span>
+                            <span className="rounded-full bg-muted px-2 py-0.5 text-micro font-bold">
+                              {leaseStatusLabel[lease.status]}
+                            </span>
+                          </div>
+                          <div className="mt-2 text-caption text-muted-foreground">
+                            {lease.contractStart} → {lease.contractEnd} · 월 {fmtKRprice(Number(lease.monthlyRent))}원
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-caption text-muted-foreground">등록된 계약 없음</p>
+                  )}
+                </div>
               </Tabs.Content>
 
-              <Tabs.Content value="history">
-                <p className="text-caption text-muted-foreground">
-                  관리이력은 2단계 (`maintenance_logs` 테이블) 에서 추가됩니다.
-                </p>
+              <Tabs.Content value="history" className="space-y-2">
+                {maintenanceQ.isLoading ? (
+                  <p className="text-caption text-muted-foreground">로딩 중…</p>
+                ) : maintenanceQ.data?.length ? (
+                  maintenanceQ.data.map((log) => (
+                    <div key={log.id} className="rounded-xl border border-border bg-background p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="truncate text-body font-semibold text-foreground">{log.title}</span>
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-micro font-bold">
+                          {maintenanceStatusLabel[log.status]}
+                        </span>
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-1.5 text-micro font-semibold text-muted-foreground">
+                        <span className="rounded-md bg-muted px-2 py-1">
+                          {maintenanceCategoryLabel[log.category]}
+                        </span>
+                        <span className="rounded-md bg-muted px-2 py-1">
+                          {maintenancePriorityLabel[log.priority]}
+                        </span>
+                        {log.cost ? (
+                          <span className="rounded-md bg-muted px-2 py-1">
+                            {fmtKRprice(Number(log.cost))}원
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-caption text-muted-foreground">등록된 관리이력 없음</p>
+                )}
+              </Tabs.Content>
+
+              <Tabs.Content value="depreciation" className="space-y-3">
+                {depreciationQ.isLoading ? (
+                  <p className="text-caption text-muted-foreground">로딩 중…</p>
+                ) : depreciationQ.data ? (
+                  <>
+                    <Row k="취득가" v={`${fmtKRprice(Number(depreciationQ.data.acquisitionPrice))}원`} />
+                    <Row k="내용연수" v={`${depreciationQ.data.usefulLifeYears}년`} />
+                    <Row k="방법" v={depMethodLabel[depreciationQ.data.method]} />
+                    <Row
+                      k="최근 장부가"
+                      v={
+                        depreciationQ.data.entries && depreciationQ.data.entries.length > 0
+                          ? `${fmtKRprice(Number(depreciationQ.data.entries[depreciationQ.data.entries.length - 1]!.bookValue))}원`
+                          : '-'
+                      }
+                    />
+                  </>
+                ) : (
+                  <p className="text-caption text-muted-foreground">감가상각 스케줄 없음</p>
+                )}
               </Tabs.Content>
 
               <Tabs.Content value="memo">

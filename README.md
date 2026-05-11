@@ -7,8 +7,8 @@ V16 단일 HTML 대시보드(`SJ_대시보드_V16.html`)를 다중 사용자 서
 
 - 프론트 — Vite 5 + React 18 + TypeScript 5 + Tailwind CSS + Radix UI + Pretendard + DM Mono + Recharts
 - 백엔드 — Node.js 20+ + Fastify 4 + Prisma 5 (PR #2 부터 추가)
-- DB — SQLite (1단계) → PostgreSQL 15+ (운영)
-- 호스팅 — Railway (1단계) → 사내 서버 (운영)
+- DB — PostgreSQL 15+ (운영 기준)
+- 호스팅 — Railway (Vercel 대안 1순위) → 사내 서버 (장기 운영 후보)
 - 디자인 시스템 — DESIGN.md 토큰·컴포넌트·다크모드 기본 전면 적용
 
 ## 구조 (모노레포 — pnpm workspaces)
@@ -60,8 +60,8 @@ pnpm lint         # ESLint 0 경고
 
 | 변수 | 1단계 기본값 | 용도 |
 |---|---|---|
-| `DATABASE_PROVIDER` | `sqlite` | Prisma provider |
-| `DATABASE_URL` | `file:./prisma/dev.db` | DB 연결 |
+| `DATABASE_URL` | `postgresql://...` | DB 연결 |
+| `HOST` | `::` | Railway/Fastify 공개 네트워크 바인딩 |
 | `SESSION_SECRET` | (생성 필요) | 세션 쿠키 서명 |
 | `AUTH_PEPPER` | (생성 필요) | bcrypt pepper |
 | `STORAGE_DRIVER` | `local` | 저장소 어댑터 |
@@ -77,6 +77,8 @@ pnpm lint         # ESLint 0 경고
 - [plan.md](plan.md) — 1단계 구현 계획 + 9건 확정 결정
 - [checklist.md](checklist.md) — 실행 체크리스트 (A~K)
 - [docs/spec.md](docs/spec.md) — 1단계 명세서 (도메인·API·DB·ETL·검증)
+- [docs/deployment-railway.md](docs/deployment-railway.md) — Vercel 이외 Railway 배포 가이드
+- [docs/system-design-2026-05-10.md](docs/system-design-2026-05-10.md) — 2단계 이후 시스템 설계
 - [DESIGN.md](DESIGN.md) — Work Platform 디자인 기준서 (양 플랫폼 공유)
 - [context-notes.md](context-notes.md) — 분석 / 결정 / 보류 / 사용자 결정 메모
 - [CLAUDE.md](CLAUDE.md) — AI 코딩 가이드라인 (Karpathy 10조)
@@ -90,7 +92,8 @@ pnpm lint         # ESLint 0 경고
 - [x] PR #5 — 자산현황 페이지 + Recharts 차트 5종 + MoM API
 - [x] PR #6 — 사업장 검색 + 매니저 뷰 + 데이터 조정 (xlsb 시트 매핑)
 - [x] PR #7 — 관리자 패널 + 비밀번호 변경 + 인쇄 CSS (다크→라이트)
-- [ ] Railway 배포 — 사용자 직접 (계정 + 환경변수 입력 필요)
+- [x] 2단계 기반 — 임대계약 / 유지보수 / 비품 원장 / 감가상각 모델·API·화면
+- [x] Railway 배포 설정 — `railway.toml` + Fastify `HOST=::` + 배포 가이드
 
 자세한 진척과 임시 admin 비밀번호는 [docs/wakeup-report.md](docs/wakeup-report.md) 참조.
 

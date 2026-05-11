@@ -6,6 +6,17 @@ export type Role = 'admin' | 'editor' | 'viewer' | 'auditor';
 export type SiteType = '본사' | '매장' | '물류';
 export type LocationType = 'hq' | 'store' | 'logistics';
 export type Period = string; // 'YYYY-MM' — '2026-03' 등
+export type LeaseStatus = 'active' | 'expired' | 'terminated' | 'pending';
+export type MaintenanceCategory =
+  | 'regular_inspection'
+  | 'emergency_repair'
+  | 'facility_upgrade'
+  | 'safety_diagnosis';
+export type MaintenanceStatus = 'open' | 'in_progress' | 'closed' | 'cancelled';
+export type MaintenancePriority = 'low' | 'normal' | 'high' | 'critical';
+export type LedgerTxType = 'purchase' | 'transfer' | 'disposal' | 'adjustment';
+export type DepAssetType = 'building' | 'equipment';
+export type DepMethod = 'straight_line' | 'declining_balance';
 
 export const M_KEYS = [
   '총자산규모',
@@ -18,6 +29,34 @@ export const M_KEYS = [
 export type MetricKey = (typeof M_KEYS)[number];
 
 export const ROLES: readonly Role[] = ['admin', 'editor', 'viewer', 'auditor'] as const;
+export const LEASE_STATUSES: readonly LeaseStatus[] = ['active', 'expired', 'terminated', 'pending'] as const;
+export const MAINTENANCE_CATEGORIES: readonly MaintenanceCategory[] = [
+  'regular_inspection',
+  'emergency_repair',
+  'facility_upgrade',
+  'safety_diagnosis',
+] as const;
+export const MAINTENANCE_STATUSES: readonly MaintenanceStatus[] = [
+  'open',
+  'in_progress',
+  'closed',
+  'cancelled',
+] as const;
+export const MAINTENANCE_PRIORITIES: readonly MaintenancePriority[] = [
+  'low',
+  'normal',
+  'high',
+  'critical',
+] as const;
+export const LEDGER_TX_TYPES: readonly LedgerTxType[] = [
+  'purchase',
+  'transfer',
+  'disposal',
+  'adjustment',
+] as const;
+export const LOCATION_TYPES: readonly LocationType[] = ['hq', 'store', 'logistics'] as const;
+export const DEP_ASSET_TYPES: readonly DepAssetType[] = ['building', 'equipment'] as const;
+export const DEP_METHODS: readonly DepMethod[] = ['straight_line', 'declining_balance'] as const;
 
 // ── 사용자
 export type User = {
@@ -185,6 +224,96 @@ export type BuildingMemo = {
   body: string;
   updatedBy: string | null;
   updatedAt: string;
+};
+
+// ── 2단계: 임대 / 유지보수 / 비품 원장 / 감가상각
+export type LeaseContract = {
+  id: string;
+  buildingId: string;
+  buildingName?: string;
+  tenantName: string;
+  tenantContact: string | null;
+  contractStart: string;
+  contractEnd: string;
+  rentArea: number;
+  monthlyRent: string;
+  deposit: string;
+  renewalOption: boolean;
+  renewedFromId: string | null;
+  status: LeaseStatus;
+  notes: string | null;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type MaintenanceLog = {
+  id: string;
+  buildingId: string;
+  buildingName?: string;
+  category: MaintenanceCategory;
+  title: string;
+  description: string | null;
+  status: MaintenanceStatus;
+  priority: MaintenancePriority;
+  assigneeId: string | null;
+  assigneeEmail?: string | null;
+  vendorName: string | null;
+  startedAt: string | null;
+  closedAt: string | null;
+  cost: string | null;
+  attachmentUrls: string[];
+  createdBy: string;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type EquipmentLedger = {
+  id: string;
+  equipmentItemId: string;
+  equipmentName?: string;
+  equipmentLegacyId?: string;
+  legacyAssetNo: string | null;
+  txType: LedgerTxType;
+  txDate: string;
+  fromLocation: LocationType | null;
+  toLocation: LocationType | null;
+  storeId: string | null;
+  amount: string;
+  quantity: number;
+  reason: string | null;
+  documentUrl: string | null;
+  period: Period;
+  createdBy: string;
+  createdAt: string;
+};
+
+export type DepEntry = {
+  id: string;
+  scheduleId: string;
+  period: Period;
+  expense: string;
+  accumulated: string;
+  bookValue: string;
+  computedAt: string;
+};
+
+export type DepreciationSchedule = {
+  id: string;
+  assetType: DepAssetType;
+  buildingId: string | null;
+  buildingName?: string | null;
+  equipmentItemId: string | null;
+  equipmentName?: string | null;
+  acquisitionDate: string;
+  acquisitionPrice: string;
+  usefulLifeYears: number;
+  method: DepMethod;
+  salvageRate: number;
+  startedAt: string;
+  notes: string | null;
+  entries?: DepEntry[];
 };
 
 // ── API 응답 헬퍼

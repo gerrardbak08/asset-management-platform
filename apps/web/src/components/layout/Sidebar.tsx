@@ -1,6 +1,6 @@
 // 좌측 사이드바 — 다이소 다크네이비 chrome. 활성 항목은 배경+텍스트 톤만 변화 (좌측 strip / 아이콘 앰버 컬러 모두 제거)
 import { NavLink } from 'react-router-dom';
-import { Building2, Building, Store, Shield } from 'lucide-react';
+import { ArrowRightLeft, Building2, Building, Calculator, FileText, Shield, Store, Wrench } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 import { AsungSymbol } from './AsungLogo';
@@ -16,6 +16,10 @@ const MENU: MenuItem[] = [
   { to: '/dashboard', label: '자산현황', icon: Building2, group: '운영' },
   { to: '/buildings', label: '건물', icon: Building, group: '운영' },
   { to: '/stores', label: '사업장', icon: Store, group: '운영' },
+  { to: '/leases', label: '임대계약', icon: FileText, group: '운영' },
+  { to: '/maintenance', label: '유지보수', icon: Wrench, group: '운영' },
+  { to: '/ledger', label: '비품 원장', icon: ArrowRightLeft, group: '운영' },
+  { to: '/depreciation', label: '감가상각', icon: Calculator, group: '운영' },
   { to: '/admin', label: '관리', icon: Shield, group: '관리' },
 ];
 
@@ -41,7 +45,7 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-sidebar-border px-4 py-3 text-micro text-sidebar-muted-foreground">
-        v0.1.0 · 1단계
+        v0.2.0 · 2단계
       </div>
     </aside>
   );

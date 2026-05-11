@@ -16,6 +16,10 @@ import { uploadRoutes } from './routes/upload';
 import { adminRoutes } from './routes/admin';
 import { configRoutes } from './routes/config';
 import { exportRoutes } from './routes/export';
+import { leaseRoutes } from './routes/leases';
+import { maintenanceRoutes } from './routes/maintenance';
+import { ledgerRoutes } from './routes/ledger';
+import { depreciationRoutes } from './routes/depreciation';
 import { attachUser } from './lib/auth/guards';
 
 export async function buildServer() {
@@ -89,6 +93,10 @@ export async function buildServer() {
   await app.register(adminRoutes, { prefix: '/api' });
   await app.register(configRoutes, { prefix: '/api' });
   await app.register(exportRoutes, { prefix: '/api' });
+  await app.register(leaseRoutes, { prefix: '/api' });
+  await app.register(maintenanceRoutes, { prefix: '/api' });
+  await app.register(ledgerRoutes, { prefix: '/api' });
+  await app.register(depreciationRoutes, { prefix: '/api' });
 
   return app;
 }
@@ -99,7 +107,7 @@ const isEntry =
 
 if (isEntry) {
   buildServer()
-    .then((app) => app.listen({ port: config.PORT, host: '0.0.0.0' }))
+    .then((app) => app.listen({ port: config.PORT, host: config.HOST }))
     .catch((err) => {
       console.error(err);
       process.exit(1);

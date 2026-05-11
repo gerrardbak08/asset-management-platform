@@ -17,9 +17,14 @@ model User {
   role         String // 'admin' | 'editor' | 'viewer' | 'auditor'
   createdAt    DateTime @default(now())
 
-  buildingsUpdated  Building[]          @relation("BuildingUpdater")
-  memosUpdated      BuildingMemo[]
-  snapshotsCreated  EquipmentSnapshot[]
+  buildingsUpdated    Building[]          @relation("BuildingUpdater")
+  memosUpdated        BuildingMemo[]
+  snapshotsCreated    EquipmentSnapshot[]
+  leasesUpdated       LeaseContract[]     @relation("LeaseUpdater")
+  maintenanceAssigned MaintenanceLog[]    @relation("MaintenanceAssignee")
+  maintenanceCreated  MaintenanceLog[]    @relation("MaintenanceCreator")
+  maintenanceUpdated  MaintenanceLog[]    @relation("MaintenanceUpdater")
+  ledgerCreated       EquipmentLedger[]
 }
 
 model Building {
@@ -47,16 +52,21 @@ model Building {
   updatedAt        DateTime  @updatedAt
   createdAt        DateTime  @default(now())
 
-  memo BuildingMemo?
+  memo                  BuildingMemo?
+  leaseContracts        LeaseContract[]
+  maintenanceLogs       MaintenanceLog[]
+  depreciationSchedules DepreciationSchedule[]
 }
 
 model EquipmentItem {
-  id        String              @id @default(uuid())
-  legacyId  String              @unique
-  name      String
-  isActive  Boolean             @default(true)
-  createdAt DateTime            @default(now())
-  snapshots EquipmentSnapshot[]
+  id                    String                 @id @default(uuid())
+  legacyId              String                 @unique
+  name                  String
+  isActive              Boolean                @default(true)
+  createdAt             DateTime               @default(now())
+  snapshots             EquipmentSnapshot[]
+  ledger                EquipmentLedger[]
+  depreciationSchedules DepreciationSchedule[]
 }
 
 model EquipmentSnapshot {
@@ -117,4 +127,164 @@ model BuildingMemo {
   updatedById String?
   updatedBy   User?    @relation(fields: [updatedById], references: [id])
   updatedAt   DateTime @updatedAt
+}
+
+model LeaseContract {
+  id            String      @id @default(uuid())
+  buildingId    String
+  building      Building    @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  tenantName    String
+  tenantContact String?
+  contractStart DateTime
+  contractEnd   DateTime
+  rentArea      Float
+  monthlyRent   BigInt
+  deposit       BigInt
+  renewalOption Boolean     @default(false)
+  renewedFromId String?
+  status        LeaseStatus @default(active)
+  notes         String?
+  updatedById   String?
+  updatedBy     User?       @relation("LeaseUpdater", fields: [updatedById], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([buildingId, status])
+  @@index([contractEnd])
+}
+
+model MaintenanceLog {
+  id             String              @id @default(uuid())
+  buildingId     String
+  building       Building            @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  category       MaintenanceCategory
+  title          String
+  description    String?
+  status         MaintenanceStatus   @default(open)
+  priority       MaintenancePriority @default(normal)
+  assigneeId     String?
+  assignee       User?               @relation("MaintenanceAssignee", fields: [assigneeId], references: [id])
+  vendorName     String?
+  startedAt      DateTime?
+  closedAt       DateTime?
+  cost           BigInt?
+  attachmentUrls String[]            @default([])
+  createdById    String
+  createdBy      User                @relation("MaintenanceCreator", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?               @relation("MaintenanceUpdater", fields: [updatedById], references: [id])
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@index([buildingId, status, startedAt])
+  @@index([category])
+}
+
+model EquipmentLedger {
+  id              String        @id @default(uuid())
+  equipmentItemId String
+  equipmentItem   EquipmentItem @relation(fields: [equipmentItemId], references: [id], onDelete: Cascade)
+  legacyAssetNo   String?
+  txType          LedgerTxType
+  txDate          DateTime
+  fromLocation    LocationType?
+  toLocation      LocationType?
+  storeId         String?
+  amount          BigInt
+  quantity        Int           @default(1)
+  reason          String?
+  documentUrl     String?
+  period          String
+  createdById     String
+  createdBy       User          @relation(fields: [createdById], references: [id])
+  createdAt       DateTime      @default(now())
+
+  @@index([equipmentItemId, txDate])
+  @@index([period, txType])
+  @@index([storeId, period])
+}
+
+model DepreciationSchedule {
+  id               String         @id @default(uuid())
+  assetType        DepAssetType
+  buildingId       String?
+  building         Building?      @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  equipmentItemId  String?
+  equipmentItem    EquipmentItem? @relation(fields: [equipmentItemId], references: [id], onDelete: Cascade)
+  acquisitionDate  DateTime
+  acquisitionPrice BigInt
+  usefulLifeYears  Int
+  method           DepMethod      @default(straight_line)
+  salvageRate      Float          @default(0)
+  startedAt        DateTime       @default(now())
+  notes            String?
+  entries          DepEntry[]
+
+  @@index([assetType, buildingId])
+  @@index([assetType, equipmentItemId])
+}
+
+model DepEntry {
+  id          String               @id @default(uuid())
+  scheduleId  String
+  schedule    DepreciationSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  period      String
+  expense     BigInt
+  accumulated BigInt
+  bookValue   BigInt
+  computedAt  DateTime             @default(now())
+
+  @@unique([scheduleId, period])
+  @@index([period])
+}
+
+enum LeaseStatus {
+  active
+  expired
+  terminated
+  pending
+}
+
+enum MaintenanceCategory {
+  regular_inspection
+  emergency_repair
+  facility_upgrade
+  safety_diagnosis
+}
+
+enum MaintenanceStatus {
+  open
+  in_progress
+  closed
+  cancelled
+}
+
+enum MaintenancePriority {
+  low
+  normal
+  high
+  critical
+}
+
+enum LedgerTxType {
+  purchase
+  transfer
+  disposal
+  adjustment
+}
+
+enum LocationType {
+  hq
+  store
+  logistics
+}
+
+enum DepAssetType {
+  building
+  equipment
+}
+
+enum DepMethod {
+  straight_line
+  declining_balance
 }

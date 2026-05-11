@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { prisma } from '@/lib/prisma';
+import { recomputeDepEntries } from '@/lib/depreciation';
 
 type V16Building = [
   string, string, string, number, number, string,
@@ -56,6 +57,12 @@ function findPhoto(name: string, photos: Record<string, string>): string | null 
   return null;
 }
 
+function addMonths(value: Date, months: number): Date {
+  const next = new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), 1));
+  next.setUTCMonth(next.getUTCMonth() + months);
+  return next;
+}
+
 async function main() {
   const dataPath = path.resolve(process.cwd(), 'data', 'v16-extracted.json');
   const json = JSON.parse(await fs.promises.readFile(dataPath, 'utf-8')) as Extracted;
@@ -78,7 +85,9 @@ async function main() {
     const photoFile = findPhoto(r[0], json.photos);
     const detailFile = findPhoto(r[0], json.details);
 
-    await prisma.building.upsert({
+    const acquisitionDate = new Date(r[7]);
+    const acquisitionPrice = BigInt(Math.round(+r[8] || 0));
+    const building = await prisma.building.upsert({
       where: { legacyId },
       create: {
         legacyId,
@@ -89,8 +98,8 @@ async function main() {
         areaPyeong: +r[4] || 0,
         floors: r[5],
         approvalDate: r[6] && r[6] !== '-' ? new Date(r[6]) : null,
-        acquisitionDate: new Date(r[7]),
-        acquisitionPrice: BigInt(Math.round(+r[8] || 0)),
+        acquisitionDate,
+        acquisitionPrice,
         rentalArea: +r[9] || 0,
         rentalRate: rate,
         vacancy,
@@ -108,8 +117,8 @@ async function main() {
         areaPyeong: +r[4] || 0,
         floors: r[5],
         approvalDate: r[6] && r[6] !== '-' ? new Date(r[6]) : null,
-        acquisitionDate: new Date(r[7]),
-        acquisitionPrice: BigInt(Math.round(+r[8] || 0)),
+        acquisitionDate,
+        acquisitionPrice,
         rentalArea: +r[9] || 0,
         rentalRate: rate,
         vacancy,
@@ -120,6 +129,47 @@ async function main() {
         detailPhotoUrl: detailFile ? `/files/buildings/${detailFile}` : null,
       },
     });
+
+    const hasLeaseSnapshot = (r[12] && r[12] !== '-') || (+r[9] || 0) > 0 || rate > 0;
+    if (hasLeaseSnapshot) {
+      const existingLease = await prisma.leaseContract.findFirst({
+        where: { buildingId: building.id, status: 'active' },
+      });
+      if (!existingLease) {
+        const periodStart = new Date(`${period}-01T00:00:00.000Z`);
+        await prisma.leaseContract.create({
+          data: {
+            buildingId: building.id,
+            tenantName: r[12] || '-',
+            contractStart: periodStart,
+            contractEnd: addMonths(periodStart, 12),
+            rentArea: +r[9] || 0,
+            monthlyRent: 0n,
+            deposit: 0n,
+            status: 'active',
+            notes: 'V16 임대 스냅샷에서 생성. 월 임대료/보증금/계약 종료일은 수동 보정 필요.',
+          },
+        });
+      }
+    }
+
+    const existingDep = await prisma.depreciationSchedule.findFirst({
+      where: { assetType: 'building', buildingId: building.id },
+    });
+    if (!existingDep && acquisitionPrice > 0n) {
+      const schedule = await prisma.depreciationSchedule.create({
+        data: {
+          assetType: 'building',
+          buildingId: building.id,
+          acquisitionDate,
+          acquisitionPrice,
+          usefulLifeYears: 30,
+          method: 'straight_line',
+          notes: 'V16 건물 취득가 기준 자동 생성.',
+        },
+      });
+      await recomputeDepEntries(schedule.id);
+    }
   }
   console.log(`  ${json.buildingsRaw.length} 건물 upsert 완료`);
 
@@ -141,8 +191,10 @@ async function main() {
     });
 
     const locations = ['hq', 'store', 'logistics'] as const;
+    let inventoryTotal = 0n;
     for (let li = 0; li < locations.length; li++) {
       const lt = locations[li];
+      inventoryTotal += BigInt(Math.round(r[4][li] || 0));
       await prisma.equipmentSnapshot.upsert({
         where: {
           equipmentId_period_locationType: {
@@ -167,6 +219,24 @@ async function main() {
           inventoryAmount: BigInt(Math.round(r[4][li] || 0)),
         },
       });
+    }
+
+    const existingDep = await prisma.depreciationSchedule.findFirst({
+      where: { assetType: 'equipment', equipmentItemId: item.id },
+    });
+    if (!existingDep && inventoryTotal > 0n) {
+      const schedule = await prisma.depreciationSchedule.create({
+        data: {
+          assetType: 'equipment',
+          equipmentItemId: item.id,
+          acquisitionDate: new Date(`${period}-01T00:00:00.000Z`),
+          acquisitionPrice: inventoryTotal,
+          usefulLifeYears: 5,
+          method: 'straight_line',
+          notes: 'V16 비품 재고 스냅샷 기준 자동 생성.',
+        },
+      });
+      await recomputeDepEntries(schedule.id);
     }
   }
   console.log(`  ${json.equipmentsRaw.length} 비품 × 3 위치 upsert`);

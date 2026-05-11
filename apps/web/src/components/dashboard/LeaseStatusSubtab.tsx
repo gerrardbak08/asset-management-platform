@@ -31,7 +31,7 @@ function regionBucket(addr: string): '수도권' | '지방' {
 }
 
 type UseBucket = '창고시설' | '판매시설' | '공동주택·업무시설' | '제1종근린생활시설' | '기타';
-function useBucket(use: string): UseBucket {
+function bucketNameOfUse(use: string): UseBucket {
   const u = use || '';
   if (u.includes('창고')) return '창고시설';
   if (u.includes('판매시설')) return '판매시설';
@@ -70,7 +70,7 @@ type GroupRow = {
 
 export function LeaseStatusSubtab() {
   const q = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
-  const items: Building[] = q.data ?? [];
+  const items: Building[] = useMemo(() => q.data ?? [], [q.data]);
 
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
   const [expandedUse, setExpandedUse] = useState<string | null>(null);
@@ -125,7 +125,7 @@ export function LeaseStatusSubtab() {
   const useGroups = useMemo((): GroupRow[] => {
     const map = new Map<string, GroupRow>();
     for (const b of items) {
-      const key = useBucket(b.use);
+      const key = bucketNameOfUse(b.use);
       const cur = map.get(key) ?? { key, count: 0, totalPrice: 0, avgRate: 0, buildings: [] };
       cur.count++;
       cur.totalPrice += parsePrice(b.acquisitionPrice);

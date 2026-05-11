@@ -1,6 +1,6 @@
-// 모바일 하단 네비 — < md 에서 활성, 4메뉴 (자산현황·건물·사업장·관리). 터치 ≥44px
+// 모바일 하단 네비 — < md 에서 활성. 터치 ≥44px
 import { NavLink } from 'react-router-dom';
-import { Building2, Building, Store, Shield } from 'lucide-react';
+import { ArrowRightLeft, Building2, Building, Calculator, FileText, Shield, Store, Wrench } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -14,13 +14,17 @@ const ITEMS: MenuItem[] = [
   { to: '/dashboard', label: '자산현황', icon: Building2 },
   { to: '/buildings', label: '건물', icon: Building },
   { to: '/stores', label: '사업장', icon: Store },
+  { to: '/leases', label: '임대', icon: FileText },
+  { to: '/maintenance', label: '보수', icon: Wrench },
+  { to: '/ledger', label: '원장', icon: ArrowRightLeft },
+  { to: '/depreciation', label: '상각', icon: Calculator },
   { to: '/admin', label: '관리', icon: Shield },
 ];
 
 export function MobileNav() {
   return (
     <nav
-      className="no-print fixed inset-x-0 bottom-0 z-30 flex h-14 items-stretch border-t border-border bg-card md:hidden"
+      className="no-print fixed inset-x-0 bottom-0 z-30 flex h-14 items-stretch overflow-x-auto border-t border-border bg-card md:hidden"
       aria-label="주 메뉴"
     >
       {ITEMS.map((m) => (
@@ -29,7 +33,7 @@ export function MobileNav() {
           to={m.to}
           className={({ isActive }) =>
             cn(
-              'flex min-h-[44px] flex-1 flex-col items-center justify-center gap-0.5 text-micro font-medium transition-colors duration-150',
+              'flex min-h-[44px] min-w-[64px] flex-1 flex-col items-center justify-center gap-0.5 text-micro font-medium transition-colors duration-150',
               isActive
                 ? 'text-primary'
                 : 'text-muted-foreground hover:text-foreground',
