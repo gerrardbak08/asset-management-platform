@@ -8,4 +8,4 @@ echo "→ Prisma 마이그레이션..."
 pnpm exec prisma migrate deploy
 
 echo "→ 서버 시작..."
-exec node dist/server.js
+exec node dist/src/server.js
