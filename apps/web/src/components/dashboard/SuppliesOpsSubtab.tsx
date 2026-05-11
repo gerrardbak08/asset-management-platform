@@ -161,8 +161,11 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
         ))}
       </div>
 
+      {/* 재고 TOP5 + 흐름 TOP10 좌우 2열 */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+
       {/* 재고 상위 카테고리 TOP5 + 상세 패널 */}
-      <Card className="p-5">
+      <Card className="flex flex-col p-5">
         <SectionHeader
           title="재고 상위 카테고리 TOP 5"
           description="클릭 시 상세"
@@ -305,8 +308,8 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
         </div>
       </Card>
 
-      {/* 비품 흐름 TOP10 (구 비품 흐름 탭) */}
-      <Card className="p-5">
+      {/* 비품 흐름 TOP10 */}
+      <Card className="flex flex-col p-5">
         <div className="mb-3 flex items-center justify-between">
           <SectionHeader
             title="비품 흐름 TOP 10"
@@ -330,7 +333,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
             ))}
           </div>
         </div>
-        <div className="h-[420px] w-full">
+        <div className="min-h-[280px] flex-1">
           <ResponsiveContainer>
             <BarChart data={flowData} layout="vertical" margin={{ top: 4, right: 24, bottom: 0, left: 0 }}>
               <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
@@ -373,6 +376,8 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
           </ResponsiveContainer>
         </div>
       </Card>
+
+      </div>{/* end TOP5/TOP10 grid */}
     </div>
   );
 }

@@ -55,17 +55,19 @@ export function HeroKPI({ m0 }: Props) {
     >
       {/* 총자산 KPI — 메인 */}
       <motion.div variants={cardItemVariants} className="h-full">
-        <Card className="relative flex h-full flex-col overflow-hidden border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6">
-          {/* 상단 강조 바 */}
-          <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary via-primary/70 to-primary/20" />
-
-          {/* 레이블 */}
-          <p className="text-micro font-semibold uppercase tracking-[0.12em] text-primary/80">
-            총 자산 규모
-          </p>
-          <p className="mt-0.5 text-caption text-muted-foreground">
-            기준월 <strong className="font-semibold text-foreground">{m0.meta.current_period}</strong>
-          </p>
+        <Card className="flex h-full flex-col border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6">
+          {/* 레이블 + MoM (우측 상단) */}
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="text-heading-sm font-bold tracking-tight text-primary">
+                총 자산 규모
+              </p>
+              <p className="mt-0.5 text-caption text-muted-foreground">
+                기준월 <strong className="font-semibold text-foreground">{m0.meta.current_period}</strong>
+              </p>
+            </div>
+            <MomBadge ratio={m0.mom.total.ratio} showLabel />
+          </div>
 
           {/* 핵심 숫자 */}
           <div className="mt-4 flex items-end gap-2">
@@ -81,11 +83,6 @@ export function HeroKPI({ m0 }: Props) {
             <span className="mb-1 font-mono text-[20px] font-semibold leading-none text-muted-foreground">
               원
             </span>
-          </div>
-
-          {/* MoM 배지 */}
-          <div className="mt-3">
-            <MomBadge ratio={m0.mom.total.ratio} showLabel />
           </div>
 
           {/* 구분선 + 상세 */}

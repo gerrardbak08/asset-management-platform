@@ -1,8 +1,9 @@
 // 좌측 사이드바 — 다이소 다크네이비 chrome. 활성 항목은 배경+텍스트 톤만 변화 (좌측 strip / 아이콘 앰버 컬러 모두 제거)
 import { NavLink } from 'react-router-dom';
-import { Building2, Building, Store, Database, Shield } from 'lucide-react';
+import { Building2, Building, Store, Shield } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { cn } from '@/lib/utils';
+import { AsungSymbol } from './AsungLogo';
 
 type MenuItem = {
   to: string;
@@ -15,8 +16,7 @@ const MENU: MenuItem[] = [
   { to: '/dashboard', label: '자산현황', icon: Building2, group: '운영' },
   { to: '/buildings', label: '건물', icon: Building, group: '운영' },
   { to: '/stores', label: '사업장', icon: Store, group: '운영' },
-  { to: '/data', label: '데이터 업로드', icon: Database, group: '관리' },
-  { to: '/admin', label: '시스템 관리', icon: Shield, group: '관리' },
+  { to: '/admin', label: '관리', icon: Shield, group: '관리' },
 ];
 
 export function Sidebar() {
@@ -25,9 +25,14 @@ export function Sidebar() {
 
   return (
     <aside className="hidden w-[240px] shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
-      <div className="flex h-14 items-center gap-2 border-b border-sidebar-border px-4">
-        <span aria-hidden="true" className="brand-stripe-vertical h-5 w-1 rounded-full" />
-        <span className="text-heading-md font-semibold tracking-tight">자산관리</span>
+      <div className="flex h-14 items-center gap-2.5 border-b border-gray-200 bg-white px-4">
+        <AsungSymbol />
+        <div className="min-w-0">
+          <div className="text-[16px] font-bold leading-snug tracking-tight text-[#1B3A7A]">
+            전사 자산관리 시스템
+          </div>
+          <div className="mt-0.5 text-micro text-gray-400">2026년 3월 · 전사 자산 현황</div>
+        </div>
       </div>
 
       <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">

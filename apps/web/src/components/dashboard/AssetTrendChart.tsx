@@ -8,6 +8,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ReferenceLine,
+  ReferenceArea,
   ResponsiveContainer,
 } from 'recharts';
 import { dashboardApi } from '@/lib/api/dashboard';
@@ -64,6 +66,7 @@ export function AssetTrendChart() {
               width={44}
             />
             <Tooltip
+              formatter={(v: unknown) => [`${v}`]}
               contentStyle={{
                 background: 'hsl(var(--card))',
                 border: '1px solid hsl(var(--border))',
@@ -73,12 +76,15 @@ export function AssetTrendChart() {
               }}
             />
             <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11 }} />
+            {/* 기준선 100 근방 회색 밴드 */}
+            <ReferenceArea y1={97} y2={103} fill="hsl(var(--muted-foreground))" fillOpacity={0.08} stroke="none" />
+            <ReferenceLine y={100} stroke="hsl(var(--muted-foreground))" strokeDasharray="4 4" strokeWidth={1} strokeOpacity={0.5} />
             <Line
               type="monotone"
               dataKey="총자산"
               stroke="hsl(var(--foreground))"
-              strokeWidth={2}
-              dot={{ r: 4 }}
+              strokeWidth={2.5}
+              dot={{ r: 4, fill: 'hsl(var(--foreground))' }}
               activeDot={{ r: 5 }}
               isAnimationActive
               animationDuration={CHART_ANIM_MS}
@@ -89,7 +95,7 @@ export function AssetTrendChart() {
               dataKey="유형자산"
               stroke="hsl(var(--primary))"
               strokeWidth={2}
-              dot={{ r: 4 }}
+              dot={{ r: 3.5, fill: 'hsl(var(--primary))' }}
               activeDot={{ r: 5 }}
               isAnimationActive
               animationDuration={CHART_ANIM_MS}
@@ -98,10 +104,10 @@ export function AssetTrendChart() {
             <Line
               type="monotone"
               dataKey="무형자산"
-              stroke="hsl(var(--info))"
+              stroke="hsl(var(--warning))"
               strokeWidth={1.5}
-              strokeDasharray="5 3"
-              dot={{ r: 3 }}
+              strokeDasharray="6 3"
+              dot={{ r: 3, fill: 'hsl(var(--warning))' }}
               isAnimationActive
               animationDuration={CHART_ANIM_MS}
               animationEasing="ease-out"
@@ -109,10 +115,10 @@ export function AssetTrendChart() {
             <Line
               type="monotone"
               dataKey="비품"
-              stroke="hsl(var(--accent))"
+              stroke="hsl(var(--danger))"
               strokeWidth={1.5}
               strokeDasharray="3 3"
-              dot={{ r: 3 }}
+              dot={{ r: 3, fill: 'hsl(var(--danger))' }}
               isAnimationActive
               animationDuration={CHART_ANIM_MS}
               animationEasing="ease-out"

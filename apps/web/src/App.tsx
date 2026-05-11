@@ -6,7 +6,6 @@ import { AuthGuard } from '@/components/AuthGuard';
 import Dashboard from '@/pages/Dashboard';
 import Buildings from '@/pages/Buildings';
 import Stores from '@/pages/Stores';
-import Data from '@/pages/Data';
 import Admin from '@/pages/Admin';
 import Login from '@/pages/Login';
 
@@ -26,7 +25,7 @@ export default function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/buildings" element={<Buildings />} />
                   <Route path="/stores" element={<Stores />} />
-                  <Route path="/data" element={<Data />} />
+                  <Route path="/data" element={<Admin />} />
                   <Route path="/admin" element={<Admin />} />
                 </Routes>
               </main>

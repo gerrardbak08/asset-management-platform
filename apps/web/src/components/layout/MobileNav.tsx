@@ -1,6 +1,6 @@
-// 모바일 하단 네비 — < md 에서 활성, 5메뉴 (자산현황·건물·사업장·업로드·관리). 터치 ≥44px
+// 모바일 하단 네비 — < md 에서 활성, 4메뉴 (자산현황·건물·사업장·관리). 터치 ≥44px
 import { NavLink } from 'react-router-dom';
-import { Building2, Building, Store, Database, Shield } from 'lucide-react';
+import { Building2, Building, Store, Shield } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -14,7 +14,6 @@ const ITEMS: MenuItem[] = [
   { to: '/dashboard', label: '자산현황', icon: Building2 },
   { to: '/buildings', label: '건물', icon: Building },
   { to: '/stores', label: '사업장', icon: Store },
-  { to: '/data', label: '업로드', icon: Database },
   { to: '/admin', label: '관리', icon: Shield },
 ];
 

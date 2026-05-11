@@ -96,9 +96,9 @@ export function StoreTimeline({ detail }: Props) {
   }, [detail]);
 
   return (
-    <Card className="p-5">
+    <Card className="flex h-full flex-col overflow-hidden p-5">
       <SectionHeader title="활동 타임라인" />
-      <ol className="relative space-y-3 border-l-2 border-border pl-5">
+      <ol className="relative min-h-0 flex-1 space-y-3 overflow-y-auto border-l-2 border-border pl-5">
         {events.map((e, i) => (
           <li key={i} className="relative">
             <span

@@ -37,7 +37,7 @@ export default function Stores() {
 
   const list = useQuery({
     queryKey: ['stores', debounced],
-    queryFn: () => storesApi.list(debounced, 1, 30),
+    queryFn: () => storesApi.list(debounced, 1, 50),
   });
 
   // 첫 결과 자동 선택 (선택값이 결과에 없으면)
@@ -73,8 +73,11 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[280px,1fr] lg:items-stretch">
-        <Card className="flex h-full flex-col overflow-hidden">
+      <div
+        className="grid grid-cols-1 gap-3 lg:grid-cols-[280px,1fr] lg:items-stretch"
+        style={{ height: 'calc(100vh - 160px)' }}
+      >
+        <Card className="flex min-h-0 flex-col overflow-hidden">
           <div className="shrink-0 px-4 py-3 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
@@ -155,8 +158,8 @@ function SelectedPanel({
   );
 
   return (
-    <div className="space-y-3">
-      <Card className="p-5">
+    <div className="flex h-full min-h-0 flex-col gap-3">
+      <Card className="shrink-0 p-5">
         <div className="flex items-baseline gap-2">
           <h2 className="text-heading-lg font-semibold tracking-tight text-foreground">{detail.name}</h2>
           {detail.siteType ? (
@@ -175,7 +178,7 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid shrink-0 grid-cols-1 gap-3 lg:grid-cols-2 lg:items-stretch">
         {/* 비품 카테고리 TOP 10 */}
         <Card className="flex flex-col p-5">
           <div className="mb-3 flex shrink-0 items-center justify-between">
@@ -302,7 +305,9 @@ function SelectedPanel({
         </Card>
       </div>
 
-      <StoreTimeline detail={detail} />
+      <div className="min-h-0 flex-1 overflow-hidden">
+        <StoreTimeline detail={detail} />
+      </div>
     </div>
   );
 }
