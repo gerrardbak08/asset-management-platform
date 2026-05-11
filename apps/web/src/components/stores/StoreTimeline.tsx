@@ -98,17 +98,19 @@ export function StoreTimeline({ detail }: Props) {
   return (
     <Card className="flex h-full flex-col overflow-hidden p-5">
       <SectionHeader title="활동 타임라인" />
-      <ol className="relative min-h-0 flex-1 space-y-3 overflow-y-auto border-l-2 border-border pl-5">
+      <ol className="relative mt-6 flex min-h-0 flex-1 gap-6 overflow-x-auto overflow-y-hidden border-t-2 border-border pt-6 pb-2">
         {events.map((e, i) => (
-          <li key={i} className="relative">
+          <li key={i} className="relative w-[200px] flex-shrink-0">
             <span
               aria-hidden="true"
-              className={`absolute -left-[27px] top-0 flex h-5 w-5 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-4 ring-card`}
+              className={`absolute -top-[33px] left-0 flex h-6 w-6 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-4 ring-card`}
             >
-              <e.icon className="h-3 w-3" />
+              <e.icon className="h-3.5 w-3.5" />
             </span>
-            <div className="text-body font-medium text-foreground">{e.title}</div>
-            <div className="mt-0.5 text-caption text-muted-foreground">{e.detail}</div>
+            <div className="text-body font-semibold text-foreground">{e.title}</div>
+            <div className="mt-1 text-caption leading-relaxed text-muted-foreground whitespace-normal break-keep">
+              {e.detail}
+            </div>
           </li>
         ))}
       </ol>
