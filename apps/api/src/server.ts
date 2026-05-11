@@ -55,8 +55,8 @@ export async function buildServer() {
   app.get('/api/debug-uploads', async () => {
     const fs = await import('node:fs');
     const udir = path.join(webDist, 'files');
-    let files = [];
-    let bfiles = [];
+    let files: string[] = [];
+    let bfiles: string[] = [];
     try { files = fs.readdirSync(udir); } catch(e) {}
     try { bfiles = fs.readdirSync(path.join(udir, 'buildings')); } catch(e) {}
     return {
