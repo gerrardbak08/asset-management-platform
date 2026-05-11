@@ -58,15 +58,16 @@ export async function buildServer() {
     path.dirname(fileURLToPath(import.meta.url)),
     '../../public',
   );
+  app.log.info({ webDist }, 'Static files path');
   try {
     const { existsSync } = await import('node:fs');
     if (existsSync(webDist)) {
       await app.register(staticPlugin, {
         root: webDist,
         prefix: '/',
-        wildcard: false,
+        wildcard: true,
         decorateReply: false,
-        index: false,
+        index: 'index.html',
       });
       // SPA fallback — /api·/files 이외 GET 요청은 index.html 반환
       app.setNotFoundHandler(async (req, reply) => {
