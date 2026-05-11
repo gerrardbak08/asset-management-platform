@@ -13,7 +13,7 @@ type Props = {
 export function Header({ title, description, action }: Props) {
   const [reportOpen, setReportOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/80 md:px-5">
+    <header style={{ minHeight: 56 }} className="sticky top-0 z-30 flex shrink-0 items-center justify-between gap-4 border-b border-border bg-card/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-card/80 md:px-5">
       <div className="min-w-0">
         <h1 className="truncate text-heading-md font-semibold tracking-tight text-foreground">
           {title}
