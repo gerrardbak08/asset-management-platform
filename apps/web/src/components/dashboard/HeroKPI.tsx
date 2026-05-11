@@ -53,83 +53,107 @@ export function HeroKPI({ m0 }: Props) {
       animate="visible"
       className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-3"
     >
-      {/* 총자산 KPI */}
+      {/* 총자산 KPI — 메인 */}
       <motion.div variants={cardItemVariants} className="h-full">
-      <Card className="flex h-full flex-col p-5">
-        <p className="text-caption font-medium uppercase tracking-wider text-muted-foreground">
-          총 자산 규모 · {m0.meta.current_period}
-        </p>
-        <div className="mt-3 flex items-baseline gap-2">
-          <span className="text-heading-lg text-muted-foreground">₩</span>
-          <span className="font-kpi-huge font-mono tabular-nums leading-none text-foreground">
-            {fmtKR(cur.total)}
-          </span>
-          <span className="text-heading-lg text-muted-foreground">원</span>
-        </div>
-        <div className="mt-2">
-          <MomBadge ratio={m0.mom.total.ratio} showLabel />
-        </div>
-        <p className="mt-3 text-caption text-muted-foreground">
-          {fmtKRfull(cur.total)} · 기준월{' '}
-          <strong className="text-foreground">{m0.meta.current_period}</strong> (전월{' '}
-          {m0.meta.previous_period})
-        </p>
-      </Card>
+        <Card className="relative flex h-full flex-col overflow-hidden border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6">
+          {/* 상단 강조 바 */}
+          <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary via-primary/70 to-primary/20" />
+
+          {/* 레이블 */}
+          <p className="text-micro font-semibold uppercase tracking-[0.12em] text-primary/80">
+            총 자산 규모
+          </p>
+          <p className="mt-0.5 text-caption text-muted-foreground">
+            기준월 <strong className="font-semibold text-foreground">{m0.meta.current_period}</strong>
+          </p>
+
+          {/* 핵심 숫자 */}
+          <div className="mt-4 flex items-end gap-2">
+            <span className="font-mono text-[20px] font-semibold leading-none text-muted-foreground">
+              ₩
+            </span>
+            <span
+              className="font-mono tabular-nums leading-none text-foreground"
+              style={{ fontSize: '52px', fontWeight: 700, letterSpacing: '-0.02em' }}
+            >
+              {fmtKR(cur.total)}
+            </span>
+            <span className="mb-1 font-mono text-[20px] font-semibold leading-none text-muted-foreground">
+              원
+            </span>
+          </div>
+
+          {/* MoM 배지 */}
+          <div className="mt-3">
+            <MomBadge ratio={m0.mom.total.ratio} showLabel />
+          </div>
+
+          {/* 구분선 + 상세 */}
+          <div className="mt-auto pt-4">
+            <div className="mb-3 h-px bg-border/60" />
+            <p className="text-caption text-muted-foreground">
+              {fmtKRfull(cur.total)}
+              <span className="mx-1.5 opacity-40">·</span>
+              전월 <span className="text-foreground">{m0.meta.previous_period}</span> 대비
+            </p>
+          </div>
+        </Card>
       </motion.div>
 
       {/* 도넛 차트 — 그래프 좌측 + 범례 우측 */}
       <motion.div variants={cardItemVariants} className="h-full">
       <Card className="flex h-full flex-col p-5">
         <p className="mb-3 text-body-strong text-muted-foreground">자산 유형별 구성</p>
-        <div className="flex items-center gap-3">
-          <div className="h-[160px] w-[140px] shrink-0">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={donutData}
-                  dataKey="total"
-                  nameKey="subcategory"
-                  innerRadius="50%"
-                  outerRadius="80%"
-                  paddingAngle={2}
-                  stroke="hsl(var(--card))"
-                  strokeWidth={2}
-                  isAnimationActive
-                  animationDuration={CHART_ANIM_MS}
-                  animationEasing="ease-out"
-                >
-                  {donutData.map((_, i) => (
-                    <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(v: unknown) => fmtKRfull(Number(v))}
-                  contentStyle={{
-                    background: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 12,
-                    fontSize: 12,
-                    color: 'hsl(var(--foreground))',
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+        <div className="flex flex-1 flex-row items-center gap-3">
+          <div className="flex flex-1 items-center justify-center">
+            <div className="h-[160px] w-[160px]">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={donutData}
+                    dataKey="total"
+                    nameKey="subcategory"
+                    innerRadius="50%"
+                    outerRadius="80%"
+                    paddingAngle={2}
+                    stroke="hsl(var(--card))"
+                    strokeWidth={2}
+                    isAnimationActive
+                    animationDuration={CHART_ANIM_MS}
+                    animationEasing="ease-out"
+                  >
+                    {donutData.map((_, i) => (
+                      <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(v: unknown) => fmtKRfull(Number(v))}
+                    contentStyle={{
+                      background: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: 12,
+                      fontSize: 12,
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
           <ul className="min-w-0 flex-1 space-y-1.5">
             {donutData.map((d, i) => (
-              <li key={d.subcategory} className="flex items-center gap-1.5">
-                <span
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ background: DONUT_COLORS[i % DONUT_COLORS.length] }}
-                  aria-hidden="true"
-                />
-                <span className="min-w-0 flex-1 truncate text-caption text-muted-foreground">
-                  {d.subcategory}
+              <li key={d.subcategory} className="flex items-center justify-between gap-2">
+                <span className="flex min-w-0 items-center gap-1">
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ background: DONUT_COLORS[i % DONUT_COLORS.length] }}
+                    aria-hidden="true"
+                  />
+                  <span className="truncate text-caption text-muted-foreground">
+                    {d.subcategory}
+                  </span>
                 </span>
-                <span className="font-mono tabular-nums text-caption text-foreground">
-                  {fmtKR(d.total)}원
-                </span>
-                <span className="w-9 text-right text-caption text-muted-foreground">
+                <span className="shrink-0 text-right text-caption text-muted-foreground">
                   {cur.total > 0 ? ((d.total / cur.total) * 100).toFixed(1) : '0.0'}%
                 </span>
               </li>
@@ -173,12 +197,12 @@ function IssuePanel() {
     .slice(0, 3);
 
   return (
-    <Card className="p-5">
+    <Card className="flex h-full flex-col p-5">
       <div className="mb-3 flex items-center gap-2">
         <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" />
         <span className="text-heading-sm text-foreground">이슈 사항</span>
       </div>
-
+      <div className="min-h-0 flex-1 overflow-y-auto">
       {vacantBuildings.length > 0 ? (
         <div className="mb-3">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -216,6 +240,7 @@ function IssuePanel() {
       ) : (
         <p className="text-body text-muted-foreground">이번 달 폐기 항목 없음</p>
       )}
+      </div>
     </Card>
   );
 }

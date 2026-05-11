@@ -379,8 +379,10 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
 
 function SummaryLine({ label, text }: { label: string; text: string }) {
   return (
-    <p className="text-body text-muted-foreground">
-      <span className="mr-2 font-semibold text-foreground/60">{label}</span>
+    <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-body text-muted-foreground">
+      <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-2 py-0.5 text-caption font-medium text-muted-foreground">
+        {label}
+      </span>
       {text}
     </p>
   );

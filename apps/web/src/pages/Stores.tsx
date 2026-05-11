@@ -73,12 +73,12 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[280px,1fr] lg:items-start">
-        <Card className="overflow-hidden">
-          <div className="px-4 py-3 text-caption font-semibold text-muted-foreground">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[280px,1fr] lg:items-stretch">
+        <Card className="flex h-full flex-col overflow-hidden">
+          <div className="shrink-0 px-4 py-3 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
-          <ul className="max-h-[600px] overflow-y-auto">
+          <ul className="min-h-0 flex-1 overflow-y-auto">
             {(list.data?.items ?? []).map((s) => (
               <li key={s.id}>
                 <button
@@ -175,9 +175,10 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:items-start">
-        <Card className="p-5">
-          <div className="mb-3 flex items-center justify-between">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:items-stretch">
+        {/* 비품 카테고리 TOP 10 */}
+        <Card className="flex flex-col p-5">
+          <div className="mb-3 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
               <button
@@ -202,8 +203,8 @@ function SelectedPanel({
               </button>
             </div>
           </div>
-          <div className="h-[280px] w-full">
-            <ResponsiveContainer>
+          <div className="min-h-0 flex-1">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={supplyData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
                 <XAxis
@@ -238,21 +239,25 @@ function SelectedPanel({
           </div>
         </Card>
 
-        <Card className="p-5">
-          <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
+        {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
+        <Card className="flex flex-col p-5">
+          <div className="mb-3 shrink-0">
+            <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
+          </div>
           {typeData.length === 0 ? (
             <p className="text-caption text-muted-foreground">자산 유형 데이터 없음.</p>
           ) : (
-            <>
-              <div className="h-[260px] w-full">
-                <ResponsiveContainer>
+            <div className="flex min-h-0 flex-1 flex-row items-center gap-4">
+              {/* 도넛 */}
+              <div className="h-[160px] w-[160px] shrink-0">
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={typeData}
                       dataKey="value"
                       nameKey="name"
-                      innerRadius="55%"
-                      outerRadius="85%"
+                      innerRadius="52%"
+                      outerRadius="82%"
                       paddingAngle={2}
                       stroke="hsl(var(--card))"
                       strokeWidth={2}
@@ -274,22 +279,25 @@ function SelectedPanel({
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <ul className="mt-3 space-y-1 text-caption">
+              {/* 범례 */}
+              <ul className="min-w-0 flex-1 space-y-2">
                 {typeData.map((d, i) => (
-                  <li key={d.name} className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-muted-foreground">
+                  <li key={d.name} className="flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-1.5">
                       <span
-                        className="h-2 w-2 rounded-full"
+                        className="h-2 w-2 shrink-0 rounded-full"
                         style={{ background: TYPE_COLORS[i % TYPE_COLORS.length] }}
                         aria-hidden="true"
                       />
-                      {d.name}
+                      <span className="truncate text-caption text-muted-foreground">{d.name}</span>
                     </span>
-                    <span className="font-mono tabular-nums text-foreground">{fmtKRfull(d.value)}</span>
+                    <span className="shrink-0 font-mono tabular-nums text-caption text-foreground">
+                      {fmtKRfull(d.value)}
+                    </span>
                   </li>
                 ))}
               </ul>
-            </>
+            </div>
           )}
         </Card>
       </div>

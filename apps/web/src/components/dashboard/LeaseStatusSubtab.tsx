@@ -76,6 +76,13 @@ export function LeaseStatusSubtab() {
   const [expandedUse, setExpandedUse] = useState<string | null>(null);
   const [drawerBd, setDrawerBd] = useState<Building | null>(null);
 
+  type DrillFilter = 'rented' | 'noVac' | 'hasVac' | 'area' | 'stable' | 'caution' | 'danger';
+  const [activeFilter, setActiveFilter] = useState<DrillFilter | null>(null);
+
+  function toggleFilter(f: DrillFilter) {
+    setActiveFilter((prev) => (prev === f ? null : f));
+  }
+
   // ── 요약 KPI (V16 동등) ──
   const summary = useMemo(() => {
     if (items.length === 0) return null;
@@ -179,6 +186,29 @@ export function LeaseStatusSubtab() {
     [items],
   );
 
+  const drilldownBuildings = useMemo((): Building[] => {
+    if (!activeFilter) return [];
+    switch (activeFilter) {
+      case 'rented':  return items.filter((b) => (b.rental?.rate ?? 0) > 0);
+      case 'noVac':   return items.filter((b) => (b.rental?.vacancy ?? 0) === 0 && (b.rental?.rate ?? 0) > 0);
+      case 'hasVac':  return items.filter((b) => (b.rental?.vacancy ?? 0) > 0);
+      case 'area':    return [...items].filter((b) => (b.rental?.area ?? 0) > 0).sort((a, b) => b.rental.area - a.rental.area);
+      case 'stable':  return items.filter((b) => riskOf(b.rental.rate) === 'success');
+      case 'caution': return items.filter((b) => riskOf(b.rental.rate) === 'warning');
+      case 'danger':  return items.filter((b) => riskOf(b.rental.rate) === 'danger');
+    }
+  }, [items, activeFilter]);
+
+  const DRILL_TITLE: Record<string, string> = {
+    rented:  '임대 운영 건물',
+    noVac:   '완전 임대 건물 (공실률 0%)',
+    hasVac:  '공실 발생 건물',
+    area:    '임대면적 현황 (면적 큰 순)',
+    stable:  '안정 건물 (임대율 95%↑)',
+    caution: '주의 건물 (임대율 85~94%)',
+    danger:  '위험 건물 (임대율 85%↓)',
+  };
+
   if (q.isLoading) return <p className="text-caption text-muted-foreground">로딩 중…</p>;
 
   return (
@@ -188,82 +218,146 @@ export function LeaseStatusSubtab() {
         <Card className="p-5">
           <SectionHeader title="건물 임대 현황" description={`총 ${items.length}동`} />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <KpiCard label="임대 운영 건물" value={`${summary.rented}개`} sub={`전체 ${items.length}개 중`} />
-            <KpiCard label="완전 임대 건물" value={`${summary.noVac}개`} sub="공실률 0%" />
-            <KpiCard label="공실 발생 건물" value={`${summary.hasVac}개`} sub="관리 필요" />
+            <KpiCard
+              label="임대 운영 건물"
+              value={`${summary.rented}개`}
+              sub={`전체 ${items.length}개 중`}
+              isActive={activeFilter === 'rented'}
+              onClick={() => toggleFilter('rented')}
+            />
+            <KpiCard
+              label="완전 임대 건물"
+              value={`${summary.noVac}개`}
+              sub="공실률 0%"
+              isActive={activeFilter === 'noVac'}
+              onClick={() => toggleFilter('noVac')}
+            />
+            <KpiCard
+              label="공실 발생 건물"
+              value={`${summary.hasVac}개`}
+              sub="관리 필요"
+              isActive={activeFilter === 'hasVac'}
+              onClick={() => toggleFilter('hasVac')}
+            />
             <KpiCard
               label="총 임대면적"
               value={`${summary.totalRentArea.toLocaleString('ko-KR', { maximumFractionDigits: 0 })}㎡`}
               sub="임차인 있는 건물 합산"
+              isActive={activeFilter === 'area'}
+              onClick={() => toggleFilter('area')}
             />
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <RiskChip risk="success" text={`안정 ${summary.stable}동 (95%↑)`} />
-            <RiskChip risk="warning" text={`주의 ${summary.caution}동 (85-94%)`} />
-            <RiskChip risk="danger" text={`위험 ${summary.danger}동 (85%↓)`} />
+            <RiskChip
+              risk="success"
+              text={`안정 ${summary.stable}동 (95%↑)`}
+              isActive={activeFilter === 'stable'}
+              onClick={() => toggleFilter('stable')}
+            />
+            <RiskChip
+              risk="warning"
+              text={`주의 ${summary.caution}동 (85-94%)`}
+              isActive={activeFilter === 'caution'}
+              onClick={() => toggleFilter('caution')}
+            />
+            <RiskChip
+              risk="danger"
+              text={`위험 ${summary.danger}동 (85%↓)`}
+              isActive={activeFilter === 'danger'}
+              onClick={() => toggleFilter('danger')}
+            />
           </div>
         </Card>
       )}
 
-      {/* ── ② 건물별 임대율 차트 ── */}
-      <Card className="p-5">
-        <SectionHeader title="건물별 임대율" description="공실 발생 건물은 주황 · 막대 클릭 시 상세" />
-        <div className="h-[420px] w-full">
-          <ResponsiveContainer>
-            <BarChart data={rateData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
-              <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
-              <XAxis
-                type="number"
-                domain={[0, 110]}
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                tickFormatter={(v) => `${v}%`}
-                axisLine={{ stroke: 'hsl(var(--border))' }}
-                tickLine={false}
-              />
-              <YAxis
-                type="category"
-                dataKey="name"
-                width={110}
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                axisLine={{ stroke: 'hsl(var(--border))' }}
-                tickLine={false}
-              />
-              <Tooltip
-                cursor={{ fill: 'hsl(var(--muted))' }}
-                contentStyle={{
-                  background: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: 12,
-                  fontSize: 12,
-                  color: 'hsl(var(--foreground))',
-                }}
-                formatter={(v, _n, p) => [`${v}% (공실 ${(p as { payload?: { vac?: number } })?.payload?.vac ?? 0}%)`, '임대율']}
-              />
-              <Bar
-                dataKey="rate"
-                radius={[0, 6, 6, 0]}
-                maxBarSize={18}
-                isAnimationActive
-                animationDuration={CHART_ANIM_MS}
-                animationEasing="ease-out"
-                onClick={(d: unknown) => {
-                  const b = (d as { payload?: { building?: Building } })?.payload?.building;
-                  if (b) setDrawerBd(b);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                {rateData.map((d, i) => (
-                  <Cell key={i} fill={d.vac > 0 ? 'hsl(var(--warning))' : 'hsl(var(--success))'} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
+      {/* ── 드릴다운 패널 ── */}
+      {activeFilter && drilldownBuildings.length > 0 && (
+        <DrilldownPanel
+          title={DRILL_TITLE[activeFilter] ?? ''}
+          buildings={drilldownBuildings}
+          onClose={() => setActiveFilter(null)}
+          onPickBuilding={setDrawerBd}
+        />
+      )}
 
-      {/* ── ③ 면적 비교 + 산점도 (2열) ── */}
+      {/* ── ② 지역(수도권/지방) + 용도(4압축) 2열 테이블 ── */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <GroupTable
+          title="지역별 현황"
+          description="수도권 / 지방"
+          groups={regionGroups}
+          expanded={expandedRegion}
+          onToggle={(k) => setExpandedRegion(expandedRegion === k ? null : k)}
+          onPickBuilding={setDrawerBd}
+        />
+        <GroupTable
+          title="건물용도별 현황"
+          description={`${useGroups.length}개 용도 (4종 압축)`}
+          groups={useGroups}
+          expanded={expandedUse}
+          onToggle={(k) => setExpandedUse(expandedUse === k ? null : k)}
+          onPickBuilding={setDrawerBd}
+        />
+      </div>
+
+      {/* ── ③ 건물별 임대율 + 면적 비교 + 산점도 (3열) ── */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <Card className="p-5">
+          <SectionHeader title="건물별 임대율" description="공실 발생 건물은 주황 · 막대 클릭 시 상세" />
+          <div className="h-[360px] w-full">
+            <ResponsiveContainer>
+              <BarChart data={rateData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
+                <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
+                <XAxis
+                  type="number"
+                  domain={[0, 110]}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                  tickFormatter={(v) => `${v}%`}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={90}
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tickLine={false}
+                />
+                <Tooltip
+                  cursor={{ fill: 'hsl(var(--muted))' }}
+                  contentStyle={{
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: 12,
+                    fontSize: 12,
+                    color: 'hsl(var(--foreground))',
+                  }}
+                  formatter={(v, _n, p) => [`${v}% (공실 ${(p as { payload?: { vac?: number } })?.payload?.vac ?? 0}%)`, '임대율']}
+                />
+                <Bar
+                  dataKey="rate"
+                  radius={[0, 6, 6, 0]}
+                  maxBarSize={16}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
+                  onClick={(d: unknown) => {
+                    const b = (d as { payload?: { building?: Building } })?.payload?.building;
+                    if (b) setDrawerBd(b);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {rateData.map((d, i) => (
+                    <Cell key={i} fill={d.vac > 0 ? 'hsl(var(--warning))' : 'hsl(var(--success))'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
         <Card className="p-5">
           <SectionHeader title="임대면적 vs 전체면적 비교" description="상위 10동" />
           <div className="h-[360px] w-full">
@@ -280,7 +374,7 @@ export function LeaseStatusSubtab() {
                 <YAxis
                   type="category"
                   dataKey="name"
-                  width={100}
+                  width={90}
                   tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
                   axisLine={{ stroke: 'hsl(var(--border))' }}
                   tickLine={false}
@@ -398,26 +492,6 @@ export function LeaseStatusSubtab() {
         </Card>
       </div>
 
-      {/* ── ④ 지역(수도권/지방) + 용도(4압축) 2열 테이블 ── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <GroupTable
-          title="지역별 현황"
-          description="수도권 / 지방"
-          groups={regionGroups}
-          expanded={expandedRegion}
-          onToggle={(k) => setExpandedRegion(expandedRegion === k ? null : k)}
-          onPickBuilding={setDrawerBd}
-        />
-        <GroupTable
-          title="건물용도별 현황"
-          description={`${useGroups.length}개 용도 (4종 압축)`}
-          groups={useGroups}
-          expanded={expandedUse}
-          onToggle={(k) => setExpandedUse(expandedUse === k ? null : k)}
-          onPickBuilding={setDrawerBd}
-        />
-      </div>
-
       {drawerBd && (
         <BuildingDrawer building={drawerBd} open={!!drawerBd} onClose={() => setDrawerBd(null)} />
       )}
@@ -427,29 +501,161 @@ export function LeaseStatusSubtab() {
 
 /* ── sub-components ── */
 
-function KpiCard({ label, value, sub }: { label: string; value: string; sub: string }) {
+function KpiCard({
+  label,
+  value,
+  sub,
+  isActive,
+  onClick,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  isActive?: boolean;
+  onClick?: () => void;
+}) {
   return (
-    <div className="rounded-xl border border-border bg-muted/20 p-3">
-      <div className="text-caption text-muted-foreground">{label}</div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        'w-full rounded-xl border p-3 text-left transition-all duration-150',
+        isActive
+          ? 'border-primary bg-primary/10 ring-1 ring-primary/30'
+          : 'border-border bg-muted/20 hover:border-primary/40 hover:bg-muted/40',
+      )}
+    >
+      <div className="flex items-start justify-between gap-1">
+        <div className="text-caption text-muted-foreground">{label}</div>
+        {isActive && (
+          <span className="shrink-0 text-micro font-medium text-primary">▾ 목록</span>
+        )}
+      </div>
       <div className="mt-1 font-mono text-heading-sm font-semibold tabular-nums text-foreground">
         {value}
       </div>
       <div className="mt-0.5 text-micro text-muted-foreground">{sub}</div>
-    </div>
+    </button>
   );
 }
 
-function RiskChip({ risk, text }: { risk: 'danger' | 'warning' | 'success'; text: string }) {
+function RiskChip({
+  risk,
+  text,
+  isActive,
+  onClick,
+}: {
+  risk: 'danger' | 'warning' | 'success';
+  text: string;
+  isActive?: boolean;
+  onClick?: () => void;
+}) {
   return (
-    <span
+    <button
+      type="button"
+      onClick={onClick}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-caption font-medium',
+        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-caption font-medium transition-all duration-150',
         RISK_CLASS[risk],
+        isActive ? 'ring-2 ring-offset-1' : 'hover:brightness-95',
+        isActive && risk === 'success' && 'ring-success/50',
+        isActive && risk === 'warning' && 'ring-warning/50',
+        isActive && risk === 'danger' && 'ring-danger/50',
       )}
     >
       <span className={cn('h-2 w-2 rounded-full', RISK_DOT[risk])} />
       {text}
-    </span>
+      {isActive && <span className="ml-0.5">▾</span>}
+    </button>
+  );
+}
+
+function DrilldownPanel({
+  title,
+  buildings,
+  onClose,
+  onPickBuilding,
+}: {
+  title: string;
+  buildings: Building[];
+  onClose: () => void;
+  onPickBuilding: (b: Building) => void;
+}) {
+  return (
+    <Card className="overflow-hidden border-primary/20">
+      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3">
+        <div>
+          <span className="text-heading-sm font-semibold text-foreground">{title}</span>
+          <span className="ml-2 text-caption text-muted-foreground">{buildings.length}동</span>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-lg px-2.5 py-1 text-caption text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          aria-label="닫기"
+        >
+          닫기 ✕
+        </button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[600px]">
+          <thead className="bg-muted/40 text-caption text-muted-foreground">
+            <tr>
+              <th className="px-4 py-2.5 text-left font-semibold">건물명</th>
+              <th className="px-3 py-2.5 text-left font-semibold">지역</th>
+              <th className="hidden px-3 py-2.5 text-left font-semibold sm:table-cell">용도</th>
+              <th className="px-3 py-2.5 text-right font-semibold">임대율</th>
+              <th className="px-3 py-2.5 text-right font-semibold">공실률</th>
+              <th className="hidden px-3 py-2.5 text-right font-semibold md:table-cell">취득가</th>
+              <th className="hidden px-3 py-2.5 text-left font-semibold lg:table-cell">임차인</th>
+              <th className="px-3 py-2.5 text-center font-semibold">상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {buildings.map((b) => {
+              const risk = riskOf(b.rental.rate);
+              return (
+                <tr
+                  key={b.id}
+                  className="border-t border-border transition-colors hover:bg-muted/20"
+                >
+                  <td className="px-4 py-2.5">
+                    <button
+                      type="button"
+                      onClick={() => onPickBuilding(b)}
+                      className="text-left font-medium text-primary hover:underline"
+                    >
+                      {b.name}
+                    </button>
+                  </td>
+                  <td className="px-3 py-2.5 text-caption text-muted-foreground">
+                    {regionBucket(b.address)}
+                  </td>
+                  <td className="hidden px-3 py-2.5 text-caption text-muted-foreground sm:table-cell">
+                    {b.use || '—'}
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground">
+                    {b.rental.rate}%
+                  </td>
+                  <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
+                    {b.rental.vacancy}%
+                  </td>
+                  <td className="hidden px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground md:table-cell">
+                    {parsePrice(b.acquisitionPrice).toFixed(1)}억원
+                  </td>
+                  <td className="hidden max-w-[160px] truncate px-3 py-2.5 text-caption text-muted-foreground lg:table-cell">
+                    {b.tenant || '—'}
+                  </td>
+                  <td className="px-3 py-2.5 text-center">
+                    <RiskBadge risk={risk} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </Card>
   );
 }
 
