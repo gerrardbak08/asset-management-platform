@@ -185,8 +185,8 @@ function SelectedPanel({
       {/* 차트 영역 */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex flex-col p-3 overflow-hidden">
-          <div className="mb-2 flex shrink-0 items-center justify-between">
+        <Card className="p-3">
+          <div className="mb-2 flex items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
               <button
@@ -211,53 +211,51 @@ function SelectedPanel({
               </button>
             </div>
           </div>
-          <div className="h-[180px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={supplyData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
-                <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
-                <XAxis
-                  type="number"
-                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                  axisLine={{ stroke: 'hsl(var(--border))' }}
-                  tickLine={false}
-                  tickFormatter={(v) => fmtKR(Number(v))}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={100}
-                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                  axisLine={{ stroke: 'hsl(var(--border))' }}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(v) => (mode === 'amount' ? fmtKRfull(Number(v)) : Number(v).toLocaleString('ko-KR') + ' 개')}
-                  contentStyle={{
-                    background: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 12,
-                    fontSize: 12,
-                    color: 'hsl(var(--foreground))',
-                  }}
-                  cursor={{ fill: 'hsl(var(--muted))' }}
-                />
-                <Bar dataKey="value" fill="hsl(var(--primary))" radius={[0, 6, 6, 0]} maxBarSize={20} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={supplyData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
+              <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
+              <XAxis
+                type="number"
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                axisLine={{ stroke: 'hsl(var(--border))' }}
+                tickLine={false}
+                tickFormatter={(v) => fmtKR(Number(v))}
+              />
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={100}
+                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                axisLine={{ stroke: 'hsl(var(--border))' }}
+                tickLine={false}
+              />
+              <Tooltip
+                formatter={(v) => (mode === 'amount' ? fmtKRfull(Number(v)) : Number(v).toLocaleString('ko-KR') + ' 개')}
+                contentStyle={{
+                  background: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  color: 'hsl(var(--foreground))',
+                }}
+                cursor={{ fill: 'hsl(var(--muted))' }}
+              />
+              <Bar dataKey="value" fill="hsl(var(--primary))" radius={[0, 6, 6, 0]} maxBarSize={20} />
+            </BarChart>
+          </ResponsiveContainer>
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex min-h-[260px] flex-col p-3 overflow-hidden">
-          <div className="mb-2 shrink-0">
+        <Card className="p-3">
+          <div className="mb-2">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
           {typeData.length === 0 ? (
             <p className="text-caption text-muted-foreground">자산 유형 데이터 없음.</p>
           ) : (
-            <div className="flex min-h-0 flex-1 flex-row items-center gap-4">
+            <div className="flex flex-row items-center gap-4">
               {/* 도넛 */}
-              <div className="aspect-square w-[130px] shrink-0">
+              <div className="h-[150px] w-[150px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
