@@ -132,6 +132,11 @@ const isEntry =
   path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 
 if (isEntry) {
+  const now = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+  console.log(`\n🚀 [BUILD INFO] Server starting at: ${now}`);
+  console.log(`📂 [BUILD INFO] Current Directory: ${process.cwd()}`);
+  console.log(`🌐 [BUILD INFO] Node Env: ${config.NODE_ENV}\n`);
+
   buildServer()
     .then((app) => app.listen({ port: config.PORT, host: config.HOST }))
     .catch((err) => {

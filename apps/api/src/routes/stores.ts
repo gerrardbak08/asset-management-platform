@@ -42,7 +42,7 @@ export const storeRoutes: FastifyPluginAsync = async (app) => {
     return {
       ok: true,
       data: {
-        items: items.map((s) => ({
+        items: items.map((s: any) => ({
           id: s.id,
           name: s.name,
           siteType: s.siteType,

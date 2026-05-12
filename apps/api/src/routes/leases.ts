@@ -58,10 +58,10 @@ export const leaseRoutes: FastifyPluginAsync = async (app) => {
       ok: true,
       data: {
         critical: leases
-          .filter((lease) => lease.contractEnd <= criticalCutoff)
+          .filter((lease: any) => lease.contractEnd <= criticalCutoff)
           .map(serializeLease),
         warning: leases
-          .filter((lease) => lease.contractEnd > criticalCutoff)
+          .filter((lease: any) => lease.contractEnd > criticalCutoff)
           .map(serializeLease),
       },
     };
@@ -88,7 +88,7 @@ export const leaseRoutes: FastifyPluginAsync = async (app) => {
       include: { building: { select: { name: true } } },
       orderBy: [{ status: 'asc' }, { contractEnd: 'asc' }],
     });
-    return { ok: true, data: leases.map(serializeLease) };
+    return { ok: true, data: leases.map((l: any) => serializeLease(l)) };
   });
 
   app.get<{ Params: { id: string } }>(
@@ -110,7 +110,7 @@ export const leaseRoutes: FastifyPluginAsync = async (app) => {
             orderBy: { contractStart: 'asc' },
           })
         : [];
-      return { ok: true, data: { ...serializeLease(lease), chain: chain.map(serializeLease) } };
+      return { ok: true, data: { ...serializeLease(lease), chain: chain.map((l) => serializeLease(l)) } };
     },
   );
 

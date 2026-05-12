@@ -44,8 +44,9 @@ export function Sidebar() {
         <SidebarGroup label="관리" items={management} />
       </nav>
 
-      <div className="border-t border-sidebar-border px-4 py-3 text-micro text-sidebar-muted-foreground">
-        v0.2.0 · 2단계
+      <div className="border-t border-sidebar-border px-4 py-3 text-[10px] text-sidebar-muted-foreground">
+        v0.2.2 · 레이아웃 최적화
+        <div className="opacity-50">Build: 2026-05-12 14:55</div>
       </div>
     </aside>
   );

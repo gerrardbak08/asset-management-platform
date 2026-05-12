@@ -13,7 +13,7 @@ function csvEscape(v: unknown): string {
 
 function rowsToCsv(headers: string[], rows: (string | number | null | undefined)[][]): string {
   const head = headers.map(csvEscape).join(',');
-  const body = rows.map((r) => r.map(csvEscape).join(',')).join('\n');
+  const body = rows.map((r: any) => r.map((c: any) => csvEscape(c)).join(',')).join('\n');
   return '﻿' + head + '\n' + body + '\n';
 }
 
@@ -33,14 +33,14 @@ export const exportRoutes: FastifyPluginAsync = async (app) => {
     const payload = {
       version: '0.1.0',
       exportedAt: new Date().toISOString(),
-      buildings: buildings.map((b) => ({
+      buildings: buildings.map((b: any) => ({
         ...b,
         acquisitionPrice: b.acquisitionPrice.toString(),
         acquisitionDate: b.acquisitionDate.toISOString().slice(0, 10),
         approvalDate: b.approvalDate ? b.approvalDate.toISOString().slice(0, 10) : null,
       })),
       equipments,
-      snapshots: snapshots.map((s) => ({
+      snapshots: snapshots.map((s: any) => ({
         ...s,
         equipmentLegacyId: s.equipment.legacyId,
         equipmentName: s.equipment.name,
@@ -49,7 +49,7 @@ export const exportRoutes: FastifyPluginAsync = async (app) => {
         disposalAmount: s.disposalAmount.toString(),
         inventoryAmount: s.inventoryAmount.toString(),
       })),
-      monthlySnapshots: monthly.map((m) => ({
+      monthlySnapshots: monthly.map((m: any) => ({
         ...m,
         totalAsset: m.totalAsset.toString(),
         tangible: m.tangible.toString(),
@@ -73,7 +73,7 @@ export const exportRoutes: FastifyPluginAsync = async (app) => {
     const items = await prisma.building.findMany({ orderBy: { legacyId: 'asc' } });
     const csv = rowsToCsv(
       ['건물명', '주소', '용도', '연면적(㎡)', '평', '층수', '사용승인일', '취득일', '취득가액', '임대면적', '임대율', '공실률', '임차인'],
-      items.map((b) => [
+      items.map((b: any) => [
         b.name,
         b.address,
         b.use,
@@ -113,8 +113,8 @@ export const exportRoutes: FastifyPluginAsync = async (app) => {
           '폐기(본사)', '폐기(매장)', '폐기(물류)',
           '재고(본사)', '재고(매장)', '재고(물류)',
         ],
-        equipments.map((e) => {
-          const byLoc = (loc: 'hq' | 'store' | 'logistics') => e.snapshots.find((s) => s.locationType === loc);
+        equipments.map((e: any) => {
+          const byLoc = (loc: 'hq' | 'store' | 'logistics') => e.snapshots.find((s: any) => s.locationType === loc);
           const hq = byLoc('hq');
           const st = byLoc('store');
           const lg = byLoc('logistics');

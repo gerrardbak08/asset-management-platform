@@ -56,7 +56,7 @@ export const ledgerRoutes: FastifyPluginAsync = async (app) => {
       orderBy: { txDate: 'desc' },
       take: 500,
     });
-    return { ok: true, data: rows.map(serializeLedger) };
+    return { ok: true, data: rows.map((r: any) => serializeLedger(r)) };
   });
 
   app.post('/ledger/recompute-snapshot', { preHandler: requireRole('admin') }, async (req, reply) => {
@@ -78,7 +78,7 @@ export const ledgerRoutes: FastifyPluginAsync = async (app) => {
         include: { equipmentItem: { select: { name: true, legacyId: true } } },
         orderBy: { txDate: 'desc' },
       });
-      return { ok: true, data: rows.map(serializeLedger) };
+      return { ok: true, data: rows.map((r: any) => serializeLedger(r)) };
     },
   );
 

@@ -41,7 +41,7 @@ export const dashboardRoutes: FastifyPluginAsync = async (app) => {
     });
     return {
       ok: true,
-      data: items.map((s) => ({
+      data: items.map((s: any) => ({
         period: s.period,
         totalAsset: bigintToNum(s.totalAsset),
         tangible: bigintToNum(s.tangible),
@@ -62,7 +62,7 @@ export const dashboardRoutes: FastifyPluginAsync = async (app) => {
     });
     return {
       ok: true,
-      data: items.map((e) => ({
+      data: items.map((e: any) => ({
         id: e.id,
         legacyId: e.legacyId,
         name: e.name,
@@ -89,7 +89,7 @@ export const dashboardRoutes: FastifyPluginAsync = async (app) => {
       });
       return {
         ok: true,
-        data: items.map((s) => ({
+        data: items.map((s: any) => ({
           id: s.id,
           equipmentId: s.equipmentId,
           equipmentLegacyId: s.equipment.legacyId,

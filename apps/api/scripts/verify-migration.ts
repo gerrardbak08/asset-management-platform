@@ -51,7 +51,7 @@ async function main() {
     include: { snapshots: { where: { period: '2026-03' } } },
   });
   const fireTotal =
-    fire?.snapshots.reduce((acc, s) => acc + s.inventoryAmount, 0n) ?? 0n;
+    fire?.snapshots.reduce((acc: bigint, s: any) => acc + s.inventoryAmount, 0n) ?? 0n;
   check('소화기 재고 합계 26-03', fireTotal, EXPECTED.fireExtinguisherInventory);
 
   // 4) 건물 카운트
