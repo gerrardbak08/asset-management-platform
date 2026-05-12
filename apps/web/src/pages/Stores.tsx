@@ -169,11 +169,11 @@ function SelectedPanel({
               ) : null}
             </div>
           </div>
-          <div className="shrink-0 text-caption font-medium text-muted-foreground">
+          <div className="shrink-0 text-[11px] font-medium text-muted-foreground">
             {detail.period} 기준
           </div>
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <Kpi label="자산 장부가" value={fmtKRfull(detail.assetValue)} />
           <Kpi label="자산 항목 수" value={detail.assetCount.toLocaleString('ko-KR') + ' 건'} />
           <Kpi label="비품 재고액" value={fmtKRfull(detail.supplyValue)} />
@@ -184,7 +184,7 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid h-[240px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid h-[200px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
         {/* 비품 카테고리 TOP 10 */}
         <Card className="flex flex-col p-4 overflow-hidden">
           <div className="mb-3 flex shrink-0 items-center justify-between">

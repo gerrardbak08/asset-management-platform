@@ -19,8 +19,11 @@ export async function imageRoutes(app: FastifyInstance) {
     const candidates = [
       path.join(process.cwd(), 'uploads', 'buildings', safeSrc),
       path.join(process.cwd(), '../../uploads', 'buildings', safeSrc),
-      path.join(process.cwd(), 'public', 'files', 'buildings', safeSrc)
+      path.join(process.cwd(), 'public', 'files', 'buildings', safeSrc),
+      path.join(process.cwd(), '..', '..', 'uploads', 'buildings', safeSrc)
     ];
+
+    app.log.info({ safeSrc, candidates }, 'Image optimization request');
 
     let inputPath = '';
     for (const cand of candidates) {
