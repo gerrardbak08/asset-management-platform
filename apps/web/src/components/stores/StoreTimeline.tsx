@@ -1,4 +1,4 @@
-// 사업장 활동 타임라인 — V16 renderStoreTimeline 동등. 카테고리 변동·자산 항목·갱신 이력 (1단계 — 합성 이벤트)
+// 사업장 활동 타임라인 — 컴팩트 수평 레이아웃
 import { useMemo } from 'react';
 import {
   ArrowDown,
@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import type { StoreDetail } from '@/lib/api/stores';
 import { Card } from '@/components/ui/Card';
-import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
 import { fmtKR } from '@/lib/format';
 
 type Event = {
@@ -20,7 +19,7 @@ type Event = {
   detail: string;
 };
 
-const TONE_BG: Record<Event['tone'], string> = {
+const TONE_CLASSES: Record<Event['tone'], string> = {
   primary: 'bg-primary/10 text-primary',
   info: 'bg-info-subtle text-info',
   success: 'bg-success-subtle text-success',
@@ -37,7 +36,7 @@ export function StoreTimeline({ detail }: Props) {
       icon: Building2,
       tone: 'primary',
       title: '사업장 등록',
-      detail: `${detail.period} 기준 자산 ${fmtKR(detail.assetValue)}원 · 항목 ${detail.assetCount.toLocaleString('ko-KR')}건`,
+      detail: `${detail.period} · ${fmtKR(detail.assetValue)}원 · ${detail.assetCount.toLocaleString('ko-KR')}건`,
     });
 
     const supplyEntries = Object.entries(detail.supplyByCategory ?? {})
@@ -82,7 +81,7 @@ export function StoreTimeline({ detail }: Props) {
         icon: Boxes,
         tone: 'success',
         title: '비품 재고 보유',
-        detail: `${fmtKR(detail.supplyValue)}원 · ${Object.keys(detail.supplyByCategory ?? {}).length} 카테고리`,
+        detail: `${fmtKR(detail.supplyValue)}원 · ${Object.keys(detail.supplyByCategory ?? {}).length}종`,
       });
     }
 
@@ -90,42 +89,36 @@ export function StoreTimeline({ detail }: Props) {
       icon: Clock,
       tone: 'muted',
       title: '데이터 기준',
-      detail: `${detail.period} 마감 (수동 또는 xlsb 업로드)`,
+      detail: `${detail.period} 마감`,
     });
     return out;
   }, [detail]);
 
   return (
-    <Card className="w-full max-w-full p-3 shadow-sm">
-      <SectionHeader title="활동 타임라인" />
-      <ol className="relative mt-1 flex w-full gap-3 overflow-x-auto border-t-2 border-border pt-7 pb-1 custom-scrollbar">
+    <Card className="shrink-0 p-3 shadow-sm">
+      <div className="mb-2 text-[11px] font-bold text-foreground">활동 타임라인</div>
+      <div className="flex items-start gap-1 overflow-x-auto custom-scrollbar">
         {events.map((e, i) => (
-          <li key={i} className="relative w-[140px] shrink-0">
-            {/* 타임라인 연결 점선 및 점 */}
-            <div
-              className="absolute -top-[28px] left-[12px] h-[14px] w-[1px] border-l border-dashed border-border/60"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute -top-[28px] left-[12px] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-border"
-              aria-hidden="true"
-            />
-
+          <div
+            key={i}
+            className="flex min-w-[110px] flex-1 items-start gap-2 rounded-lg border border-border/50 bg-muted/20 px-2.5 py-2"
+          >
             <span
-              aria-hidden="true"
-              className={`absolute -top-[14px] left-0 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full ${TONE_BG[e.tone]} ring-3 ring-card shadow-sm`}
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
             >
               <e.icon className="h-3 w-3" />
             </span>
-            <div className="text-[11px] font-bold leading-tight text-foreground">
-              {e.title}
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-semibold leading-tight text-foreground truncate">
+                {e.title}
+              </div>
+              <div className="mt-0.5 text-[9px] leading-snug text-muted-foreground truncate">
+                {e.detail}
+              </div>
             </div>
-            <div className="mt-0.5 text-[10px] leading-snug text-muted-foreground line-clamp-2">
-              {e.detail}
-            </div>
-          </li>
+          </div>
         ))}
-      </ol>
+      </div>
     </Card>
   );
 }

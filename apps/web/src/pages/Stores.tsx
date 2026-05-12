@@ -74,14 +74,14 @@ export default function Stores() {
       </Card>
 
       <div
-        className="grid grid-cols-1 gap-4 lg:grid-cols-[300px,1fr] lg:items-start"
-        style={{ minHeight: 'calc(100vh - 180px)' }}
+        className="grid grid-cols-1 gap-4 lg:grid-cols-[280px,1fr]"
+        style={{ height: 'calc(100vh - 180px)' }}
       >
-        <Card className="flex flex-col overflow-hidden lg:sticky lg:top-4 lg:max-h-[calc(100vh-200px)]">
-          <div className="shrink-0 px-4 py-3 text-caption font-semibold text-muted-foreground">
+        <Card className="flex flex-col overflow-hidden">
+          <div className="shrink-0 px-4 py-2 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
-          <ul className="min-h-0 flex-1 overflow-y-auto pb-12 custom-scrollbar">
+          <ul className="min-h-0 flex-1 overflow-y-auto custom-scrollbar">
             {(list.data?.items ?? []).map((s) => (
               <li key={s.id}>
                 <button
@@ -158,8 +158,9 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex min-h-0 flex-col gap-4 pb-12">
-      <Card className="shrink-0 p-4">
+    <div className="flex flex-col gap-3" style={{ height: 'calc(100vh - 180px)' }}>
+      {/* KPI 헤더 — 고정 높이 */}
+      <Card className="shrink-0 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <div className="flex items-baseline gap-2">
@@ -169,7 +170,7 @@ function SelectedPanel({
               ) : null}
             </div>
           </div>
-          <div className="shrink-0 text-[11px] font-medium text-muted-foreground">
+          <div className="shrink-0 text-[10px] font-medium text-muted-foreground">
             {detail.period} 기준
           </div>
         </div>
@@ -184,10 +185,11 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+      {/* 차트 영역 — 남은 공간의 대부분 차지 */}
+      <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex min-h-[240px] flex-col p-4 overflow-hidden">
-          <div className="mb-3 flex shrink-0 items-center justify-between">
+        <Card className="flex min-h-0 flex-col p-3 overflow-hidden">
+          <div className="mb-2 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
               <button
@@ -249,8 +251,8 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex min-h-[240px] flex-col p-4 overflow-hidden">
-          <div className="mb-3 shrink-0">
+        <Card className="flex min-h-0 flex-col p-3 overflow-hidden">
+          <div className="mb-2 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
           {typeData.length === 0 ? (
@@ -258,7 +260,7 @@ function SelectedPanel({
           ) : (
             <div className="flex min-h-0 flex-1 flex-row items-center gap-4">
               {/* 도넛 */}
-              <div className="h-[140px] w-[140px] shrink-0">
+              <div className="aspect-square w-[130px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -311,9 +313,8 @@ function SelectedPanel({
         </Card>
       </div>
 
-      <div className="shrink-0">
-        <StoreTimeline detail={detail} />
-      </div>
+      {/* 타임라인 — 하단 고정 */}
+      <StoreTimeline detail={detail} />
     </div>
   );
 }

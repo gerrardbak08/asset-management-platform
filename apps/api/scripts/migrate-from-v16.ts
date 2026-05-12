@@ -84,6 +84,9 @@ async function main() {
     const coord = json.coords[i] ?? [37.5665, 126.978];
     const photoFile = findPhoto(r[0], json.photos);
     const detailFile = findPhoto(r[0], json.details);
+    // 실제 디스크 파일명은 b{NNN}.jpg / b{NNN}_detail.jpg 형식
+    const diskPhotoFile = `b${String(i + 1).padStart(3, '0')}.jpg`;
+    const diskDetailFile = `b${String(i + 1).padStart(3, '0')}_detail.jpg`;
 
     const acquisitionDate = new Date(r[7]);
     const acquisitionPrice = BigInt(Math.round(+r[8] || 0));
@@ -106,8 +109,8 @@ async function main() {
         tenant: r[12] || '-',
         lat: coord[0],
         lng: coord[1],
-        photoUrl: photoFile ? `/files/buildings/${photoFile}` : null,
-        detailPhotoUrl: detailFile ? `/files/buildings/${detailFile}` : null,
+        photoUrl: photoFile ? `/files/buildings/${diskPhotoFile}` : null,
+        detailPhotoUrl: detailFile ? `/files/buildings/${diskDetailFile}` : null,
       },
       update: {
         name: r[0],
@@ -125,8 +128,8 @@ async function main() {
         tenant: r[12] || '-',
         lat: coord[0],
         lng: coord[1],
-        photoUrl: photoFile ? `/files/buildings/${photoFile}` : null,
-        detailPhotoUrl: detailFile ? `/files/buildings/${detailFile}` : null,
+        photoUrl: photoFile ? `/files/buildings/${diskPhotoFile}` : null,
+        detailPhotoUrl: detailFile ? `/files/buildings/${diskDetailFile}` : null,
       },
     });
 
