@@ -51,7 +51,7 @@ export function PhotoLightbox({ open, onClose, photos, initialIndex = 0, alt }: 
           </Dialog.Close>
 
           <img
-            src={cur.url}
+            src={`/api/images/optimized?src=${encodeURIComponent(cur.url)}&w=1200&q=85`}
             alt={`${alt} — ${cur.label}`}
             className="max-h-[85vh] max-w-[92vw] rounded-xl object-contain shadow-2xl"
           />

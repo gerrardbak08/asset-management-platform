@@ -20,6 +20,7 @@ import { leaseRoutes } from './routes/leases';
 import { maintenanceRoutes } from './routes/maintenance';
 import { ledgerRoutes } from './routes/ledger';
 import { depreciationRoutes } from './routes/depreciation';
+import { imageRoutes } from './routes/image';
 import { attachUser } from './lib/auth/guards';
 
 export async function buildServer() {
@@ -60,6 +61,8 @@ export async function buildServer() {
         prefix: '/',
         wildcard: true,
         index: 'index.html',
+        maxAge: '1d', // 기본 1일 캐시
+        immutable: true,
       });
       // SPA fallback
       app.setNotFoundHandler(async (req, reply) => {
@@ -85,6 +88,7 @@ export async function buildServer() {
   await app.register(maintenanceRoutes, { prefix: '/api' });
   await app.register(ledgerRoutes, { prefix: '/api' });
   await app.register(depreciationRoutes, { prefix: '/api' });
+  await app.register(imageRoutes); // /api/images/optimized
 
   return app;
 }

@@ -178,9 +178,9 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid h-[180px] shrink-0 grid-cols-1 gap-3 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid h-[220px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex flex-col p-3.5">
+        <Card className="flex flex-col p-4">
           <div className="mb-3 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
@@ -243,7 +243,7 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex flex-col p-3.5">
+        <Card className="flex flex-col p-4">
           <div className="mb-3 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>

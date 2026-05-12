@@ -21,9 +21,11 @@ export function PhotoFallback({ primary, fallback, alt, className }: Props) {
       </div>
     );
   }
+  const optimizedSrc = src ? `/api/images/optimized?src=${encodeURIComponent(src)}&w=600&q=75` : null;
+
   return (
     <img
-      src={src}
+      src={optimizedSrc ?? src}
       alt={alt}
       loading="lazy"
       className={cn('object-cover', className)}
