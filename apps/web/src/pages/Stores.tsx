@@ -73,8 +73,8 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-[280px,1fr]">
-        <Card className="flex flex-col overflow-hidden">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px,1fr]">
+        <Card className="flex flex-col overflow-hidden lg:h-[520px]">
           <div className="shrink-0 px-4 py-2 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
