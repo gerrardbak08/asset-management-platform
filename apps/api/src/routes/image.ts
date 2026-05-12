@@ -12,8 +12,9 @@ export async function imageRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: 'src is required' });
     }
 
-    // 보안: 상위 디렉토리 접근 방지
-    const safeSrc = path.basename(src).toLowerCase();
+    // 보안 및 경로 정규화: 디코딩 후 basename 추출
+    const decodedSrc = decodeURIComponent(src);
+    const safeSrc = path.basename(decodedSrc).toLowerCase();
     
     // 여러 경로 후보 확인 (루트 또는 apps/api 기준)
     const candidates = [

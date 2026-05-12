@@ -3,8 +3,8 @@ set -e
 
 echo "🚀 Starting build process..."
 
-# 1. Install all dependencies (including devDependencies)
-pnpm install --prod=false
+# 1. Install all dependencies (ensuring devDeps are included for build)
+NODE_ENV=development pnpm install --frozen-lockfile=false
 
 # 2. Build everything in the monorepo
 echo "📦 Building all projects..."
