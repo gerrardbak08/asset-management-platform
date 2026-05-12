@@ -14,11 +14,26 @@ export async function imageRoutes(app: FastifyInstance) {
 
     // 보안: 상위 디렉토리 접근 방지
     const safeSrc = path.basename(src);
-    const inputPath = path.join(process.cwd(), 'uploads', 'buildings', safeSrc);
     
-    try {
-      await fs.access(inputPath);
-    } catch (e) {
+    // 여러 경로 후보 확인 (루트 또는 apps/api 기준)
+    const candidates = [
+      path.join(process.cwd(), 'uploads', 'buildings', safeSrc),
+      path.join(process.cwd(), '../../uploads', 'buildings', safeSrc),
+      path.join(process.cwd(), 'public', 'files', 'buildings', safeSrc)
+    ];
+
+    let inputPath = '';
+    for (const cand of candidates) {
+      try {
+        await fs.access(cand);
+        inputPath = cand;
+        break;
+      } catch (e) {
+        continue;
+      }
+    }
+    
+    if (!inputPath) {
       return reply.status(404).send({ error: 'Image not found' });
     }
 
