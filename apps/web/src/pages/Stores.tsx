@@ -73,11 +73,8 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div
-        className="grid grid-cols-1 gap-4 lg:grid-cols-[280px,1fr]"
-        style={{ height: 'calc(100vh - 180px)' }}
-      >
-        <Card className="flex flex-col overflow-hidden">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px,1fr]">
+        <Card className="flex flex-col overflow-hidden lg:h-[calc(100vh-180px)] lg:sticky lg:top-4">
           <div className="shrink-0 px-4 py-2 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
@@ -158,9 +155,9 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex flex-col gap-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+    <div className="flex flex-col gap-3">
       {/* KPI 헤더 */}
-      <Card className="shrink-0 p-3">
+      <Card className="p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <div className="flex items-baseline gap-2">
@@ -186,7 +183,7 @@ function SelectedPanel({
       </Card>
 
       {/* 차트 영역 — 고정 높이 */}
-      <div className="grid shrink-0 grid-cols-1 gap-3 lg:grid-cols-2" style={{ height: '220px' }}>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2" style={{ height: '220px' }}>
         {/* 비품 카테고리 TOP 10 */}
         <Card className="flex h-full flex-col p-3 overflow-hidden">
           <div className="mb-2 flex shrink-0 items-center justify-between">

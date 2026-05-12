@@ -53,17 +53,15 @@ export async function buildServer() {
   const webDist = path.join(process.cwd(), 'public');
 
   // /files 정적 파일 서빙 — public/files 또는 uploads 에서 건물 사진 등 제공
-  // Railway: 빌드 스크립트가 uploads/ → public/files/ 로 복사
-  // 개발: uploads/ 디렉토리 직접 사용
   const filesDir = path.join(process.cwd(), 'public', 'files');
   const uploadsDir = path.resolve(config.UPLOADS_DIR);
   try {
     const { existsSync, mkdirSync } = await import('node:fs');
-    // public/files 가 있으면 그걸 사용 (프로덕션)
     const staticRoot = existsSync(filesDir) ? filesDir : uploadsDir;
     if (!existsSync(staticRoot)) {
       mkdirSync(staticRoot, { recursive: true });
     }
+    app.log.info({ filesDir, uploadsDir, staticRoot }, '/files static root');
     await app.register(staticPlugin, {
       root: staticRoot,
       prefix: '/files/',
@@ -74,28 +72,41 @@ export async function buildServer() {
     app.log.warn(e, 'Failed to register /files static route');
   }
 
-  // 정적 파일 서빙 (웹 빌드 결과물)
+  // 정적 파일 서빙 (웹 빌드 결과물) — decorateReply: true 로 sendFile 사용 가능
   try {
     const { existsSync } = await import('node:fs');
     if (existsSync(webDist)) {
+      app.log.info({ webDist }, 'Web dist found');
       await app.register(staticPlugin, {
         root: webDist,
         prefix: '/',
-        wildcard: true,
+        wildcard: false,
         index: 'index.html',
         maxAge: '1d',
-        immutable: true,
-        decorateReply: false,
       });
-      // SPA fallback
+      // SPA fallback — index.html 을 직접 파일로 읽어서 전송
+      const { readFile } = await import('node:fs/promises');
+      const indexPath = path.join(webDist, 'index.html');
+      let indexHtml = '';
+      try {
+        indexHtml = await readFile(indexPath, 'utf-8');
+      } catch (err) {
+        app.log.error({ err, indexPath }, 'Failed to load index.html');
+      }
       app.setNotFoundHandler(async (req, reply) => {
         if (!req.url.startsWith('/api') && !req.url.startsWith('/files')) {
-          return reply.sendFile('index.html', webDist);
+          if (indexHtml) {
+            return reply.type('text/html').send(indexHtml);
+          }
         }
         reply.status(404).send({ ok: false, code: 'NOT_FOUND', message: '경로를 찾을 수 없습니다.' });
       });
+    } else {
+      app.log.warn({ webDist }, 'Web dist not found — SPA fallback disabled');
     }
-  } catch (e) {}
+  } catch (e) {
+    app.log.error(e, 'Failed to register web static route');
+  }
 
   // 라우트
   await app.register(healthRoutes, { prefix: '/api' });

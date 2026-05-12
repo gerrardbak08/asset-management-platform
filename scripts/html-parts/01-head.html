@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIMS — 전사 자산관리 시스템</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#1B3A7A;--primary-dark:#1E3A5F;--accent:#F59E0B;--bg:#F5F6FA;--card:#fff;--fg:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;--muted-bg:#f3f4f6;--danger:#b91c1c;--danger-bg:#fef2f2;--warning:#d97706;--warning-bg:#fffbeb;--success:#15803d;--success-bg:#f0fdf4;--info:#1d4ed8;--info-bg:#eff6ff;--sidebar-w:220px;--header-h:52px}
+html,body{height:100%;font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;font-size:13px;color:var(--fg);background:var(--bg)}
+button{font-family:inherit;cursor:pointer;border:none;background:none}input,textarea{font-family:inherit}
+#app{display:flex;height:100vh;overflow:hidden}
+#sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--primary-dark);color:#fff;display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0}
+.sidebar-logo{padding:16px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.brand-wrap{display:flex;align-items:center;gap:10px}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#1a1a2e}
+.brand-name{font-size:14px;font-weight:700}.brand-sub{font-size:9px;color:rgba(255,255,255,0.5)}
+nav{flex:1;padding:8px 0}
+.nav-group{padding:4px 12px;margin-top:12px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.05em}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;color:rgba(255,255,255,0.6);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:#fff}
+.nav-item.active{background:rgba(255,255,255,0.08);color:#fff;font-weight:700;border-left-color:var(--accent)}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#header{height:var(--header-h);min-height:var(--header-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px}
+#header h1{font-size:15px;font-weight:700}
+.period-badge{font-size:10px;font-weight:600;background:var(--primary);color:#fff;padding:2px 8px;border-radius:99px}
+#content{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.p3{padding:12px}.p4{padding:16px}
+.g2{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.g3{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+.g4{display:grid;gap:10px;grid-template-columns:repeat(4,1fr)}
+@media(max-width:1000px){.g3,.g4{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}}
+@media(max-width:640px){.g3,.g4{grid-template-columns:1fr}}
+.hero-card{background:linear-gradient(135deg,#fff,#eef2fc);border:1px solid rgba(27,58,122,0.12);border-radius:12px;padding:20px}
+.hero-label{font-size:12px;font-weight:700;color:var(--primary)}
+.hero-value{font-size:36px;font-weight:800;line-height:1;letter-spacing:-0.02em}
+.hero-unit{font-size:16px;font-weight:600;color:var(--muted)}
+.hero-sub{margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px}
+.mom-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700}
+.mom-up{background:#dcfce7;color:#15803d}.mom-down{background:#fef2f2;color:#b91c1c}.mom-flat{background:#f3f4f6;color:#6b7280}
+.sec-title{font-size:13px;font-weight:700}.sec-desc{font-size:10px;color:var(--muted);margin-top:2px}
+.kpi-box{border-radius:10px;border:1px solid var(--border);background:var(--muted-bg);padding:8px 10px}
+.kpi-label{font-size:9px;font-weight:600;color:var(--muted);text-transform:uppercase}.kpi-val{font-size:12px;font-weight:700;margin-top:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{padding:6px 10px;text-align:right;font-size:10px;font-weight:600;color:var(--muted);background:var(--muted-bg);border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl th.l{text-align:left}.tbl td{padding:6px 10px;border-bottom:1px solid var(--border);text-align:right}.tbl td.l{text-align:left}.tbl tr:hover td{background:#f9fafb}
+.tab-list{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:12px;overflow-x:auto}
+.tab-btn{padding:7px 12px;font-size:12px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;margin-bottom:-1px}
+.tab-btn:hover{color:var(--fg)}.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+.bld-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:1100px){.bld-grid{grid-template-columns:1fr 1fr}}@media(max-width:700px){.bld-grid{grid-template-columns:1fr}}
+.bld-card{border-radius:12px;border:1px solid var(--border);background:var(--card);overflow:hidden;cursor:pointer;transition:all 0.15s}
+.bld-card:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(27,58,122,0.1)}
+.bld-photo{width:100%;height:130px;object-fit:cover;display:block}.bld-photo-empty{width:100%;height:130px;display:flex;align-items:center;justify-content:center;background:var(--muted-bg);color:var(--muted);font-size:11px}
+.bld-body{padding:12px}.bld-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.bld-addr{font-size:10px;color:var(--muted);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bld-kpi{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bld-kpi-item{border-radius:8px;border:1px solid var(--border);background:var(--muted-bg);padding:5px 8px}
+.bld-kpi-item .label{font-size:9px;color:var(--muted);font-weight:600}.bld-kpi-item .val{font-size:11px;font-weight:700;margin-top:1px}
+.rental-bar{height:4px;background:var(--muted-bg);border-radius:99px;margin-top:8px;overflow:hidden}
+.rental-fill{height:100%;border-radius:99px}
+.region-tag{position:absolute;right:8px;top:8px;background:rgba(0,0,0,0.7);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px}
+.store-layout{display:grid;grid-template-columns:260px 1fr;gap:12px;height:calc(100vh - 130px)}
+.store-list{overflow-y:auto;border-radius:12px;border:1px solid var(--border);background:var(--card)}
+.store-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:11px}
+.store-item:hover{background:#f0f4ff}.store-item.active{background:#e8edf7}
+.store-detail{overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.tl-row{display:flex;gap:6px;overflow-x:auto;padding:4px 0}
+.tl-card{min-width:90px;flex:1;display:flex;align-items:flex-start;gap:6px;border-radius:8px;border:1px solid var(--border);background:var(--muted-bg);padding:7px 8px}
+.tl-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.tl-title{font-size:9px;font-weight:700;line-height:1.2}.tl-desc{font-size:8px;color:var(--muted);margin-top:1px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:none}.overlay.open{display:block}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:520px;max-width:95vw;background:var(--card);z-index:101;box-shadow:-4px 0 24px rgba(0,0,0,0.15);overflow-y:auto;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.22,1,0.36,1)}
+.drawer.open{transform:translateX(0)}
+.drawer-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.drawer-close{width:28px;height:28px;border-radius:6px;background:var(--muted-bg);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted)}
+.drawer-close:hover{background:#e8edf7;color:var(--fg)}
+.drawer-body{padding:16px 20px;flex:1}
+.search-box{display:flex;align-items:center;gap:8px;border-radius:10px;border:1px solid var(--border);background:var(--muted-bg);padding:7px 12px}
+.search-box input{flex:1;background:none;border:none;outline:none;font-size:12px}
+.hidden{display:none}
+.donut-wrap{display:flex;align-items:center;gap:12px}
+.risk-badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:99px;font-size:9px;font-weight:600}
+.risk-d{background:var(--danger-bg);color:var(--danger)}.risk-w{background:var(--warning-bg);color:var(--warning)}.risk-s{background:var(--success-bg);color:var(--success)}
+</style>
+</head>
+<body>
+<div id="app">
+<aside id="sidebar">
+  <div class="sidebar-logo"><div class="brand-wrap"><div class="logo-mark">A</div><div><div class="brand-name">ASUNG</div><div class="brand-sub">Asset Management</div></div></div></div>
+  <nav>
+    <div class="nav-group">운영</div>
+    <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')">📊 자산현황</div>
+    <div class="nav-item" data-page="buildings" onclick="go('buildings')">🏢 건물</div>
+    <div class="nav-item" data-page="stores" onclick="go('stores')">🏪 사업장</div>
+    <div class="nav-item" data-page="leases" onclick="go('leases')">📋 임대계약</div>
+    <div class="nav-item" data-page="maintenance" onclick="go('maintenance')">🔧 유지보수</div>
+    <div class="nav-item" data-page="ledger" onclick="go('ledger')">📦 비품 원장</div>
+    <div class="nav-item" data-page="depreciation" onclick="go('depreciation')">📉 감가상각</div>
+    <div class="nav-group">관리</div>
+    <div class="nav-item" data-page="admin" onclick="go('admin')">⚙️ 관리</div>
+  </nav>
+</aside>
+<div id="main">
+  <div id="header"><h1 id="page-title">자산현황</h1><span class="period-badge">2026-03 기준</span></div>
+  <div id="content"></div>
+</div>
+</div>
+<div class="overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="building-drawer">
+  <div class="drawer-hdr"><div><div class="sec-title" id="drawer-title"></div><div class="sec-desc" id="drawer-addr" style="margin-top:4px"></div></div><button class="drawer-close" onclick="closeDrawer()">✕</button></div>
+  <div class="drawer-body" id="drawer-body"></div>
+</div>
