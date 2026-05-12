@@ -3,9 +3,6 @@ set -e
 
 echo "🚀 Starting build process..."
 
-# 1. Install dependencies
-pnpm install --frozen-lockfile
-
 # 2. Build API
 echo "📦 Building API..."
 cd apps/api
