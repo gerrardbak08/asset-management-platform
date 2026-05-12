@@ -74,7 +74,7 @@ export default function Stores() {
       </Card>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px,1fr]">
-        <Card className="flex flex-col overflow-hidden lg:h-[520px]">
+        <Card className="flex flex-col overflow-hidden lg:h-[calc(100vh-200px)]">
           <div className="shrink-0 px-4 py-2 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
@@ -155,7 +155,7 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex flex-col gap-3 lg:h-[520px]">
+    <div className="flex flex-col gap-3 lg:h-[calc(100vh-200px)]">
       {/* KPI 헤더 */}
       <Card className="shrink-0 p-3">
         <div className="flex items-start justify-between gap-2">
