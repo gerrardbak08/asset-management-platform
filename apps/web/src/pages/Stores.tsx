@@ -308,7 +308,7 @@ function SelectedPanel({
         </Card>
       </div>
 
-      {/* 타임라인 — 하단 고정 */}
+      {/* 타임라인 */}
       <StoreTimeline detail={detail} />
     </div>
   );
