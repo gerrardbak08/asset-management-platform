@@ -95,24 +95,24 @@ export function StoreTimeline({ detail }: Props) {
   }, [detail]);
 
   return (
-    <Card className="p-2.5">
-      <div className="mb-1.5 text-[10px] font-bold text-foreground">활동 타임라인</div>
-      <div className="grid grid-cols-3 gap-1.5 lg:grid-cols-6">
+    <Card className="p-3">
+      <div className="mb-2 text-[11px] font-bold text-foreground">활동 타임라인</div>
+      <div className="grid grid-cols-3 gap-2 lg:grid-cols-6">
         {events.map((e, i) => (
           <div
             key={i}
-            className="flex items-center gap-1.5 rounded-md border border-border/40 bg-muted/20 px-2 py-1.5"
+            className="flex items-start gap-2 rounded-lg border border-border/40 bg-muted/20 px-2.5 py-2.5"
           >
             <span
-              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
             >
-              <e.icon className="h-2.5 w-2.5" />
+              <e.icon className="h-3 w-3" />
             </span>
             <div className="min-w-0 flex-1">
-              <div className="text-[9px] font-semibold leading-tight text-foreground truncate">
+              <div className="text-[10px] font-semibold leading-tight text-foreground truncate">
                 {e.title}
               </div>
-              <div className="text-[8px] leading-snug text-muted-foreground truncate">
+              <div className="mt-0.5 text-[9px] leading-snug text-muted-foreground truncate">
                 {e.detail}
               </div>
             </div>
