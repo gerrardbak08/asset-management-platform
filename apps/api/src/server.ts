@@ -52,7 +52,24 @@ export async function buildServer() {
 
   const webDist = path.join(process.cwd(), 'public');
 
-  // 정적 파일 서빙 (웹 + /files)
+  // /files 정적 파일 서빙 — uploads 디렉토리에서 건물 사진 등 제공
+  const uploadsDir = path.resolve(config.UPLOADS_DIR);
+  try {
+    const { existsSync, mkdirSync } = await import('node:fs');
+    if (!existsSync(uploadsDir)) {
+      mkdirSync(uploadsDir, { recursive: true });
+    }
+    await app.register(staticPlugin, {
+      root: uploadsDir,
+      prefix: '/files/',
+      decorateReply: false,
+      maxAge: '7d',
+    });
+  } catch (e) {
+    app.log.warn(e, 'Failed to register /files static route');
+  }
+
+  // 정적 파일 서빙 (웹 빌드 결과물)
   try {
     const { existsSync } = await import('node:fs');
     if (existsSync(webDist)) {
@@ -61,8 +78,9 @@ export async function buildServer() {
         prefix: '/',
         wildcard: true,
         index: 'index.html',
-        maxAge: '1d', // 기본 1일 캐시
+        maxAge: '1d',
         immutable: true,
+        decorateReply: false,
       });
       // SPA fallback
       app.setNotFoundHandler(async (req, reply) => {

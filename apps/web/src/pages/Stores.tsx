@@ -74,10 +74,10 @@ export default function Stores() {
       </Card>
 
       <div
-        className="grid grid-cols-1 gap-4 lg:grid-cols-[300px,1fr] lg:items-stretch"
-        style={{ height: 'calc(100vh - 140px)' }}
+        className="grid grid-cols-1 gap-4 lg:grid-cols-[300px,1fr] lg:items-start"
+        style={{ minHeight: 'calc(100vh - 180px)' }}
       >
-        <Card className="flex min-h-0 flex-col overflow-hidden">
+        <Card className="flex flex-col overflow-hidden lg:sticky lg:top-4 lg:max-h-[calc(100vh-200px)]">
           <div className="shrink-0 px-4 py-3 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
@@ -158,7 +158,7 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto custom-scrollbar pb-12">
+    <div className="flex min-h-0 flex-col gap-4 pb-12">
       <Card className="shrink-0 p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
@@ -184,9 +184,9 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid h-[200px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex flex-col p-4 overflow-hidden">
+        <Card className="flex min-h-[240px] flex-col p-4 overflow-hidden">
           <div className="mb-3 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
@@ -249,7 +249,7 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex flex-col p-4 overflow-hidden">
+        <Card className="flex min-h-[240px] flex-col p-4 overflow-hidden">
           <div className="mb-3 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
@@ -258,7 +258,7 @@ function SelectedPanel({
           ) : (
             <div className="flex min-h-0 flex-1 flex-row items-center gap-4">
               {/* 도넛 */}
-              <div className="h-[160px] w-[160px] shrink-0">
+              <div className="h-[140px] w-[140px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie

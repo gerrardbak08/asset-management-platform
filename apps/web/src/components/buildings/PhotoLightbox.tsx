@@ -16,9 +16,13 @@ type Props = {
 
 export function PhotoLightbox({ open, onClose, photos, initialIndex = 0, alt }: Props) {
   const [idx, setIdx] = useState(initialIndex);
+  const [imgError, setImgError] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
-    if (open) setIdx(Math.max(0, Math.min(initialIndex, photos.length - 1)));
+    if (open) {
+      setIdx(Math.max(0, Math.min(initialIndex, photos.length - 1)));
+      setImgError({});
+    }
   }, [open, initialIndex, photos.length]);
 
   useEffect(() => {
@@ -51,8 +55,13 @@ export function PhotoLightbox({ open, onClose, photos, initialIndex = 0, alt }: 
           </Dialog.Close>
 
           <img
-            src={`/api/images/optimized?src=${encodeURIComponent(cur.url)}&w=1200&q=85`}
+            src={
+              imgError[idx]
+                ? cur.url
+                : `/api/images/optimized?src=${encodeURIComponent(cur.url)}&w=1200&q=85`
+            }
             alt={`${alt} — ${cur.label}`}
+            onError={() => setImgError((prev) => ({ ...prev, [idx]: true }))}
             className="max-h-[85vh] max-w-[92vw] rounded-xl object-contain shadow-2xl"
           />
 

@@ -3,6 +3,7 @@ import { FastifyInstance } from 'fastify';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
+import { config } from '../config';
 
 export async function imageRoutes(app: FastifyInstance) {
   app.get('/api/images/optimized', async (req, reply) => {
@@ -12,35 +13,53 @@ export async function imageRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: 'src is required' });
     }
 
-    // 보안 및 경로 정규화: 디코딩 후 basename 추출
+    // 보안 및 경로 정규화: 디코딩 후 경로 추출
     const decodedSrc = decodeURIComponent(src);
-    const safeSrc = path.basename(decodedSrc).toLowerCase();
+    const normalized = decodedSrc.replace(/\\/g, '/');
+    const filename = path.basename(normalized);
+    // 경로에서 서브디렉토리 추출 (예: /files/buildings/xxx.jpg → buildings/xxx.jpg)
+    const subPath = normalized.replace(/^\/?files\//, '');
     
-    // 여러 경로 후보 확인 (루트 또는 apps/api 기준)
+    // 여러 경로 후보 확인
+    const uploadsDir = path.resolve(config.UPLOADS_DIR);
     const candidates = [
-      path.join(process.cwd(), 'uploads', 'buildings', safeSrc),
-      path.join(process.cwd(), '..', '..', 'uploads', 'buildings', safeSrc),
-      path.join(process.cwd(), 'apps', 'api', 'public', 'files', 'buildings', safeSrc),
-      path.join(process.cwd(), 'public', 'files', 'buildings', safeSrc),
-      path.join(process.cwd(), 'dist', 'public', 'files', 'buildings', safeSrc),
-      // 대문자 버전도 시도
-      path.join(process.cwd(), 'uploads', 'buildings', safeSrc.toUpperCase())
+      // uploads 디렉토리 기준 (서브경로 포함)
+      path.join(uploadsDir, subPath),
+      path.join(uploadsDir, filename),
+      path.join(uploadsDir, 'buildings', filename),
+      // cwd 기준
+      path.join(process.cwd(), 'uploads', 'buildings', filename),
+      path.join(process.cwd(), 'uploads', subPath),
+      // public/files 기준
+      path.join(process.cwd(), 'public', 'files', subPath),
+      path.join(process.cwd(), 'public', 'files', 'buildings', filename),
     ];
 
-    app.log.info({ cwd: process.cwd(), safeSrc, candidates }, 'Image optimization search');
+    // 대소문자 변형도 추가
+    const extraCandidates = candidates.flatMap(c => {
+      const dir = path.dirname(c);
+      const base = path.basename(c);
+      return [
+        path.join(dir, base.toLowerCase()),
+        path.join(dir, base.toUpperCase()),
+      ];
+    });
+
+    const allCandidates = [...new Set([...candidates, ...extraCandidates])];
 
     let inputPath = '';
-    for (const cand of candidates) {
+    for (const cand of allCandidates) {
       try {
         await fs.access(cand);
         inputPath = cand;
         break;
-      } catch (e) {
+      } catch {
         continue;
       }
     }
     
     if (!inputPath) {
+      app.log.warn({ src, filename, subPath, uploadsDir }, 'Image not found in any candidate path');
       return reply.status(404).send({ error: 'Image not found' });
     }
 
