@@ -158,8 +158,8 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex flex-col gap-3" style={{ height: 'calc(100vh - 180px)' }}>
-      {/* KPI 헤더 — 고정 높이 */}
+    <div className="flex flex-col gap-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+      {/* KPI 헤더 */}
       <Card className="shrink-0 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
@@ -185,10 +185,10 @@ function SelectedPanel({
         </div>
       </Card>
 
-      {/* 차트 영역 — 남은 공간의 대부분 차지 */}
-      <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-2">
+      {/* 차트 영역 — 고정 높이 */}
+      <div className="grid shrink-0 grid-cols-1 gap-3 lg:grid-cols-2" style={{ height: '220px' }}>
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex min-h-0 flex-col p-3 overflow-hidden">
+        <Card className="flex h-full flex-col p-3 overflow-hidden">
           <div className="mb-2 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
@@ -251,7 +251,7 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex min-h-0 flex-col p-3 overflow-hidden">
+        <Card className="flex h-full flex-col p-3 overflow-hidden">
           <div className="mb-2 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
