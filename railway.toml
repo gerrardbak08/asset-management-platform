@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "pnpm install --frozen-lockfile && cd apps/api && pnpm exec prisma generate && pnpm run build && cd ../web && pnpm run build && cd ../.. && mkdir -p apps/api/public/files/buildings && cp -rv uploads/buildings/. apps/api/public/files/buildings/ && cp -rv apps/web/dist/. apps/api/public/"
+buildCommand = "pnpm install --frozen-lockfile && cd apps/api && pnpm exec prisma generate && pnpm run build && cd ../web && pnpm run build && cd ../.. && mkdir -p uploads/buildings && mkdir -p apps/api/public/files/buildings && cp -rv uploads/buildings/. apps/api/public/files/buildings/ && cp -rv apps/web/dist/. apps/api/public/"
 
 [deploy]
 startCommand = "cd apps/api && pnpm exec prisma migrate deploy && pnpm run db:seed && pnpm exec tsx src/server.ts"
