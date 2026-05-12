@@ -1,4 +1,4 @@
-// 사업장 활동 타임라인 — 컴팩트 수평 레이아웃
+// 사업장 활동 타임라인 — 컴팩트 그리드 레이아웃
 import { useMemo } from 'react';
 import {
   ArrowDown,
@@ -47,7 +47,7 @@ export function StoreTimeline({ detail }: Props) {
       out.push({
         icon: Boxes,
         tone: 'accent',
-        title: `최대 카테고리 — ${top.cat}`,
+        title: `최대 — ${top.cat}`,
         detail: `${fmtKR(top.amt)}원`,
       });
     }
@@ -60,7 +60,7 @@ export function StoreTimeline({ detail }: Props) {
       out.push({
         icon: ArrowUp,
         tone: 'info',
-        title: `자산 유형 1순위 — ${topType.k}`,
+        title: `유형 1위 — ${topType.k}`,
         detail: `${fmtKR(topType.v)}원`,
       });
     }
@@ -70,7 +70,7 @@ export function StoreTimeline({ detail }: Props) {
         out.push({
           icon: ArrowDown,
           tone: 'muted',
-          title: `자산 유형 최저 — ${last.k}`,
+          title: `유형 최저 — ${last.k}`,
           detail: `${fmtKR(last.v)}원`,
         });
       }
@@ -80,7 +80,7 @@ export function StoreTimeline({ detail }: Props) {
       out.push({
         icon: Boxes,
         tone: 'success',
-        title: '비품 재고 보유',
+        title: '비품 재고',
         detail: `${fmtKR(detail.supplyValue)}원 · ${Object.keys(detail.supplyByCategory ?? {}).length}종`,
       });
     }
@@ -88,31 +88,31 @@ export function StoreTimeline({ detail }: Props) {
     out.push({
       icon: Clock,
       tone: 'muted',
-      title: '데이터 기준',
+      title: '기준일',
       detail: `${detail.period} 마감`,
     });
     return out;
   }, [detail]);
 
   return (
-    <Card className="shrink-0 p-3 shadow-sm">
-      <div className="mb-2 text-[11px] font-bold text-foreground">활동 타임라인</div>
-      <div className="flex items-start gap-1 overflow-x-auto custom-scrollbar">
+    <Card className="p-2.5">
+      <div className="mb-1.5 text-[10px] font-bold text-foreground">활동 타임라인</div>
+      <div className="grid grid-cols-3 gap-1.5 lg:grid-cols-6">
         {events.map((e, i) => (
           <div
             key={i}
-            className="flex min-w-[110px] flex-1 items-start gap-2 rounded-lg border border-border/50 bg-muted/20 px-2.5 py-2"
+            className="flex items-center gap-1.5 rounded-md border border-border/40 bg-muted/20 px-2 py-1.5"
           >
             <span
-              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
+              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
             >
-              <e.icon className="h-3 w-3" />
+              <e.icon className="h-2.5 w-2.5" />
             </span>
             <div className="min-w-0 flex-1">
-              <div className="text-[10px] font-semibold leading-tight text-foreground truncate">
+              <div className="text-[9px] font-semibold leading-tight text-foreground truncate">
                 {e.title}
               </div>
-              <div className="mt-0.5 text-[9px] leading-snug text-muted-foreground truncate">
+              <div className="text-[8px] leading-snug text-muted-foreground truncate">
                 {e.detail}
               </div>
             </div>

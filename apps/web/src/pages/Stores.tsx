@@ -73,8 +73,8 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-[280px,1fr]">
-        <Card className="flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[280px,1fr]">
+        <Card className="flex flex-col overflow-hidden lg:max-h-[600px]">
           <div className="shrink-0 px-4 py-2 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
@@ -85,17 +85,17 @@ export default function Stores() {
                   type="button"
                   onClick={() => setSelectedId(s.id)}
                   className={
-                    'flex w-full items-center justify-between gap-2 border-t border-border px-4 py-2 text-left transition-colors duration-150 hover:bg-muted ' +
+                    'flex w-full items-center justify-between gap-1.5 border-t border-border px-3 py-1.5 text-left transition-colors duration-150 hover:bg-muted ' +
                     (selectedId === s.id ? 'bg-muted' : '')
                   }
                 >
                   <div className="min-w-0">
-                    <div className="truncate text-body font-medium text-foreground">{s.name}</div>
+                    <div className="truncate text-caption font-medium text-foreground">{s.name}</div>
                     {s.siteType ? (
-                      <div className="truncate text-caption text-muted-foreground">{s.siteType}</div>
+                      <div className="truncate text-micro text-muted-foreground">{s.siteType}</div>
                     ) : null}
                   </div>
-                  <span className="shrink-0 font-mono tabular-nums text-caption text-muted-foreground">
+                  <span className="shrink-0 font-mono tabular-nums text-micro text-muted-foreground">
                     {fmtKR(s.assetValue)}
                   </span>
                 </button>
