@@ -52,15 +52,20 @@ export async function buildServer() {
 
   const webDist = path.join(process.cwd(), 'public');
 
-  // /files 정적 파일 서빙 — uploads 디렉토리에서 건물 사진 등 제공
+  // /files 정적 파일 서빙 — public/files 또는 uploads 에서 건물 사진 등 제공
+  // Railway: 빌드 스크립트가 uploads/ → public/files/ 로 복사
+  // 개발: uploads/ 디렉토리 직접 사용
+  const filesDir = path.join(process.cwd(), 'public', 'files');
   const uploadsDir = path.resolve(config.UPLOADS_DIR);
   try {
     const { existsSync, mkdirSync } = await import('node:fs');
-    if (!existsSync(uploadsDir)) {
-      mkdirSync(uploadsDir, { recursive: true });
+    // public/files 가 있으면 그걸 사용 (프로덕션)
+    const staticRoot = existsSync(filesDir) ? filesDir : uploadsDir;
+    if (!existsSync(staticRoot)) {
+      mkdirSync(staticRoot, { recursive: true });
     }
     await app.register(staticPlugin, {
-      root: uploadsDir,
+      root: staticRoot,
       prefix: '/files/',
       decorateReply: false,
       maxAge: '7d',
