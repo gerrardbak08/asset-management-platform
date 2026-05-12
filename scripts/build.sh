@@ -3,20 +3,14 @@ set -e
 
 echo "🚀 Starting build process..."
 
-# 2. Build API
-echo "📦 Building API..."
-cd apps/api
-pnpm exec prisma generate
-pnpm run build
-cd ../..
+# 1. Install all dependencies (including devDependencies)
+pnpm install --prod=false
 
-# 3. Build Web
-echo "📦 Building Web..."
-cd apps/web
-pnpm run build
-cd ../..
+# 2. Build everything in the monorepo
+echo "📦 Building all projects..."
+pnpm -r build
 
-# 4. Prepare static assets
+# 3. Prepare static assets
 echo "📁 Preparing static assets..."
 mkdir -p uploads/buildings
 mkdir -p apps/api/public/files/buildings
