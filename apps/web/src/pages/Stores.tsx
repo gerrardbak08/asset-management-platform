@@ -81,7 +81,7 @@ export default function Stores() {
           <div className="shrink-0 px-4 py-3 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
-          <ul className="min-h-0 flex-1 overflow-y-auto">
+          <ul className="min-h-0 flex-1 overflow-y-auto pb-12 custom-scrollbar">
             {(list.data?.items ?? []).map((s) => (
               <li key={s.id}>
                 <button
