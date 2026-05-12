@@ -73,8 +73,8 @@ export default function Stores() {
         </label>
       </Card>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px,1fr]">
-        <Card className="flex flex-col overflow-hidden lg:h-[calc(100vh-180px)] lg:sticky lg:top-4">
+      <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-[280px,1fr]">
+        <Card className="flex h-full min-h-0 flex-col overflow-hidden">
           <div className="shrink-0 px-4 py-2 text-caption font-semibold text-muted-foreground">
             검색 결과 {list.data ? `(${list.data.items.length}/${list.data.total})` : ''}
           </div>
@@ -182,10 +182,10 @@ function SelectedPanel({
         </div>
       </Card>
 
-      {/* 차트 영역 — 고정 높이 */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2" style={{ height: '220px' }}>
+      {/* 차트 영역 */}
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex h-full flex-col p-3 overflow-hidden">
+        <Card className="flex flex-col p-3 overflow-hidden">
           <div className="mb-2 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
@@ -211,7 +211,7 @@ function SelectedPanel({
               </button>
             </div>
           </div>
-          <div className="min-h-0 flex-1">
+          <div className="h-[180px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={supplyData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
@@ -248,7 +248,7 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex h-full flex-col p-3 overflow-hidden">
+        <Card className="flex min-h-[260px] flex-col p-3 overflow-hidden">
           <div className="mb-2 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
