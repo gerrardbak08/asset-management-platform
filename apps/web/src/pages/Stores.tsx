@@ -155,9 +155,9 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 lg:h-[520px]">
       {/* KPI 헤더 */}
-      <Card className="p-3">
+      <Card className="shrink-0 p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <div className="flex items-baseline gap-2">
@@ -309,7 +309,9 @@ function SelectedPanel({
       </div>
 
       {/* 타임라인 */}
-      <StoreTimeline detail={detail} />
+      <div className="min-h-0 flex-1">
+        <StoreTimeline detail={detail} />
+      </div>
     </div>
   );
 }

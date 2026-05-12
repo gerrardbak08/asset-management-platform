@@ -95,7 +95,7 @@ export function StoreTimeline({ detail }: Props) {
   }, [detail]);
 
   return (
-    <Card className="p-3">
+    <Card className="flex h-full flex-col p-3">
       <div className="mb-2 text-[11px] font-bold text-foreground">활동 타임라인</div>
       <div className="grid grid-cols-3 gap-2 lg:grid-cols-6">
         {events.map((e, i) => (
