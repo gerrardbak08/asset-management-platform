@@ -160,13 +160,19 @@ function SelectedPanel({
   return (
     <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto custom-scrollbar pb-12">
       <Card className="shrink-0 p-4">
-        <div className="flex items-baseline gap-2">
-          <h2 className="text-heading-lg font-semibold tracking-tight text-foreground">{detail.name}</h2>
-          {detail.siteType ? (
-            <span className="text-caption text-muted-foreground">· {detail.siteType}</span>
-          ) : null}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <div className="flex items-baseline gap-2">
+              <h2 className="truncate text-heading-lg font-semibold tracking-tight text-foreground">{detail.name}</h2>
+              {detail.siteType ? (
+                <span className="truncate text-caption text-muted-foreground">· {detail.siteType}</span>
+              ) : null}
+            </div>
+          </div>
+          <div className="shrink-0 text-caption font-medium text-muted-foreground">
+            {detail.period} 기준
+          </div>
         </div>
-        <div className="mt-1 text-caption text-muted-foreground">{detail.period} 기준</div>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           <Kpi label="자산 장부가" value={fmtKRfull(detail.assetValue)} />
           <Kpi label="자산 항목 수" value={detail.assetCount.toLocaleString('ko-KR') + ' 건'} />
