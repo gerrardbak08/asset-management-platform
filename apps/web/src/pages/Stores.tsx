@@ -158,8 +158,8 @@ function SelectedPanel({
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto custom-scrollbar pb-12">
-      <Card className="shrink-0 p-3.5">
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto custom-scrollbar pb-12">
+      <Card className="shrink-0 p-4">
         <div className="flex items-baseline gap-2">
           <h2 className="text-heading-lg font-semibold tracking-tight text-foreground">{detail.name}</h2>
           {detail.siteType ? (
@@ -178,9 +178,9 @@ function SelectedPanel({
         </div>
       </Card>
 
-      <div className="grid h-[220px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid h-[240px] shrink-0 grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
         {/* 비품 카테고리 TOP 10 */}
-        <Card className="flex flex-col p-4">
+        <Card className="flex flex-col p-4 overflow-hidden">
           <div className="mb-3 flex shrink-0 items-center justify-between">
             <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
@@ -243,7 +243,7 @@ function SelectedPanel({
         </Card>
 
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
-        <Card className="flex flex-col p-4">
+        <Card className="flex flex-col p-4 overflow-hidden">
           <div className="mb-3 shrink-0">
             <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
           </div>
@@ -305,7 +305,7 @@ function SelectedPanel({
         </Card>
       </div>
 
-      <div className="min-w-0 flex-1">
+      <div className="shrink-0">
         <StoreTimeline detail={detail} />
       </div>
     </div>
