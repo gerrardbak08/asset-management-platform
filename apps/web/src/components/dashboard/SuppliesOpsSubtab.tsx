@@ -170,41 +170,39 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
           title="재고 상위 카테고리 TOP 5"
           description="클릭 시 상세"
         />
-        <div className="space-y-2">
-          {topCats.items.map((cat) => {
+        <div className="space-y-2.5">
+          {topCats.items.map((cat, i) => {
             const isSelected = selectedEq === cat.name;
+            const rankOpacity = 1 - i * 0.15; // 1위=1.0 → 5위=0.40
             return (
               <div key={cat.name}>
                 <button
                   type="button"
                   onClick={() => setSelectedEq(isSelected ? null : cat.name)}
                   className={cn(
-                    'group flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors',
-                    isSelected
-                      ? 'bg-primary/10'
-                      : 'hover:bg-muted/40',
+                    'w-full rounded-xl p-2 text-left transition-colors',
+                    isSelected ? 'bg-primary/10' : 'hover:bg-muted/40',
                   )}
                 >
-                  <span className="w-28 shrink-0 truncate text-body text-foreground">
-                    {cat.name}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="h-4 overflow-hidden rounded-full bg-muted">
-                      <div
-                        className={cn(
-                          'h-full rounded-full transition-all',
-                          isSelected ? 'bg-primary' : 'bg-primary/70 group-hover:bg-primary',
-                        )}
-                        style={{ width: `${Math.max(cat.pct, 2)}%` }}
-                      />
-                    </div>
+                  {/* 이름 + 비율 */}
+                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="truncate text-caption font-semibold text-foreground">{cat.name}</span>
+                    <span className="shrink-0 text-caption text-muted-foreground">{cat.pct.toFixed(1)}%</span>
                   </div>
-                  <span className="w-20 shrink-0 text-right font-mono tabular-nums text-body text-foreground">
-                    {fmtKRfull(cat.amount)}
-                  </span>
-                  <span className="w-10 shrink-0 text-right text-caption text-muted-foreground">
-                    {cat.pct.toFixed(1)}%
-                  </span>
+                  {/* 막대 + 금액 라벨 오버레이 */}
+                  <div className="relative h-6 overflow-hidden rounded-lg bg-muted">
+                    <div
+                      className="absolute inset-y-0 left-0 rounded-lg transition-all duration-300"
+                      style={{
+                        width: `${Math.max(cat.pct, 2)}%`,
+                        background: 'hsl(var(--primary))',
+                        opacity: isSelected ? 1 : rankOpacity,
+                      }}
+                    />
+                    <span className="absolute inset-y-0 right-2 flex items-center font-mono text-[11px] tabular-nums text-foreground">
+                      {fmtKRfull(cat.amount)}
+                    </span>
+                  </div>
                 </button>
 
                 {/* 인라인 상세 패널 */}
