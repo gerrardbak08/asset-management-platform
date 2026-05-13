@@ -50,7 +50,7 @@ export default function Leases() {
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <div className="min-w-[800px]">
-            <div className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-semibold text-muted-foreground">
+            <div className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-medium text-muted-foreground">
               <span className="text-center">건물</span>
               <span className="text-center">임차인</span>
               <span className="text-center">상태</span>
@@ -77,16 +77,16 @@ export default function Leases() {
                       className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] items-center gap-4 px-4 py-3 text-caption"
                     >
                       <div className="min-w-0">
-                        <div className="truncate font-semibold text-foreground">{lease.buildingName ?? lease.buildingId}</div>
+                        <div className="truncate text-caption font-medium text-foreground">{lease.buildingName ?? lease.buildingId}</div>
                       </div>
-                      <div className="truncate text-muted-foreground whitespace-nowrap">{lease.tenantName}</div>
-                      <span className="w-fit whitespace-nowrap rounded-full bg-muted px-2 py-1 text-caption font-semibold">
+                      <div className="truncate text-caption text-muted-foreground whitespace-nowrap">{lease.tenantName}</div>
+                      <span className="w-fit whitespace-nowrap rounded-full bg-muted px-2 py-0.5 text-caption font-medium">
                         {leaseStatusLabel[lease.status]}
                       </span>
                       <span className={cn('text-caption whitespace-nowrap', left <= 30 ? 'text-danger' : 'text-muted-foreground')}>
                         {lease.contractEnd} · {left >= 0 ? `${left}일` : `${Math.abs(left)}일 경과`}
                       </span>
-                      <span className="whitespace-nowrap text-right font-semibold text-foreground">
+                      <span className="whitespace-nowrap text-right text-caption font-medium text-foreground">
                         {fmtKRprice(Number(lease.monthlyRent))}원
                       </span>
                     </div>
