@@ -107,7 +107,7 @@ export function AcquisitionHistorySubtab() {
         {/* 연도별 차트 */}
         <div>
           <SectionHeader title="연도별 취득 건수 + 누적 취득가" description="신규 취득 건수(막대) + 누적 취득가(선)" compact />
-          <div className="h-chart-lg w-full">
+          <div className="h-[220px] w-full">
             <ResponsiveContainer>
               <ComposedChart data={chartData} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
@@ -193,7 +193,7 @@ export function AcquisitionHistorySubtab() {
           <div className="border-t border-border pt-4">
             <p className="mb-3 text-body-strong font-semibold text-foreground">지역별 취득가 분포</p>
             <div className="flex items-center gap-4">
-              <div className="h-[130px] w-[130px] shrink-0">
+              <div className="h-[160px] w-[160px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -227,16 +227,14 @@ export function AcquisitionHistorySubtab() {
               </div>
               <ul className="min-w-0 flex-1 space-y-1.5">
                 {regionData.map((d, i) => (
-                  <li key={d.name} className="flex items-center justify-between gap-2">
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <span
-                        className="h-2 w-2 shrink-0 rounded-full"
-                        style={{ background: REGION_COLORS[i % REGION_COLORS.length] }}
-                        aria-hidden="true"
-                      />
-                      <span className="truncate text-caption text-muted-foreground">{d.name}</span>
-                    </span>
-                    <span className="shrink-0 tabular-nums text-caption text-foreground">
+                  <li key={d.name} className="flex items-center gap-1.5">
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full"
+                      style={{ background: REGION_COLORS[i % REGION_COLORS.length] }}
+                      aria-hidden="true"
+                    />
+                    <span className="min-w-0 flex-1 truncate text-caption text-muted-foreground">{d.name}</span>
+                    <span className="shrink-0 tabular-nums text-caption font-medium text-foreground">
                       {totalRegion > 0 ? ((d.value / totalRegion) * 100).toFixed(1) : '0.0'}%
                     </span>
                   </li>
