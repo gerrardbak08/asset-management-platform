@@ -194,7 +194,7 @@ function SelectedPanel({
       </Card>
 
       {/* 차트 영역 */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      <div className="grid shrink-0 grid-cols-1 gap-3 lg:grid-cols-2">
         {/* 비품 카테고리 TOP 10 */}
         <Card className="p-3">
           <div className="mb-2 flex items-center justify-between">
