@@ -264,7 +264,7 @@ function SelectedPanel({
           {typeData.length === 0 ? (
             <p className="text-caption text-muted-foreground">자산 유형 데이터 없음.</p>
           ) : (
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-row items-center justify-center gap-4">
               {/* 도넛 */}
               <div className="h-[150px] w-[150px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
@@ -297,19 +297,16 @@ function SelectedPanel({
                 </ResponsiveContainer>
               </div>
               {/* 범례 */}
-              <ul className="min-w-0 flex-1 space-y-2">
+              <ul className="space-y-2">
                 {typeData.map((d, i) => (
-                  <li key={d.name} className="flex items-center justify-between gap-2">
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <span
-                        className="h-2 w-2 shrink-0 rounded-full"
-                        style={{ background: TYPE_COLORS[i % TYPE_COLORS.length] }}
-                        aria-hidden="true"
-                      />
-                      <span className="truncate text-caption text-muted-foreground">{d.name}</span>
-                    </span>
-                    <span className="shrink-0 tabular-nums text-caption text-foreground">
-                      {fmtKRfull(d.value)}
+                  <li key={d.name} className="flex items-center gap-1">
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full"
+                      style={{ background: TYPE_COLORS[i % TYPE_COLORS.length] }}
+                      aria-hidden="true"
+                    />
+                    <span className="text-caption text-muted-foreground">
+                      {d.name} <span className="font-medium tabular-nums text-foreground">{fmtKRfull(d.value)}</span>
                     </span>
                   </li>
                 ))}
