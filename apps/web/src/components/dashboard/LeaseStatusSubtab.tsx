@@ -305,7 +305,7 @@ export function LeaseStatusSubtab() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="p-5">
           <SectionHeader title="건물별 임대율" description="공실 발생 건물은 주황 · 막대 클릭 시 상세" />
-          <div className="h-[360px] w-full">
+          <div className="h-chart-lg w-full">
             <ResponsiveContainer>
               <BarChart data={rateData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
@@ -360,7 +360,7 @@ export function LeaseStatusSubtab() {
 
         <Card className="p-5">
           <SectionHeader title="임대면적 vs 전체면적 비교" description="상위 10동" />
-          <div className="h-[360px] w-full">
+          <div className="h-chart-lg w-full">
             <ResponsiveContainer>
               <BarChart data={areaData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
@@ -421,7 +421,7 @@ export function LeaseStatusSubtab() {
 
         <Card className="p-5">
           <SectionHeader title="건물별 취득가 vs 임대율" description="점 클릭 시 상세" />
-          <div className="h-[360px] w-full">
+          <div className="h-chart-lg w-full">
             <ResponsiveContainer>
               <ScatterChart margin={{ top: 4, right: 16, bottom: 30, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />

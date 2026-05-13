@@ -1,5 +1,6 @@
 // 건물 목록 페이지 — 카드/표 모드 토글 + 필터/정렬 + admin/editor 인라인 편집 + 5탭 드로어
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Building as BuildingIcon, LayoutGrid, Table2 } from 'lucide-react';
 import { buildingsApi, type Building } from '@/lib/api/buildings';
@@ -21,11 +22,21 @@ export default function Buildings() {
   const canEdit = role === 'admin' || role === 'editor';
 
   const [selected, setSelected] = useState<Building | null>(null);
-  const [region, setRegion] = useState<RegionBucket | null>(null);
-  const [useGroup, setUseGroup] = useState<UseGroup | null>(null);
-  const [sort, setSort] = useState<SortKey>('acq_desc');
-  const [q, setQ] = useState('');
-  const [view, setView] = useState<ViewMode>('cards');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const region = (searchParams.get('region') as RegionBucket | null) ?? null;
+  const useGroup = (searchParams.get('useGroup') as UseGroup | null) ?? null;
+  const sort: SortKey = (searchParams.get('sort') as SortKey) || 'acq_desc';
+  const q = searchParams.get('q') ?? '';
+  const view: ViewMode = (searchParams.get('view') as ViewMode) || 'cards';
+
+  function setParam(key: string, value: string | null) {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value === null || value === '') next.delete(key);
+      else next.set(key, value);
+      return next;
+    }, { replace: true });
+  }
 
   const query = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
 
@@ -69,7 +80,7 @@ export default function Buildings() {
         <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
           <button
             type="button"
-            onClick={() => setView('cards')}
+            onClick={() => setParam('view', 'cards')}
             className={cn(
               'inline-flex items-center gap-1 rounded-md px-2 py-1 text-caption font-medium transition-colors duration-150',
               view === 'cards'
@@ -83,7 +94,7 @@ export default function Buildings() {
           </button>
           <button
             type="button"
-            onClick={() => setView('table')}
+            onClick={() => setParam('view', 'table')}
             className={cn(
               'inline-flex items-center gap-1 rounded-md px-2 py-1 text-caption font-medium transition-colors duration-150',
               view === 'table'
@@ -101,13 +112,13 @@ export default function Buildings() {
       <BuildingFilters
         buildings={query.data ?? []}
         region={region}
-        setRegion={setRegion}
+        setRegion={(v) => setParam('region', v)}
         useGroup={useGroup}
-        setUseGroup={setUseGroup}
+        setUseGroup={(v) => setParam('useGroup', v)}
         sort={sort}
-        setSort={setSort}
+        setSort={(v) => setParam('sort', v)}
         q={q}
-        setQ={setQ}
+        setQ={(v) => setParam('q', v)}
       />
 
       <SectionHeader

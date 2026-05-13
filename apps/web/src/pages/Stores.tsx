@@ -1,5 +1,6 @@
 // 사업장 검색 + 선택 사업장의 KPI 4종 + 카테고리 TOP 10 + 자산유형 도넛
 import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Store as StoreIcon } from 'lucide-react';
 import {
@@ -25,9 +26,19 @@ import { fmtKR, fmtKRfull } from '@/lib/format';
 const TYPE_COLORS = ['hsl(var(--primary))', 'hsl(var(--info))', 'hsl(var(--warning))', 'hsl(var(--success))', 'hsl(var(--danger))'];
 
 export default function Stores() {
-  const [q, setQ] = useState('');
-  const [debounced, setDebounced] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const q = searchParams.get('q') ?? '';
+  const [debounced, setDebounced] = useState(q);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  function setQ(value: string) {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (!value) next.delete('q');
+      else next.set('q', value);
+      return next;
+    }, { replace: true });
+  }
   const [supplyMode, setSupplyMode] = useState<'amount' | 'count'>('amount');
 
   useEffect(() => {
@@ -167,7 +178,7 @@ function SelectedPanel({
               ) : null}
             </div>
           </div>
-          <div className="shrink-0 text-[10px] font-medium text-muted-foreground">
+          <div className="shrink-0 text-micro font-medium text-muted-foreground">
             {detail.period} 기준
           </div>
         </div>
@@ -319,8 +330,8 @@ function SelectedPanel({
 function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-muted/30 p-2">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="mt-0.5 truncate font-kpi-inline text-body tabular-nums text-foreground">{value}</div>
+      <div className="text-micro uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="mt-0.5 truncate font-kpi-inline tabular-nums text-foreground">{value}</div>
     </div>
   );
 }

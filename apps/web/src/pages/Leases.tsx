@@ -7,6 +7,7 @@ import { fmtKRprice } from '@/lib/format';
 import { leaseStatusLabel } from '@/lib/phase2Labels';
 import { PageShell } from '@/components/ui/PageShell';
 import { Card } from '@/components/ui/Card';
+import { KpiCard } from '@/components/ui/KpiCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { cn } from '@/lib/utils';
 
@@ -44,9 +45,9 @@ export default function Leases() {
   return (
     <PageShell title="임대계약" description={`활성 ${active.length}건 · 30일 내 만료 ${expiringCount}건`}>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <MetricCard icon={FileText} label="전체 계약" value={`${leasesQ.data?.length ?? 0}건`} />
-        <MetricCard icon={CalendarClock} label="월 임대료" value={`${fmtKRprice(totalRent)}원`} />
-        <MetricCard
+        <KpiCard icon={FileText} label="전체 계약" value={`${leasesQ.data?.length ?? 0}건`} />
+        <KpiCard icon={CalendarClock} label="월 임대료" value={`${fmtKRprice(totalRent)}원`} />
+        <KpiCard
           icon={AlertTriangle}
           label="만료 임박"
           value={`${expiringCount}건`}
@@ -114,34 +115,5 @@ export default function Leases() {
         </div>
       </Card>
     </PageShell>
-  );
-}
-
-function MetricCard({
-  icon: Icon,
-  label,
-  value,
-  tone = 'default',
-}: {
-  icon: typeof FileText;
-  label: string;
-  value: string;
-  tone?: 'default' | 'danger';
-}) {
-  return (
-    <Card className="flex min-h-[92px] items-center gap-3 p-4">
-      <span
-        className={cn(
-          'grid h-10 w-10 place-items-center rounded-xl',
-          tone === 'danger' ? 'bg-danger/10 text-danger' : 'bg-muted text-primary',
-        )}
-      >
-        <Icon className="h-5 w-5" aria-hidden="true" />
-      </span>
-      <div>
-        <div className="text-caption text-muted-foreground">{label}</div>
-        <div className="mt-1 text-heading-md font-bold text-foreground">{value}</div>
-      </div>
-    </Card>
   );
 }

@@ -288,3 +288,19 @@ enum DepMethod {
   straight_line
   declining_balance
 }
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  userEmail  String?
+  action     String
+  resource   String?
+  resourceId String?
+  detail     String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([resource, resourceId])
+}

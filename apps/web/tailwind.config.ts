@@ -96,6 +96,11 @@ export default {
       letterSpacing: {
         tight: '-0.02em',
       },
+      height: {
+        'chart-sm': '240px',
+        'chart-md': '320px',
+        'chart-lg': '360px',
+      },
       transitionDuration: {
         '150': '150ms',
         '200': '200ms',

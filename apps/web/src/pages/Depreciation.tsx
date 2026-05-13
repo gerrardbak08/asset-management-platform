@@ -6,6 +6,7 @@ import { fmtKRprice } from '@/lib/format';
 import { depMethodLabel } from '@/lib/phase2Labels';
 import { PageShell } from '@/components/ui/PageShell';
 import { Card } from '@/components/ui/Card';
+import { KpiCard } from '@/components/ui/KpiCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 const PERIOD = '2026-03';
@@ -26,9 +27,9 @@ export default function Depreciation() {
       description={`${PERIOD} 기준 · 총 ${fmtKRprice(Number(summaryQ.data?.total ?? 0))}원`}
     >
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <SummaryCard label="건물" value={`${fmtKRprice(Number(summaryQ.data?.buildings ?? 0))}원`} />
-        <SummaryCard label="비품" value={`${fmtKRprice(Number(summaryQ.data?.equipments ?? 0))}원`} />
-        <SummaryCard label="합계" value={`${fmtKRprice(Number(summaryQ.data?.total ?? 0))}원`} />
+        <KpiCard icon={Landmark} label="건물" value={`${fmtKRprice(Number(summaryQ.data?.buildings ?? 0))}원`} />
+        <KpiCard icon={Landmark} label="비품" value={`${fmtKRprice(Number(summaryQ.data?.equipments ?? 0))}원`} />
+        <KpiCard icon={Calculator} label="합계" value={`${fmtKRprice(Number(summaryQ.data?.total ?? 0))}원`} />
       </div>
 
       <Card className="overflow-hidden">
@@ -61,19 +62,6 @@ export default function Depreciation() {
   );
 }
 
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <Card className="flex min-h-[92px] items-center gap-3 p-4">
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-muted text-primary">
-        <Landmark className="h-5 w-5" aria-hidden="true" />
-      </span>
-      <div>
-        <div className="text-caption text-muted-foreground">{label}</div>
-        <div className="mt-1 text-heading-md font-bold text-foreground">{value}</div>
-      </div>
-    </Card>
-  );
-}
 
 function ScheduleRow({ schedule }: { schedule: DepreciationSchedule }) {
   const latest = schedule.entries?.[0];

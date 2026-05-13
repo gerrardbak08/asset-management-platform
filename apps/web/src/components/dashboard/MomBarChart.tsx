@@ -31,7 +31,7 @@ export function MomBarChart({ m0 }: Props) {
         title="MoM 변동 폭"
         description={`전월 대비 항목별 증감 (상위 ${data.length}건)`}
       />
-      <div className="h-[240px] w-full">
+      <div className="h-chart-sm w-full">
         <ResponsiveContainer>
           <BarChart
             data={data}

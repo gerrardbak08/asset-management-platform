@@ -96,7 +96,7 @@ export function StoreTimeline({ detail }: Props) {
 
   return (
     <Card className="flex h-full flex-col p-3">
-      <div className="mb-2 text-[11px] font-bold text-foreground">활동 타임라인</div>
+      <div className="mb-2 text-caption font-bold text-foreground">활동 타임라인</div>
       <div className="grid grid-cols-3 gap-2 lg:grid-cols-6">
         {events.map((e, i) => (
           <div
@@ -109,10 +109,10 @@ export function StoreTimeline({ detail }: Props) {
               <e.icon className="h-3 w-3" />
             </span>
             <div className="min-w-0 flex-1">
-              <div className="text-[10px] font-semibold leading-tight text-foreground truncate">
+              <div className="text-micro font-semibold leading-tight text-foreground truncate">
                 {e.title}
               </div>
-              <div className="mt-0.5 text-[9px] leading-snug text-muted-foreground truncate">
+              <div className="mt-0.5 text-micro leading-snug text-muted-foreground truncate">
                 {e.detail}
               </div>
             </div>

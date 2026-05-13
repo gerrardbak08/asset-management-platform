@@ -1,6 +1,6 @@
 // 좌측 사이드바 — 다이소 다크네이비 chrome. 활성 항목은 배경+텍스트 톤만 변화 (좌측 strip / 아이콘 앰버 컬러 모두 제거)
 import { NavLink } from 'react-router-dom';
-import { ArrowRightLeft, Building2, Building, Calculator, FileText, Shield, Store, Wrench } from 'lucide-react';
+import { ArrowRightLeft, Building2, Building, Calculator, ClipboardList, FileText, Shield, Store, Wrench } from 'lucide-react';
 import type { ComponentType } from 'react';
 import { cn } from '@/lib/utils';
 import { AsungSymbol } from './AsungLogo';
@@ -21,6 +21,7 @@ const MENU: MenuItem[] = [
   { to: '/ledger', label: '비품 원장', icon: ArrowRightLeft, group: '운영' },
   { to: '/depreciation', label: '감가상각', icon: Calculator, group: '운영' },
   { to: '/admin', label: '관리', icon: Shield, group: '관리' },
+  { to: '/audit-logs', label: '감사 로그', icon: ClipboardList, group: '관리' },
 ];
 
 export function Sidebar() {
@@ -29,13 +30,13 @@ export function Sidebar() {
 
   return (
     <aside className="hidden w-[240px] shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
-      <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border bg-white px-4 dark:bg-sidebar">
+      <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border bg-sidebar px-4">
         <AsungSymbol />
         <div className="min-w-0">
-          <div className="text-[18px] font-bold leading-snug tracking-tight text-[#1B3A7A] dark:text-sidebar-foreground">
+          <div className="text-heading-lg font-bold leading-snug tracking-tight text-sidebar-accent-foreground">
             전사 자산관리 시스템
           </div>
-          <div className="mt-0.5 text-micro text-gray-400 dark:text-sidebar-muted-foreground">2026년 3월 · 전사 자산 현황</div>
+          <div className="mt-0.5 text-micro text-sidebar-muted-foreground">2026년 3월 · 전사 자산 현황</div>
         </div>
       </div>
 
@@ -44,7 +45,7 @@ export function Sidebar() {
         <SidebarGroup label="관리" items={management} />
       </nav>
 
-      <div className="border-t border-sidebar-border px-4 py-3 text-[10px] text-sidebar-muted-foreground">
+      <div className="border-t border-sidebar-border px-4 py-3 text-micro text-sidebar-muted-foreground">
         v0.2.2 · 레이아웃 최적화
         <div className="opacity-50">Build: 2026-05-12 14:55</div>
       </div>
@@ -67,8 +68,8 @@ function SidebarGroup({ label, items }: { label: string; items: MenuItem[] }) {
                 cn(
                   'group flex items-center gap-2 rounded-lg px-3 py-2 text-body font-medium transition-colors duration-150',
                   isActive
-                    ? 'bg-white/5 text-white'
-                    : 'text-sidebar-foreground/85 hover:bg-white/5 hover:text-white',
+                    ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    : 'text-sidebar-foreground/85 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
                 )
               }
             >
@@ -77,7 +78,7 @@ function SidebarGroup({ label, items }: { label: string; items: MenuItem[] }) {
                   <m.icon
                     className={cn(
                       'h-4 w-4 transition-colors duration-150',
-                      isActive ? 'text-white' : 'text-sidebar-foreground/60',
+                      isActive ? 'text-sidebar-accent-foreground' : 'text-sidebar-foreground/60',
                     )}
                     aria-hidden="true"
                   />

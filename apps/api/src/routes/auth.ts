@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { verifyPassword, hashPassword } from '@/lib/auth/password';
 import { setSessionCookie, clearSessionCookie } from '@/lib/auth/session';
 import { requireAuth } from '@/lib/auth/guards';
+import { writeAuditLog } from '@/routes/auditLogs';
 
 const ChangePasswordInput = z.object({
   currentPassword: z.string().min(1),
@@ -37,6 +38,7 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
         .send({ ok: false, code: 'AUTH_REQUIRED', message: '이메일 또는 비밀번호가 올바르지 않습니다' });
     }
     setSessionCookie(reply, user.id);
+    void writeAuditLog({ userId: user.id, userEmail: user.email, action: 'login', ip: req.ip });
     return {
       ok: true,
       data: { user: { id: user.id, email: user.email, role: user.role } },
@@ -44,7 +46,10 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
   });
 
   // ── 로그아웃
-  app.post('/auth/logout', async (_req, reply) => {
+  app.post('/auth/logout', async (req, reply) => {
+    if (req.user) {
+      void writeAuditLog({ userId: req.user.id, userEmail: req.user.email, action: 'logout', ip: req.ip });
+    }
     clearSessionCookie(reply);
     return { ok: true, data: {} };
   });

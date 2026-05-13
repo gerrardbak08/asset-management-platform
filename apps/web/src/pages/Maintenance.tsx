@@ -51,7 +51,7 @@ export default function Maintenance() {
       ) : (
         <div className="grid grid-cols-1 gap-3 xl:grid-cols-4">
           {COLUMNS.map((status) => (
-            <Card key={status} className="min-h-[320px] p-3">
+            <Card key={status} className="min-h-chart-md p-3">
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-heading-sm font-semibold text-foreground">
                   {maintenanceStatusLabel[status]}

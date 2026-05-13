@@ -149,7 +149,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
           { label: '비품 이동', value: cur?.transfer ?? 0, mom: momKpi.transfer, positive: false },
           { label: '비품 폐기', value: cur?.disposal ?? 0, mom: momKpi.disposal, positive: false },
         ].map((it) => (
-          <div key={it.label} className="rounded-xl border border-border bg-card p-4 shadow-sm">
+          <div key={it.label} className="rounded-2xl border border-border bg-card p-4 shadow-elev-1">
             <div className="text-caption text-muted-foreground">{it.label}</div>
             <div className="mt-2 font-mono text-heading-sm font-semibold tabular-nums text-foreground">
               {fmtKRfull(it.value)}
@@ -333,7 +333,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
             ))}
           </div>
         </div>
-        <div className="min-h-[280px] flex-1">
+        <div className="min-h-chart-md flex-1">
           <ResponsiveContainer>
             <BarChart data={flowData} layout="vertical" margin={{ top: 4, right: 24, bottom: 0, left: 0 }}>
               <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />

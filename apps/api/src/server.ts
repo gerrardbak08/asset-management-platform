@@ -21,6 +21,7 @@ import { maintenanceRoutes } from './routes/maintenance';
 import { ledgerRoutes } from './routes/ledger';
 import { depreciationRoutes } from './routes/depreciation';
 import { imageRoutes } from './routes/image';
+import { auditLogRoutes } from './routes/auditLogs';
 import { attachUser } from './lib/auth/guards';
 
 export async function buildServer() {
@@ -123,6 +124,7 @@ export async function buildServer() {
   await app.register(ledgerRoutes, { prefix: '/api' });
   await app.register(depreciationRoutes, { prefix: '/api' });
   await app.register(imageRoutes); // /api/images/optimized
+  await app.register(auditLogRoutes, { prefix: '/api' });
 
   return app;
 }

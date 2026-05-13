@@ -316,6 +316,35 @@ export type DepreciationSchedule = {
   entries?: DepEntry[];
 };
 
+// ── 감사 로그
+export type AuditAction =
+  | 'login'
+  | 'logout'
+  | 'create'
+  | 'update'
+  | 'delete'
+  | 'export'
+  | 'upload';
+
+export type AuditLog = {
+  id: string;
+  userId: string | null;
+  userEmail: string | null;
+  action: AuditAction;
+  resource: string | null;
+  resourceId: string | null;
+  detail: string | null;
+  ip: string | null;
+  createdAt: string;
+};
+
+export type AuditLogPage = {
+  items: AuditLog[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
 // ── API 응답 헬퍼
 export type ApiOk<T> = { ok: true; data: T };
 export type ApiErr = { ok: false; code: ApiErrorCode; message: string };

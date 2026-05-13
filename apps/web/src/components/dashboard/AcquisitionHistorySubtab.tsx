@@ -58,7 +58,7 @@ export function AcquisitionHistorySubtab() {
       {/* 차트 */}
       <Card className="p-5">
         <SectionHeader title="연도별 취득 건수 + 누적 취득가" description="신규 취득 건수(막대) + 누적 취득가(선)" />
-        <div className="h-[360px] w-full">
+        <div className="h-chart-lg w-full">
           <ResponsiveContainer>
             <ComposedChart data={chartData} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
               <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />

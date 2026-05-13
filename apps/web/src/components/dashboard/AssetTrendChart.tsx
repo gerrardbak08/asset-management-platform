@@ -101,7 +101,7 @@ export function AssetTrendChart() {
         title="자산 유형별 추이"
         description={`기준월(${baseLabel}) = 100 · 항목별 규모 차이를 제거하고 변화율만 비교 · 툴팁에서 실제 금액 확인`}
       />
-      <div className="h-[240px] w-full">
+      <div className="h-chart-sm w-full">
         <ResponsiveContainer>
           <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -8 }}>
             <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />

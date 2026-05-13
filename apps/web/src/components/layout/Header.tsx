@@ -1,6 +1,6 @@
-// 페이지 상단 헤더 — h-14 + 좌측 제목 + 우측 action / 보고서 / ThemeToggle 항상 노출
+// 페이지 상단 헤더 — h-14 + 좌측 제목 + 우측 검색(Cmd+K) / action / 보고서 / ThemeToggle 항상 노출
 import { useState, type ReactNode } from 'react';
-import { Printer } from 'lucide-react';
+import { Printer, Search } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { ReportPreviewDialog } from '@/components/report/ReportPreviewDialog';
 import { AsungSymbol } from './AsungLogo';
@@ -11,6 +11,10 @@ type Props = {
   action?: ReactNode;
 };
 
+function openSearch() {
+  window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
+}
+
 export function Header({ title, description, action }: Props) {
   const [reportOpen, setReportOpen] = useState(false);
   return (
@@ -18,7 +22,7 @@ export function Header({ title, description, action }: Props) {
       {/* 모바일 전용 CI (사이드바 숨김 < md) */}
       <div className="flex min-w-0 items-center gap-2.5 md:hidden">
         <AsungSymbol />
-        <span className="truncate text-[17px] font-bold leading-snug tracking-tight text-[#1B3A7A] dark:text-primary">
+        <span className="truncate text-heading-md font-bold leading-snug tracking-tight text-primary">
           전사 자산관리 시스템
         </span>
       </div>
@@ -34,6 +38,25 @@ export function Header({ title, description, action }: Props) {
       <div className="flex shrink-0 items-center gap-1">
         {action}
         {action ? <span className="mx-1 h-5 w-px bg-border" aria-hidden="true" /> : null}
+        {/* 전역 검색 트리거 */}
+        <button
+          type="button"
+          onClick={openSearch}
+          className="hidden items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-1.5 text-caption text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground md:flex"
+          title="전역 검색 (⌘K)"
+        >
+          <Search className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>검색</span>
+          <kbd className="rounded border border-border bg-card px-1 py-0.5 text-micro">⌘K</kbd>
+        </button>
+        <button
+          type="button"
+          onClick={openSearch}
+          className="rounded-lg p-1.5 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground md:hidden"
+          aria-label="검색"
+        >
+          <Search className="h-4 w-4" aria-hidden="true" />
+        </button>
         <button
           type="button"
           onClick={() => setReportOpen(true)}

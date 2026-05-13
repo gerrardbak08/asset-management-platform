@@ -45,6 +45,7 @@ export function BuildingMap({ name, address, lat, lng }: Props) {
           kakaoMapRef.current = new kakao.maps.Map(mapRef.current, { center, level: 4 });
           markerRef.current = new kakao.maps.Marker({ position: center, map: kakaoMapRef.current });
           iwRef.current = new kakao.maps.InfoWindow({
+            // 카카오 InfoWindow는 외부 프레임 HTML — CSS 변수 미적용, 라이트 전용 고정값 사용
             content: `<div style="padding:6px 10px;font-size:12px;font-weight:600;color:#18181B;white-space:nowrap;">${name}<br><span style="font-weight:400;color:#71717A;font-size:11px">${address}</span></div>`,
           });
           iwRef.current.open(kakaoMapRef.current, markerRef.current);
@@ -193,7 +194,7 @@ export function BuildingMap({ name, address, lat, lng }: Props) {
       {/* 지도 컨테이너 */}
       <div
         ref={mapRef}
-        className={cn('h-[360px] w-full overflow-hidden rounded-2xl border border-border bg-muted', tab !== 'map' && 'hidden')}
+        className={cn('h-chart-lg w-full overflow-hidden rounded-2xl border border-border bg-muted', tab !== 'map' && 'hidden')}
         aria-label={`${name} 위치 지도`}
       >
         {loading && !error && (
@@ -204,7 +205,7 @@ export function BuildingMap({ name, address, lat, lng }: Props) {
       </div>
 
       {/* 로드뷰 컨테이너 — 로딩 오버레이는 Kakao div 밖 별도 래퍼로 분리 */}
-      <div className={cn('relative h-[360px] w-full', tab !== 'roadview' && 'hidden')}>
+      <div className={cn('relative h-chart-lg w-full', tab !== 'roadview' && 'hidden')}>
         {tab === 'roadview' && !rvReady && !rvError && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl border border-border bg-muted text-caption text-muted-foreground pointer-events-none">
             로드뷰 로드 중…

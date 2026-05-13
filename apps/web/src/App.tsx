@@ -1,9 +1,10 @@
 // 자산관리 플랫폼 메인 앱 — /login (공개) + AuthGuard 보호 메인 셸 + < md 모바일 하단 네비
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { AuthGuard } from '@/components/AuthGuard';
+import { CommandPalette } from '@/components/ui/CommandPalette';
 import Login from '@/pages/Login';
 
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
@@ -14,10 +15,26 @@ const Maintenance = lazy(() => import('@/pages/Maintenance'));
 const Ledger = lazy(() => import('@/pages/Ledger'));
 const Depreciation = lazy(() => import('@/pages/Depreciation'));
 const Admin = lazy(() => import('@/pages/Admin'));
+const AuditLogs = lazy(() => import('@/pages/AuditLogs'));
 
 export default function App() {
+  const [cmdOpen, setCmdOpen] = useState(false);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setCmdOpen((v) => !v);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
-    <Routes>
+    <>
+      <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
+      <Routes>
       <Route path="/login" element={<Login />} />
       <Route
         path="/*"
@@ -39,6 +56,7 @@ export default function App() {
                       <Route path="/depreciation" element={<Depreciation />} />
                       <Route path="/data" element={<Admin />} />
                       <Route path="/admin" element={<Admin />} />
+                      <Route path="/audit-logs" element={<AuditLogs />} />
                     </Routes>
                   </Suspense>
                 </main>
@@ -49,5 +67,6 @@ export default function App() {
         }
       />
     </Routes>
+    </>
   );
 }
