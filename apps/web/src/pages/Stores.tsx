@@ -331,7 +331,7 @@ function Kpi({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border bg-muted/30 p-2">
       <div className="text-micro uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="mt-0.5 truncate font-kpi-inline tabular-nums text-foreground">{value}</div>
+      <div className="mt-0.5 truncate text-caption font-semibold tabular-nums text-foreground">{value}</div>
     </div>
   );
 }
