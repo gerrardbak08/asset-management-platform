@@ -148,13 +148,9 @@ export function BuildingCard({ building: b, onClick }: Props) {
 
 function KpiCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-muted/40 px-3 py-2">
-      <div className="text-micro font-medium uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
-      <div className="mt-0.5 truncate text-caption font-mono tabular-nums text-foreground">
-        {value}
-      </div>
+    <div className="py-0.5">
+      <div className="text-micro text-muted-foreground">{label}</div>
+      <div className="mt-0.5 truncate text-caption font-medium text-foreground">{value}</div>
     </div>
   );
 }
