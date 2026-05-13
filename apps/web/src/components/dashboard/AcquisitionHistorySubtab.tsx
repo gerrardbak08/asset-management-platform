@@ -1,4 +1,4 @@
-// 취득 연혁 — 연도별 취득 건수 + 누적 취득가 + 전체 취득 내역 테이블
+// 취득 연혁 — 연도별 취득 건수 + 누적 취득가 + KPI 요약 + 지역별 도넛 + 전체 취득 내역 테이블
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -11,13 +11,20 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 import { buildingsApi } from '@/lib/api/buildings';
 import { Card } from '@/components/ui/Card';
 import { SectionHeader } from '@/components/features/dashboard/SectionHeader';
-import { fmtKR } from '@/lib/format';
+import { fmtKR, fmtKRfull } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { CHART_ANIM_MS } from '@/lib/motion';
+
+function regionOf(address: string) {
+  return address.split(' ')[0] ?? '기타';
+}
 
 function cityOf(address: string) {
   const parts = address.split(' ');
@@ -25,6 +32,15 @@ function cityOf(address: string) {
 }
 
 const LARGE_AMT = 10_000_000_000; // 100억
+const REGION_COLORS = [
+  'hsl(var(--primary))',
+  'hsl(var(--info))',
+  'hsl(var(--warning))',
+  'hsl(var(--success))',
+  'hsl(var(--danger))',
+  'hsl(var(--accent))',
+  'hsl(var(--muted-foreground))',
+];
 
 export function AcquisitionHistorySubtab() {
   const q = useQuery({ queryKey: ['buildings'], queryFn: buildingsApi.list });
@@ -53,86 +69,188 @@ export function AcquisitionHistorySubtab() {
       .sort((a, b) => new Date(b.acquisitionDate).getTime() - new Date(a.acquisitionDate).getTime());
   }, [q.data]);
 
+  const kpi = useMemo(() => {
+    const items = q.data ?? [];
+    if (items.length === 0) return null;
+    const prices = items.map((b) => Number(b.acquisitionPrice));
+    const total = prices.reduce((s, v) => s + v, 0);
+    const max = Math.max(...prices);
+    const earliest = items.reduce((a, b) =>
+      new Date(a.acquisitionDate) < new Date(b.acquisitionDate) ? a : b,
+    );
+    return {
+      total,
+      avg: total / items.length,
+      max,
+      firstYear: new Date(earliest.acquisitionDate).getFullYear(),
+    };
+  }, [q.data]);
+
+  const regionData = useMemo(() => {
+    const items = q.data ?? [];
+    const map = new Map<string, number>();
+    for (const b of items) {
+      const region = regionOf(b.address);
+      map.set(region, (map.get(region) ?? 0) + Number(b.acquisitionPrice));
+    }
+    return Array.from(map.entries())
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  }, [q.data]);
+
+  const totalRegion = regionData.reduce((s, d) => s + d.value, 0);
+
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      {/* 차트 */}
-      <Card className="p-5">
-        <SectionHeader title="연도별 취득 건수 + 누적 취득가" description="신규 취득 건수(막대) + 누적 취득가(선)" />
-        <div className="h-chart-lg w-full">
-          <ResponsiveContainer>
-            <ComposedChart data={chartData} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
-              <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
-              <XAxis
-                dataKey="year"
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                axisLine={{ stroke: 'hsl(var(--border))' }}
-                tickLine={false}
-              />
-              <YAxis
-                yAxisId="left"
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                axisLine={{ stroke: 'hsl(var(--border))' }}
-                tickLine={false}
-                tickFormatter={(v) => `${v}건`}
-                width={50}
-              />
-              <YAxis
-                yAxisId="right"
-                orientation="right"
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-                axisLine={{ stroke: 'hsl(var(--border))' }}
-                tickLine={false}
-                tickFormatter={(v) => fmtKR(Number(v))}
-                width={60}
-              />
-              <Tooltip
-                formatter={(v, name) =>
-                  name === '신규 취득 건수'
-                    ? `${Number(v).toLocaleString('ko-KR')} 건`
-                    : fmtKR(Number(v)) + '원'
-                }
-                contentStyle={{
-                  background: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: 12,
-                  fontSize: 12,
-                  color: 'hsl(var(--foreground))',
-                }}
-                cursor={{ fill: 'hsl(var(--muted))' }}
-              />
-              <Legend wrapperStyle={{ fontSize: 11, color: 'hsl(var(--muted-foreground))' }} />
-              <Bar
-                yAxisId="left"
-                dataKey="count"
-                name="신규 취득 건수"
-                fill="hsl(var(--primary))"
-                radius={[6, 6, 0, 0]}
-                maxBarSize={48}
-                isAnimationActive
-                animationDuration={CHART_ANIM_MS}
-                animationEasing="ease-out"
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="cumulative"
-                name="누적 취득가"
-                stroke="hsl(var(--accent))"
-                strokeWidth={2}
-                dot={{ fill: 'hsl(var(--accent))', r: 4 }}
-                isAnimationActive
-                animationDuration={CHART_ANIM_MS}
-                animationEasing="ease-out"
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
+      {/* 왼쪽 — 차트 + KPI 요약 + 지역별 도넛 */}
+      <Card className="flex flex-col gap-5 p-5">
+        {/* 연도별 차트 */}
+        <div>
+          <SectionHeader title="연도별 취득 건수 + 누적 취득가" description="신규 취득 건수(막대) + 누적 취득가(선)" compact />
+          <div className="h-chart-lg w-full">
+            <ResponsiveContainer>
+              <ComposedChart data={chartData} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
+                <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  dataKey="year"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tickLine={false}
+                />
+                <YAxis
+                  yAxisId="left"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tickLine={false}
+                  tickFormatter={(v) => `${v}건`}
+                  width={50}
+                />
+                <YAxis
+                  yAxisId="right"
+                  orientation="right"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                  axisLine={{ stroke: 'hsl(var(--border))' }}
+                  tickLine={false}
+                  tickFormatter={(v) => fmtKR(Number(v))}
+                  width={60}
+                />
+                <Tooltip
+                  formatter={(v, name) =>
+                    name === '신규 취득 건수'
+                      ? `${Number(v).toLocaleString('ko-KR')} 건`
+                      : fmtKR(Number(v)) + '원'
+                  }
+                  contentStyle={{
+                    background: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: 12,
+                    fontSize: 12,
+                    color: 'hsl(var(--foreground))',
+                  }}
+                  cursor={{ fill: 'hsl(var(--muted))' }}
+                />
+                <Legend wrapperStyle={{ fontSize: 11, color: 'hsl(var(--muted-foreground))' }} />
+                <Bar
+                  yAxisId="left"
+                  dataKey="count"
+                  name="신규 취득 건수"
+                  fill="hsl(var(--primary))"
+                  radius={[6, 6, 0, 0]}
+                  maxBarSize={48}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="cumulative"
+                  name="누적 취득가"
+                  stroke="hsl(var(--accent))"
+                  strokeWidth={2}
+                  dot={{ fill: 'hsl(var(--accent))', r: 4 }}
+                  isAnimationActive
+                  animationDuration={CHART_ANIM_MS}
+                  animationEasing="ease-out"
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
         </div>
+
+        {/* KPI 요약 */}
+        {kpi && (
+          <div className="grid grid-cols-4 gap-2 border-t border-border pt-4">
+            <KpiCell label="총 취득가" value={fmtKRfull(kpi.total)} />
+            <KpiCell label="평균 취득가" value={fmtKRfull(kpi.avg)} />
+            <KpiCell label="최대 단건" value={fmtKRfull(kpi.max)} />
+            <KpiCell label="최초 취득" value={`${kpi.firstYear}년`} />
+          </div>
+        )}
+
+        {/* 지역별 도넛 */}
+        {regionData.length > 0 && (
+          <div className="border-t border-border pt-4">
+            <p className="mb-3 text-body-strong font-semibold text-foreground">지역별 취득가 분포</p>
+            <div className="flex items-center gap-4">
+              <div className="h-[130px] w-[130px] shrink-0">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={regionData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius="50%"
+                      outerRadius="82%"
+                      paddingAngle={2}
+                      stroke="hsl(var(--card))"
+                      strokeWidth={2}
+                      isAnimationActive
+                      animationDuration={CHART_ANIM_MS}
+                    >
+                      {regionData.map((_, i) => (
+                        <Cell key={i} fill={REGION_COLORS[i % REGION_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      formatter={(v) => fmtKRfull(Number(v))}
+                      contentStyle={{
+                        background: 'hsl(var(--card))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: 12,
+                        fontSize: 12,
+                        color: 'hsl(var(--foreground))',
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <ul className="min-w-0 flex-1 space-y-1.5">
+                {regionData.map((d, i) => (
+                  <li key={d.name} className="flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span
+                        className="h-2 w-2 shrink-0 rounded-full"
+                        style={{ background: REGION_COLORS[i % REGION_COLORS.length] }}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate text-caption text-muted-foreground">{d.name}</span>
+                    </span>
+                    <span className="shrink-0 tabular-nums text-caption text-foreground">
+                      {totalRegion > 0 ? ((d.value / totalRegion) * 100).toFixed(1) : '0.0'}%
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </Card>
 
-      {/* 취득 내역 테이블 */}
+      {/* 오른쪽 — 취득 내역 테이블 */}
       <Card className="flex flex-col p-5">
-        <SectionHeader title="건물 취득 내역 (전체)" description={`총 ${tableRows.length}동`} />
-        <div className="mt-3 min-h-0 flex-1 overflow-y-auto">
+        <SectionHeader title="건물 취득 내역 (전체)" description={`총 ${tableRows.length}동`} compact />
+        <div className="min-h-0 flex-1 overflow-y-auto">
           <table className="w-full table-fixed text-caption">
             <thead>
               <tr className="border-b border-border">
@@ -147,8 +265,8 @@ export function AcquisitionHistorySubtab() {
                 const price = Number(b.acquisitionPrice);
                 const isLarge = price >= LARGE_AMT;
                 return (
-                  <tr key={b.id} className="hover:bg-muted/40 transition-colors">
-                    <td className="py-2 pr-3 text-foreground font-medium">
+                  <tr key={b.id} className="transition-colors hover:bg-muted/40">
+                    <td className="py-2 pr-3 font-medium text-foreground">
                       <div className="truncate">{b.name}</div>
                     </td>
                     <td className="py-2 pr-3 tabular-nums text-muted-foreground whitespace-nowrap">
@@ -167,6 +285,15 @@ export function AcquisitionHistorySubtab() {
           </table>
         </div>
       </Card>
+    </div>
+  );
+}
+
+function KpiCell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-muted/30 p-2">
+      <div className="text-micro uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="mt-0.5 truncate text-caption font-semibold tabular-nums text-foreground">{value}</div>
     </div>
   );
 }
