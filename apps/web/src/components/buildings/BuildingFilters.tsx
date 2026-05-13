@@ -117,7 +117,7 @@ function Chip({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-full border px-2.5 py-0.5 text-micro font-medium transition-colors duration-150',
+        'rounded-full border px-1.5 py-0 text-[10px] font-medium leading-[18px] transition-colors duration-150',
         active
           ? 'border-primary bg-primary text-primary-foreground'
           : 'border-border bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground',
