@@ -51,11 +51,11 @@ export default function Leases() {
         <div className="overflow-x-auto">
           <div className="min-w-[800px]">
             <div className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-semibold text-muted-foreground">
-              <span>건물</span>
-              <span>임차인</span>
-              <span>상태</span>
-              <span>만료</span>
-              <span className="text-right">월 임대료</span>
+              <span className="text-center">건물</span>
+              <span className="text-center">임차인</span>
+              <span className="text-center">상태</span>
+              <span className="text-center">만료</span>
+              <span className="text-center">월 임대료</span>
             </div>
             {leasesQ.isLoading ? (
               <p className="p-4 text-caption text-muted-foreground">로딩 중…</p>
