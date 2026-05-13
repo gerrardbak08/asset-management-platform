@@ -41,11 +41,10 @@ export function BuildingFilters({
   const orderedGroups = ALL_USE_GROUPS.filter((g) => groups.includes(g));
 
   return (
-    <div className="space-y-3 rounded-2xl border border-border bg-card p-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-caption font-semibold uppercase tracking-wider text-muted-foreground">
-          지역
-        </span>
+    <div className="space-y-2 rounded-2xl border border-border bg-card p-3">
+      {/* 지역 + 용도 한 행 */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <FilterLabel>지역</FilterLabel>
         <Chip active={region === null} onClick={() => setRegion(null)}>
           전체 ({buildings.length})
         </Chip>
@@ -57,12 +56,8 @@ export function BuildingFilters({
             </Chip>
           );
         })}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-caption font-semibold uppercase tracking-wider text-muted-foreground">
-          용도
-        </span>
+        <span className="h-3.5 w-px shrink-0 bg-border" aria-hidden="true" />
+        <FilterLabel>용도</FilterLabel>
         <Chip active={useGroup === null} onClick={() => setUseGroup(null)}>
           전체
         </Chip>
@@ -76,17 +71,18 @@ export function BuildingFilters({
         })}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+      {/* 검색 + 정렬 */}
+      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="건물명 또는 주소 검색…"
-          className="flex-1 rounded-xl border border-border bg-muted px-3 py-2 text-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex-1 rounded-xl border border-border bg-muted px-3 py-1.5 text-caption text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
-          className="rounded-xl border border-border bg-muted px-3 py-2 text-body text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          className="rounded-xl border border-border bg-muted px-3 py-1.5 text-caption text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {(Object.entries(SORT_LABEL) as [SortKey, string][]).map(([v, l]) => (
             <option key={v} value={v}>
@@ -96,6 +92,14 @@ export function BuildingFilters({
         </select>
       </div>
     </div>
+  );
+}
+
+function FilterLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="shrink-0 text-micro font-semibold uppercase tracking-wider text-muted-foreground">
+      {children}
+    </span>
   );
 }
 
@@ -113,7 +117,7 @@ function Chip({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3 py-1 text-caption font-medium transition-colors duration-150',
+        'rounded-full border px-2.5 py-0.5 text-micro font-medium transition-colors duration-150',
         active
           ? 'border-primary bg-primary text-primary-foreground'
           : 'border-border bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground',
