@@ -54,7 +54,7 @@ export function AcquisitionHistorySubtab() {
   }, [q.data]);
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_420px]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* 차트 */}
       <Card className="p-5">
         <SectionHeader title="연도별 취득 건수 + 누적 취득가" description="신규 취득 건수(막대) + 누적 취득가(선)" />
@@ -133,13 +133,13 @@ export function AcquisitionHistorySubtab() {
       <Card className="flex flex-col p-5">
         <SectionHeader title="건물 취득 내역 (전체)" description={`총 ${tableRows.length}동`} />
         <div className="mt-3 min-h-0 flex-1 overflow-y-auto">
-          <table className="w-full text-caption">
+          <table className="w-full table-fixed text-caption">
             <thead>
               <tr className="border-b border-border">
-                <th className="pb-2 text-left font-semibold text-muted-foreground">건물명</th>
-                <th className="pb-2 text-left font-semibold text-muted-foreground">취득일</th>
-                <th className="pb-2 text-right font-semibold text-muted-foreground">취득가</th>
-                <th className="pb-2 text-left font-semibold text-muted-foreground pl-3">소재지</th>
+                <th className="w-[38%] pb-2 text-left font-semibold text-muted-foreground">건물명</th>
+                <th className="w-[22%] pb-2 text-left font-semibold text-muted-foreground">취득일</th>
+                <th className="w-[18%] pb-2 text-right font-semibold text-muted-foreground">취득가</th>
+                <th className="w-[22%] pb-2 pl-3 text-left font-semibold text-muted-foreground">소재지</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -148,15 +148,17 @@ export function AcquisitionHistorySubtab() {
                 const isLarge = price >= LARGE_AMT;
                 return (
                   <tr key={b.id} className="hover:bg-muted/40 transition-colors">
-                    <td className="py-2 pr-3 text-foreground font-medium">{b.name}</td>
+                    <td className="py-2 pr-3 text-foreground font-medium">
+                      <div className="truncate">{b.name}</div>
+                    </td>
                     <td className="py-2 pr-3 tabular-nums text-muted-foreground whitespace-nowrap">
                       {b.acquisitionDate.slice(0, 10)}
                     </td>
                     <td className={cn('py-2 text-right tabular-nums font-semibold whitespace-nowrap', isLarge ? 'text-danger' : 'text-foreground')}>
                       {fmtKR(price)}원
                     </td>
-                    <td className="py-2 pl-3 text-muted-foreground whitespace-nowrap">
-                      {cityOf(b.address)}
+                    <td className="py-2 pl-3 text-muted-foreground">
+                      <div className="truncate">{cityOf(b.address)}</div>
                     </td>
                   </tr>
                 );
