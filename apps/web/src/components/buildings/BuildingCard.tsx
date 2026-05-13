@@ -8,7 +8,6 @@ import { regionOf } from '@/lib/buildingHelpers';
 import { PhotoFallback } from './PhotoFallback';
 import { PhotoLightbox, type LightboxPhoto } from './PhotoLightbox';
 import { fmtKRprice } from '@/lib/format';
-import { cn } from '@/lib/utils';
 
 function getRiskTone(b: Building) {
   const photoMissing = !b.photoUrl && !b.detailPhotoUrl;
@@ -100,36 +99,12 @@ export function BuildingCard({ building: b, onClick }: Props) {
           </div>
 
           {/* KPI 그리드 */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-0 pt-1">
             <KpiCell label="취득가" value={fmtKRprice(Number(b.acquisitionPrice)) + '원'} />
             <KpiCell label="연면적" value={Math.round(b.area.pyeong).toLocaleString('ko-KR') + '평'} />
             <KpiCell label="임차인" value={b.tenant} />
             <KpiCell label="용도" value={b.use.length > 8 ? b.use.slice(0, 8) + '…' : b.use} />
-          </div>
-
-          {/* 임대율 progress bar */}
-          <div className="pt-1">
-            <div className="mb-1 flex items-center justify-between text-caption">
-              <span className="text-muted-foreground">임대율</span>
-              <span className="font-mono tabular-nums text-foreground">
-                {b.rental.rate.toFixed(0)}%
-              </span>
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-              <div
-                className={cn(
-                  'h-full transition-all duration-150',
-                  b.rental.rate === 100
-                    ? 'bg-success'
-                    : b.rental.rate >= 50
-                      ? 'bg-primary'
-                      : b.rental.rate > 0
-                        ? 'bg-warning'
-                        : 'bg-danger',
-                )}
-                style={{ width: `${Math.min(100, Math.max(0, b.rental.rate))}%` }}
-              />
-            </div>
+            <KpiCell label="임대율" value={b.rental.rate.toFixed(0) + '%'} />
           </div>
         </div>
       </Card>
@@ -148,9 +123,9 @@ export function BuildingCard({ building: b, onClick }: Props) {
 
 function KpiCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="py-0.5">
+    <div className="py-1">
       <div className="text-micro text-muted-foreground">{label}</div>
-      <div className="mt-0.5 truncate text-caption font-medium text-foreground">{value}</div>
+      <div className="mt-0.5 h-4 truncate text-caption font-medium leading-4 text-foreground">{value}</div>
     </div>
   );
 }
