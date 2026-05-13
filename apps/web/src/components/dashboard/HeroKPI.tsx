@@ -71,10 +71,7 @@ export function HeroKPI({ m0 }: Props) {
 
           {/* 핵심 숫자 */}
           <div className="mt-4 flex items-end gap-2">
-            <span
-              className="tabular-nums leading-none text-foreground"
-              style={{ fontSize: '60px', fontWeight: 700, letterSpacing: '-0.02em' }}
-            >
+            <span className="tabular-nums text-kpi-hero tracking-tight text-foreground">
               {fmtKR(cur.total)}
             </span>
             <span className="mb-1 text-heading-lg font-semibold leading-none text-muted-foreground">
