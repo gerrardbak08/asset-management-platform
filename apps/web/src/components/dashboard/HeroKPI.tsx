@@ -82,15 +82,6 @@ export function HeroKPI({ m0 }: Props) {
           {/* 전월 대비 세로 막대 차트 */}
           <MomBarMini m0={m0} />
 
-          {/* 구분선 + 상세 */}
-          <div className="mt-4 pt-3">
-            <div className="mb-2 h-px bg-border/60" />
-            <p className="text-caption text-muted-foreground">
-              {fmtKRfull(cur.total)}
-              <span className="mx-1.5 opacity-40">·</span>
-              전월 <span className="text-foreground">{m0.meta.previous_period}</span> 대비
-            </p>
-          </div>
         </Card>
       </motion.div>
 
