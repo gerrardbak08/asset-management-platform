@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AlertTriangle, CalendarClock, FileText } from 'lucide-react';
-import type { LeaseContract } from '@aims/shared';
 import { phase2Api } from '@/lib/api/phase2';
 import { fmtKRprice } from '@/lib/format';
 import { leaseStatusLabel } from '@/lib/phase2Labels';
@@ -19,13 +18,6 @@ function daysUntil(value: string): number {
   return Math.ceil((end.getTime() - today.getTime()) / MS_DAY);
 }
 
-function timelineWidth(lease: LeaseContract): number {
-  const start = new Date(`${lease.contractStart}T00:00:00`).getTime();
-  const end = new Date(`${lease.contractEnd}T00:00:00`).getTime();
-  const total = Math.max(end - start, MS_DAY);
-  const elapsed = Math.max(0, Math.min(Date.now() - start, total));
-  return Math.max(6, Math.min(100, (elapsed / total) * 100));
-}
 
 export default function Leases() {
   const leasesQ = useQuery({ queryKey: ['leases'], queryFn: () => phase2Api.leases() });
@@ -82,19 +74,10 @@ export default function Leases() {
                   return (
                     <div
                       key={lease.id}
-                      className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] items-center gap-4 px-4 py-3 text-body"
+                      className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] items-center gap-4 px-4 py-3 text-caption"
                     >
                       <div className="min-w-0">
                         <div className="truncate font-semibold text-foreground">{lease.buildingName ?? lease.buildingId}</div>
-                        <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-                          <div
-                            className={cn(
-                              'h-full rounded-full',
-                              left <= 7 ? 'bg-danger' : left <= 30 ? 'bg-warning' : 'bg-primary',
-                            )}
-                            style={{ width: `${timelineWidth(lease)}%` }}
-                          />
-                        </div>
                       </div>
                       <div className="truncate text-muted-foreground whitespace-nowrap">{lease.tenantName}</div>
                       <span className="w-fit whitespace-nowrap rounded-full bg-muted px-2 py-1 text-caption font-semibold">

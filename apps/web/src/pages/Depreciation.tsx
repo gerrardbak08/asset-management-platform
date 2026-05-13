@@ -66,7 +66,7 @@ export default function Depreciation() {
 function ScheduleRow({ schedule }: { schedule: DepreciationSchedule }) {
   const latest = schedule.entries?.[0];
   return (
-    <div className="grid gap-2 px-4 py-3 text-body lg:grid-cols-[1.2fr,100px,120px,120px,140px] lg:items-center">
+    <div className="grid gap-2 px-4 py-3 text-caption lg:grid-cols-[1.2fr,100px,120px,120px,140px] lg:items-center">
       <div className="min-w-0">
         <div className="truncate font-semibold text-foreground">
           {schedule.buildingName ?? schedule.equipmentName ?? schedule.id}
