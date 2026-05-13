@@ -103,11 +103,11 @@ export function AcquisitionHistorySubtab() {
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* 왼쪽 — 차트 + KPI 요약 + 지역별 도넛 */}
-      <Card className="flex flex-col gap-5 p-5">
+      <Card className="flex flex-col gap-3 p-4">
         {/* 연도별 차트 */}
         <div>
           <SectionHeader title="연도별 취득 건수 + 누적 취득가" description="신규 취득 건수(막대) + 누적 취득가(선)" compact />
-          <div className="h-[220px] w-full">
+          <div className="h-[180px] w-full">
             <ResponsiveContainer>
               <ComposedChart data={chartData} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
@@ -180,7 +180,7 @@ export function AcquisitionHistorySubtab() {
 
         {/* KPI 요약 */}
         {kpi && (
-          <div className="grid grid-cols-4 gap-2 border-t border-border pt-4">
+          <div className="grid grid-cols-4 gap-2 border-t border-border pt-3">
             <KpiCell label="총 취득가" value={fmtKRfull(kpi.total)} />
             <KpiCell label="평균 취득가" value={fmtKRfull(kpi.avg)} />
             <KpiCell label="최대 단건" value={fmtKRfull(kpi.max)} />
@@ -190,10 +190,10 @@ export function AcquisitionHistorySubtab() {
 
         {/* 지역별 도넛 */}
         {regionData.length > 0 && (
-          <div className="border-t border-border pt-4">
-            <p className="mb-3 text-body-strong font-semibold text-foreground">지역별 취득가 분포</p>
+          <div className="border-t border-border pt-3">
+            <p className="mb-2 text-body-strong font-semibold text-foreground">지역별 취득가 분포</p>
             <div className="flex items-center gap-4">
-              <div className="h-[160px] w-[160px] shrink-0">
+              <div className="h-[140px] w-[140px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
