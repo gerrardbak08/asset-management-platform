@@ -9,6 +9,13 @@ import { PageShell } from '@/components/ui/PageShell';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 
+const TX_CLASS: Record<string, string> = {
+  purchase:   'bg-success-subtle text-success border-success/30',
+  transfer:   'bg-info-subtle text-info border-info/30',
+  disposal:   'bg-danger-subtle text-danger border-danger/30',
+  adjustment: 'bg-warning-subtle text-warning border-warning/30',
+};
+
 export default function Ledger() {
   const [q, setQ] = useState('');
   const ledgerQ = useQuery({ queryKey: ['ledger'], queryFn: () => phase2Api.ledger() });
@@ -38,7 +45,7 @@ export default function Ledger() {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="grid grid-cols-[120px,1fr,100px,140px,120px,120px] border-b border-border px-4 py-2 text-caption font-semibold text-muted-foreground max-xl:hidden">
+        <div className="grid grid-cols-[120px,1fr,100px,140px,120px,120px] border-b border-border bg-muted/40 px-4 py-2 text-micro font-semibold uppercase tracking-wide text-muted-foreground max-xl:hidden">
           <span>일자</span>
           <span>비품</span>
           <span>유형</span>
@@ -72,20 +79,20 @@ function LedgerRow({ row }: { row: EquipmentLedger }) {
   const from = row.fromLocation ? locationLabel[row.fromLocation] : '-';
   const to = row.toLocation ? locationLabel[row.toLocation] : '-';
   return (
-    <div className="grid gap-2 px-4 py-3 text-body xl:grid-cols-[120px,1fr,100px,140px,120px,120px] xl:items-center">
-      <span className="text-caption text-muted-foreground">{row.txDate}</span>
+    <div className="grid gap-2 px-4 py-2.5 text-caption xl:grid-cols-[120px,1fr,100px,140px,120px,120px] xl:items-center">
+      <span className="text-muted-foreground">{row.txDate}</span>
       <div className="min-w-0">
         <div className="truncate font-semibold text-foreground">{row.equipmentName ?? row.equipmentItemId}</div>
-        <div className="truncate text-caption text-muted-foreground">{row.legacyAssetNo ?? row.reason ?? row.period}</div>
+        <div className="truncate text-micro text-muted-foreground">{row.legacyAssetNo ?? row.reason ?? row.period}</div>
       </div>
-      <span className="w-fit rounded-full bg-muted px-2 py-1 text-caption font-semibold">
+      <span className={`w-fit rounded-full border px-2 py-0.5 text-micro font-medium ${TX_CLASS[row.txType] ?? 'bg-muted text-muted-foreground border-border'}`}>
         {ledgerTxLabel[row.txType]}
       </span>
-      <span className="text-caption text-muted-foreground">
+      <span className="text-muted-foreground">
         {from} → {to}
       </span>
-      <span>{row.quantity.toLocaleString('ko-KR')}</span>
-      <span className="font-semibold text-foreground xl:text-right">{fmtKRprice(Number(row.amount))}원</span>
+      <span className="tabular-nums">{row.quantity.toLocaleString('ko-KR')}</span>
+      <span className="font-semibold tabular-nums text-foreground xl:text-right">{fmtKRprice(Number(row.amount))}원</span>
     </div>
   );
 }

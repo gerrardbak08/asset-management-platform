@@ -16,6 +16,20 @@ import { cn } from '@/lib/utils';
 
 const COLUMNS: MaintenanceStatus[] = ['open', 'in_progress', 'closed', 'cancelled'];
 
+const COL_CLASS: Record<MaintenanceStatus, string> = {
+  open:        'text-warning',
+  in_progress: 'text-info',
+  closed:      'text-success',
+  cancelled:   'text-muted-foreground',
+};
+
+const PRIORITY_CLASS: Record<string, string> = {
+  critical: 'bg-danger-subtle text-danger',
+  high:     'bg-warning-subtle text-warning',
+  normal:   'bg-info-subtle text-info',
+  low:      'bg-muted text-muted-foreground',
+};
+
 export default function Maintenance() {
   const logsQ = useQuery({ queryKey: ['maintenance'], queryFn: () => phase2Api.maintenance() });
   const costQ = useQuery({
@@ -53,10 +67,10 @@ export default function Maintenance() {
           {COLUMNS.map((status) => (
             <Card key={status} className="min-h-chart-md p-3">
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-heading-sm font-semibold text-foreground">
+                <h2 className={`text-body-strong font-semibold ${COL_CLASS[status]}`}>
                   {maintenanceStatusLabel[status]}
                 </h2>
-                <span className="rounded-full bg-muted px-2 py-0.5 text-caption font-semibold text-muted-foreground">
+                <span className="rounded-full bg-muted px-2 py-0.5 text-micro font-semibold text-muted-foreground">
                   {byStatus.get(status)?.length ?? 0}
                 </span>
               </div>
@@ -78,19 +92,10 @@ function MaintenanceCard({ log }: { log: MaintenanceLog }) {
     <div className="rounded-xl border border-border bg-background p-3">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="truncate text-body font-semibold text-foreground">{log.title}</div>
-          <div className="mt-1 truncate text-caption text-muted-foreground">{log.buildingName ?? log.buildingId}</div>
+          <div className="truncate text-caption font-semibold text-foreground">{log.title}</div>
+          <div className="mt-0.5 truncate text-micro text-muted-foreground">{log.buildingName ?? log.buildingId}</div>
         </div>
-        <span
-          className={cn(
-            'shrink-0 rounded-full px-2 py-0.5 text-micro font-bold',
-            log.priority === 'critical'
-              ? 'bg-danger-subtle text-danger'
-              : log.priority === 'high'
-                ? 'bg-warning-subtle text-warning'
-                : 'bg-muted text-muted-foreground',
-          )}
-        >
+        <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-micro font-bold', PRIORITY_CLASS[log.priority] ?? PRIORITY_CLASS.low)}>
           {maintenancePriorityLabel[log.priority]}
         </span>
       </div>

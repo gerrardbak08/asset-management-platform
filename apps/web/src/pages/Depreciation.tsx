@@ -33,12 +33,12 @@ export default function Depreciation() {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="grid grid-cols-[1.2fr,100px,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-medium text-muted-foreground max-lg:hidden">
-          <span className="text-center">자산</span>
+        <div className="grid grid-cols-[1.2fr,100px,120px,120px,140px] border-b border-border bg-muted/40 px-4 py-2 text-micro font-semibold uppercase tracking-wide text-muted-foreground max-lg:hidden">
+          <span>자산</span>
           <span className="text-center">방법</span>
-          <span className="text-center">내용연수</span>
-          <span className="text-center">취득일</span>
-          <span className="text-center">장부가</span>
+          <span className="text-right">내용연수</span>
+          <span>취득일</span>
+          <span className="text-right">장부가</span>
         </div>
         {schedulesQ.isLoading ? (
           <p className="p-4 text-caption text-muted-foreground">로딩 중…</p>
@@ -63,22 +63,29 @@ export default function Depreciation() {
 }
 
 
+const METHOD_CLASS: Record<string, string> = {
+  straight_line:     'bg-info-subtle text-info border-info/30',
+  declining_balance: 'bg-warning-subtle text-warning border-warning/30',
+};
+
 function ScheduleRow({ schedule }: { schedule: DepreciationSchedule }) {
   const latest = schedule.entries?.[0];
   return (
-    <div className="grid gap-2 px-4 py-3 text-caption lg:grid-cols-[1.2fr,100px,120px,120px,140px] lg:items-center">
+    <div className="grid gap-2 px-4 py-2.5 text-caption lg:grid-cols-[1.2fr,100px,120px,120px,140px] lg:items-center">
       <div className="min-w-0">
         <div className="truncate font-semibold text-foreground">
           {schedule.buildingName ?? schedule.equipmentName ?? schedule.id}
         </div>
-        <div className="text-caption text-muted-foreground">
+        <div className="text-micro text-muted-foreground">
           {schedule.assetType === 'building' ? '건물' : '비품'} · 취득가 {fmtKRprice(Number(schedule.acquisitionPrice))}원
         </div>
       </div>
-      <span>{depMethodLabel[schedule.method]}</span>
-      <span>{schedule.usefulLifeYears}년</span>
-      <span className="text-caption text-muted-foreground">{schedule.acquisitionDate}</span>
-      <span className="font-semibold text-foreground lg:text-right">
+      <span className={`w-fit rounded-full border px-2 py-0.5 text-micro font-medium ${METHOD_CLASS[schedule.method] ?? 'bg-muted text-muted-foreground border-border'}`}>
+        {depMethodLabel[schedule.method]}
+      </span>
+      <span className="text-right tabular-nums">{schedule.usefulLifeYears}년</span>
+      <span className="text-muted-foreground">{schedule.acquisitionDate}</span>
+      <span className="font-semibold text-foreground lg:text-right tabular-nums">
         {latest ? `${fmtKRprice(Number(latest.bookValue))}원` : '-'}
       </span>
     </div>
