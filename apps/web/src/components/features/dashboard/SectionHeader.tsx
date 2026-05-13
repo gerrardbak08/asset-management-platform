@@ -5,13 +5,14 @@ type Props = {
   title: string;
   description?: string;
   action?: ReactNode;
+  compact?: boolean;
 };
 
-export function SectionHeader({ title, description, action }: Props) {
+export function SectionHeader({ title, description, action, compact }: Props) {
   return (
     <div className="mb-4 flex items-start justify-between gap-3">
       <div>
-        <h2 className="text-heading-sm font-semibold tracking-tight text-foreground">{title}</h2>
+        <h2 className={`${compact ? 'text-body-strong' : 'text-heading-sm'} font-semibold tracking-tight text-foreground`}>{title}</h2>
         {description ? (
           <p className="mt-0.5 text-caption text-muted-foreground">{description}</p>
         ) : null}

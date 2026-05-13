@@ -198,7 +198,7 @@ function SelectedPanel({
         {/* 비품 카테고리 TOP 10 */}
         <Card className="p-3">
           <div className="mb-2 flex items-center justify-between">
-            <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} />
+            <SectionHeader title="비품 카테고리 TOP 10" description={mode === 'amount' ? '금액 기준' : '수량 기준'} compact />
             <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
               <button
                 type="button"
@@ -259,7 +259,7 @@ function SelectedPanel({
         {/* 자산 유형별 구성 — 도넛 좌측 · 범례 우측 */}
         <Card className="p-3">
           <div className="mb-2">
-            <SectionHeader title="자산 유형별 구성" description="장부가 기준" />
+            <SectionHeader title="자산 유형별 구성" description="장부가 기준" compact />
           </div>
           {typeData.length === 0 ? (
             <p className="text-caption text-muted-foreground">자산 유형 데이터 없음.</p>
