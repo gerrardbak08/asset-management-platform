@@ -33,12 +33,12 @@ export default function Depreciation() {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="grid grid-cols-[1.2fr,100px,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-semibold text-muted-foreground max-lg:hidden">
-          <span>자산</span>
-          <span>방법</span>
-          <span>내용연수</span>
-          <span>취득일</span>
-          <span className="text-right">장부가</span>
+        <div className="grid grid-cols-[1.2fr,100px,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-medium text-muted-foreground max-lg:hidden">
+          <span className="text-center">자산</span>
+          <span className="text-center">방법</span>
+          <span className="text-center">내용연수</span>
+          <span className="text-center">취득일</span>
+          <span className="text-center">장부가</span>
         </div>
         {schedulesQ.isLoading ? (
           <p className="p-4 text-caption text-muted-foreground">로딩 중…</p>

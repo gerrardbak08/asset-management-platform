@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'motion/react';
 import { AlertTriangle } from 'lucide-react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, LabelList } from 'recharts';
 import type { M0Data } from '@aims/shared';
 import { Card } from '@/components/ui/Card';
 import { MomBadge } from './MomBadge';
@@ -79,33 +79,8 @@ export function HeroKPI({ m0 }: Props) {
             </span>
           </div>
 
-          {/* 전월 대비 미니 바 차트 */}
-          <div className="mt-4 space-y-2">
-            {([
-              { label: '유형자산', cur: cur.tangible.value, delta: m0.mom.tangible.value, color: 'hsl(var(--primary))' },
-              { label: '무형자산', cur: cur.intangible.value, delta: m0.mom.intangible.value, color: 'hsl(var(--warning))' },
-              { label: '비품', cur: cur.supplies.value, delta: m0.mom.supplies.value, color: 'hsl(var(--danger))' },
-            ] as const).map(({ label, cur: c, delta, color }) => {
-              const prev = c - delta;
-              const max = Math.max(c, prev, 1);
-              const curPct = (c / max) * 100;
-              const prevPct = (prev / max) * 100;
-              return (
-                <div key={label}>
-                  <div className="mb-0.5 flex items-baseline justify-between">
-                    <span className="text-micro text-muted-foreground">{label}</span>
-                    <span className={`text-micro tabular-nums ${delta > 0 ? 'text-success' : delta < 0 ? 'text-danger' : 'text-muted-foreground'}`}>
-                      {delta > 0 ? '+' : ''}{fmtKR(delta)}원
-                    </span>
-                  </div>
-                  <div className="relative h-1.5 overflow-hidden rounded-full bg-muted/50">
-                    <div className="absolute inset-y-0 left-0 rounded-full bg-muted-foreground/20" style={{ width: `${prevPct}%` }} />
-                    <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${curPct}%`, background: color, opacity: 0.75 }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {/* 전월 대비 세로 막대 차트 */}
+          <MomBarMini m0={m0} />
 
           {/* 구분선 + 상세 */}
           <div className="mt-4 pt-3">
@@ -187,6 +162,69 @@ export function HeroKPI({ m0 }: Props) {
         <IssuePanel />
       </motion.div>
     </motion.div>
+  );
+}
+
+function MomBarMini({ m0 }: { m0: M0Data }) {
+  const cur = m0.current.asset_kpi;
+  const chartData = [
+    {
+      name: '유형자산',
+      전월: cur.tangible.value - m0.mom.tangible.value,
+      당월: cur.tangible.value,
+      fill: 'hsl(var(--primary))',
+    },
+    {
+      name: '무형자산',
+      전월: cur.intangible.value - m0.mom.intangible.value,
+      당월: cur.intangible.value,
+      fill: 'hsl(var(--warning))',
+    },
+    {
+      name: '비품',
+      전월: cur.supplies.value - m0.mom.supplies.value,
+      당월: cur.supplies.value,
+      fill: 'hsl(var(--danger))',
+    },
+  ];
+
+  return (
+    <div className="mt-4 h-32">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={chartData} margin={{ top: 16, right: 0, bottom: 0, left: 0 }} barCategoryGap="28%" barGap={3}>
+          <XAxis
+            dataKey="name"
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis hide domain={['auto', 'auto']} />
+          <Tooltip
+            formatter={(v: unknown) => fmtKR(Number(v)) + '원'}
+            contentStyle={{
+              background: 'hsl(var(--card))',
+              border: '1px solid hsl(var(--border))',
+              borderRadius: 10,
+              fontSize: 12,
+              color: 'hsl(var(--foreground))',
+            }}
+            cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }}
+          />
+          <Bar dataKey="전월" fill="hsl(var(--muted-foreground))" fillOpacity={0.25} radius={[3, 3, 0, 0]} isAnimationActive animationDuration={CHART_ANIM_MS} />
+          <Bar dataKey="당월" radius={[3, 3, 0, 0]} isAnimationActive animationDuration={CHART_ANIM_MS}>
+            {chartData.map((d, i) => (
+              <Cell key={i} fill={d.fill} fillOpacity={0.85} />
+            ))}
+            <LabelList
+              dataKey="당월"
+              position="top"
+              formatter={(v: unknown) => fmtKR(Number(v))}
+              style={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+            />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
