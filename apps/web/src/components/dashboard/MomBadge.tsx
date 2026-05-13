@@ -1,5 +1,4 @@
-// MoM 배지 — V16 .ac-pill 동등. ratio 부호로 색·아이콘 자동
-import { ArrowDown, ArrowUp, Minus } from 'lucide-react';
+// MoM 배지 — V16 .ac-pill 동등. ratio 부호로 색 자동 (아이콘 없음)
 import { cn } from '@/lib/utils';
 import { fmtPct } from '@/lib/format';
 
@@ -12,7 +11,6 @@ export function MomBadge({ ratio, className, positiveIsGood = true, showLabel = 
     : (sign > 0) === positiveIsGood
       ? 'bg-success-subtle text-success'
       : 'bg-danger-subtle text-danger';
-  const Icon = sign === 0 ? Minus : sign > 0 ? ArrowUp : ArrowDown;
 
   return (
     <span
@@ -22,7 +20,6 @@ export function MomBadge({ ratio, className, positiveIsGood = true, showLabel = 
         className,
       )}
     >
-      <Icon className="h-3 w-3" aria-hidden="true" />
       {fmtPct(ratio, 2)}
       {showLabel && <span className="ml-0.5 font-sans not-italic">MoM</span>}
     </span>
