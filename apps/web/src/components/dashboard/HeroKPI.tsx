@@ -134,21 +134,16 @@ export function HeroKPI({ m0 }: Props) {
               </ResponsiveContainer>
             </div>
           </div>
-          <ul className="min-w-0 flex-1 space-y-1.5">
+          <ul className="space-y-1.5">
             {donutData.map((d, i) => (
-              <li key={d.subcategory} className="flex items-center justify-between gap-2">
-                <span className="flex min-w-0 items-center gap-1">
-                  <span
-                    className="h-2 w-2 shrink-0 rounded-full"
-                    style={{ background: DONUT_COLORS[i % DONUT_COLORS.length] }}
-                    aria-hidden="true"
-                  />
-                  <span className="truncate text-caption text-muted-foreground">
-                    {d.subcategory}
-                  </span>
-                </span>
-                <span className="shrink-0 text-right text-caption text-muted-foreground">
-                  {cur.total > 0 ? ((d.total / cur.total) * 100).toFixed(1) : '0.0'}%
+              <li key={d.subcategory} className="flex items-center gap-1">
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ background: DONUT_COLORS[i % DONUT_COLORS.length] }}
+                  aria-hidden="true"
+                />
+                <span className="text-caption text-muted-foreground">
+                  {d.subcategory} <span className="font-medium text-foreground tabular-nums">{cur.total > 0 ? ((d.total / cur.total) * 100).toFixed(1) : '0.0'}%</span>
                 </span>
               </li>
             ))}
