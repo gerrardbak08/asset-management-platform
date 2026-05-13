@@ -77,7 +77,7 @@ export function HeroKPI({ m0 }: Props) {
             >
               {fmtKR(cur.total)}
             </span>
-            <span className="mb-1 text-[23px] font-semibold leading-none text-muted-foreground">
+            <span className="mb-1 text-heading-lg font-semibold leading-none text-muted-foreground">
               원
             </span>
           </div>

@@ -1,4 +1,4 @@
-// 좌측 사이드바 — 다이소 다크네이비 chrome. 활성 항목은 배경+텍스트 톤만 변화 (좌측 strip / 아이콘 앰버 컬러 모두 제거)
+// 좌측 사이드바 — 다이소 다크네이비 chrome. 활성 항목: 좌측 흰색 border-l + bg-white/10
 import { NavLink } from 'react-router-dom';
 import { ArrowRightLeft, Building2, Building, Calculator, ClipboardList, FileText, Shield, Store, Wrench } from 'lucide-react';
 import type { ComponentType } from 'react';
@@ -29,25 +29,27 @@ export function Sidebar() {
   const management = MENU.filter((m) => m.group === '관리');
 
   return (
-    <aside className="hidden w-[240px] shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
-      <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border bg-sidebar px-4">
+    <aside className="hidden w-[220px] shrink-0 flex-col bg-sidebar text-sidebar-foreground md:flex">
+      {/* CI 헤더 */}
+      <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-sidebar-border px-4">
         <AsungSymbol />
         <div className="min-w-0">
-          <div className="text-heading-lg font-bold leading-snug tracking-tight text-sidebar-accent-foreground">
-            전사 자산관리 시스템
-          </div>
-          <div className="mt-0.5 text-micro text-sidebar-muted-foreground">2026년 3월 · 전사 자산 현황</div>
+          <p className="truncate text-body font-bold tracking-tight text-white">
+            전사 자산관리
+          </p>
+          <p className="text-micro text-sidebar-muted-foreground">Asset Management</p>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
+      {/* 네비게이션 */}
+      <nav className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-2 py-4">
         <SidebarGroup label="운영" items={operations} />
         <SidebarGroup label="관리" items={management} />
       </nav>
 
-      <div className="border-t border-sidebar-border px-4 py-3 text-micro text-sidebar-muted-foreground">
-        v0.2.2 · 레이아웃 최적화
-        <div className="opacity-50">Build: 2026-05-12 14:55</div>
+      {/* 하단 버전 */}
+      <div className="shrink-0 border-t border-sidebar-border px-4 py-3 text-micro text-sidebar-muted-foreground">
+        v0.2.3 · 2026-05-13
       </div>
     </aside>
   );
@@ -56,33 +58,30 @@ export function Sidebar() {
 function SidebarGroup({ label, items }: { label: string; items: MenuItem[] }) {
   return (
     <div>
-      <div className="px-2 py-1.5 text-micro uppercase tracking-wider text-sidebar-muted-foreground">
+      <p className="mb-1 px-3 text-micro font-semibold uppercase tracking-widest text-sidebar-muted-foreground">
         {label}
-      </div>
+      </p>
       <ul className="space-y-0.5">
         {items.map((m) => (
-          <li key={m.to} className="relative">
+          <li key={m.to}>
             <NavLink
               to={m.to}
               className={({ isActive }) =>
                 cn(
-                  'group flex items-center gap-2 rounded-lg px-3 py-2 text-body font-medium transition-colors duration-150',
+                  'flex items-center gap-2.5 rounded-md px-3 py-2 text-caption font-medium transition-all duration-150',
                   isActive
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                    : 'text-sidebar-foreground/85 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+                    ? 'border-l-2 border-white bg-white/10 text-white'
+                    : 'border-l-2 border-transparent text-sidebar-foreground/70 hover:bg-white/5 hover:text-sidebar-foreground',
                 )
               }
             >
               {({ isActive }) => (
                 <>
                   <m.icon
-                    className={cn(
-                      'h-4 w-4 transition-colors duration-150',
-                      isActive ? 'text-sidebar-accent-foreground' : 'text-sidebar-foreground/60',
-                    )}
+                    className={cn('h-3.5 w-3.5 shrink-0', isActive ? 'text-white' : 'text-sidebar-foreground/50')}
                     aria-hidden="true"
                   />
-                  <span>{m.label}</span>
+                  <span className="truncate">{m.label}</span>
                 </>
               )}
             </NavLink>

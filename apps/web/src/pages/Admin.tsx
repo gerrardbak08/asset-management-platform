@@ -215,7 +215,7 @@ function DataUploadCard({ card, canEdit }: { card: CardDef; canEdit: boolean }) 
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-elev-1">
       <div className="flex items-start gap-3">
         <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.iconBg} ${card.iconColor}`}>
           <Icon className="h-5 w-5" aria-hidden="true" />
