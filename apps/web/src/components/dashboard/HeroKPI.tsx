@@ -79,9 +79,37 @@ export function HeroKPI({ m0 }: Props) {
             </span>
           </div>
 
+          {/* 전월 대비 미니 바 차트 */}
+          <div className="mt-4 space-y-2">
+            {([
+              { label: '유형자산', cur: cur.tangible.value, delta: m0.mom.tangible.value, color: 'hsl(var(--primary))' },
+              { label: '무형자산', cur: cur.intangible.value, delta: m0.mom.intangible.value, color: 'hsl(var(--warning))' },
+              { label: '비품', cur: cur.supplies.value, delta: m0.mom.supplies.value, color: 'hsl(var(--danger))' },
+            ] as const).map(({ label, cur: c, delta, color }) => {
+              const prev = c - delta;
+              const max = Math.max(c, prev, 1);
+              const curPct = (c / max) * 100;
+              const prevPct = (prev / max) * 100;
+              return (
+                <div key={label}>
+                  <div className="mb-0.5 flex items-baseline justify-between">
+                    <span className="text-micro text-muted-foreground">{label}</span>
+                    <span className={`text-micro tabular-nums ${delta > 0 ? 'text-success' : delta < 0 ? 'text-danger' : 'text-muted-foreground'}`}>
+                      {delta > 0 ? '+' : ''}{fmtKR(delta)}원
+                    </span>
+                  </div>
+                  <div className="relative h-1.5 overflow-hidden rounded-full bg-muted/50">
+                    <div className="absolute inset-y-0 left-0 rounded-full bg-muted-foreground/20" style={{ width: `${prevPct}%` }} />
+                    <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${curPct}%`, background: color, opacity: 0.75 }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
           {/* 구분선 + 상세 */}
-          <div className="mt-auto pt-4">
-            <div className="mb-3 h-px bg-border/60" />
+          <div className="mt-4 pt-3">
+            <div className="mb-2 h-px bg-border/60" />
             <p className="text-caption text-muted-foreground">
               {fmtKRfull(cur.total)}
               <span className="mx-1.5 opacity-40">·</span>

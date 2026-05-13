@@ -2,16 +2,16 @@
 export function fmtKR(n: number): string {
   if (!n || n === 0) return '-';
   if (n >= 1e12) return (n / 1e12).toFixed(2) + '조';
-  if (n >= 1e8) return (n / 1e8).toFixed(0) + '억';
-  if (n >= 1e4) return (n / 1e4).toFixed(0) + '만';
+  if (n >= 1e8) return Math.round(n / 1e8).toLocaleString('ko-KR') + '억';
+  if (n >= 1e4) return Math.round(n / 1e4).toLocaleString('ko-KR') + '만';
   return n.toLocaleString('ko-KR');
 }
 
 export function fmtKRfull(n: number): string {
   if (!n || n === 0) return '-';
   if (n >= 1e12) return (n / 1e12).toFixed(2) + '조원';
-  if (n >= 1e8) return (n / 1e8).toFixed(1) + '억원';
-  if (n >= 1e4) return (n / 1e4).toFixed(0) + '만원';
+  if (n >= 1e8) return (n / 1e8).toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '억원';
+  if (n >= 1e4) return Math.round(n / 1e4).toLocaleString('ko-KR') + '만원';
   return n.toLocaleString('ko-KR') + '원';
 }
 
