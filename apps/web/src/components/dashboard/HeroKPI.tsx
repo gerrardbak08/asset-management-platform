@@ -98,9 +98,8 @@ export function HeroKPI({ m0 }: Props) {
       <motion.div variants={cardItemVariants} className="h-full">
       <Card className="flex h-full flex-col p-5">
         <p className="mb-3 text-body-strong text-muted-foreground">자산 유형별 구성</p>
-        <div className="flex flex-1 flex-row items-center gap-3">
-          <div className="flex flex-1 items-center justify-center">
-            <div className="h-[160px] w-[160px]">
+        <div className="flex flex-1 flex-row items-center justify-center gap-4">
+          <div className="h-[200px] w-[200px] shrink-0">
               <ResponsiveContainer>
                 <PieChart>
                   <Pie
@@ -133,7 +132,6 @@ export function HeroKPI({ m0 }: Props) {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
           <ul className="space-y-1.5">
             {donutData.map((d, i) => (
               <li key={d.subcategory} className="flex items-center gap-1">

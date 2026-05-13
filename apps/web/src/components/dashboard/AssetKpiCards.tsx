@@ -142,14 +142,14 @@ export function AssetKpiCards({ m0 }: Props) {
                 </span>
                 <span className="text-body text-muted-foreground">원</span>
               </div>
-              <div className="mt-1.5 text-body-strong text-muted-foreground">
-                전월비 {c.momVal >= 0 ? '+' : ''}
-                {fmtKR(Math.abs(c.momVal))}원
-              </div>
-              <div className="mt-4 flex justify-end">
+              <div className="mt-1.5 flex items-center justify-between gap-2">
+                <span className="text-body-strong text-muted-foreground">
+                  전월비 {c.momVal >= 0 ? '+' : ''}
+                  {fmtKR(Math.abs(c.momVal))}원
+                </span>
                 <span
                   className={cn(
-                    'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-caption transition-colors',
+                    'inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-0.5 text-caption transition-colors',
                     isOpen
                       ? 'border-primary/40 bg-primary/10 text-primary'
                       : 'border-border bg-muted/40 text-muted-foreground',
