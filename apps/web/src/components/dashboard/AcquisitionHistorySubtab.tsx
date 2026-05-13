@@ -192,7 +192,7 @@ export function AcquisitionHistorySubtab() {
         {regionData.length > 0 && (
           <div className="border-t border-border pt-3">
             <p className="mb-2 text-body-strong font-semibold text-foreground">지역별 취득가 분포</p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center gap-3">
               <div className="h-[210px] w-[210px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
