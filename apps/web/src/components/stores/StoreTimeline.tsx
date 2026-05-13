@@ -95,24 +95,24 @@ export function StoreTimeline({ detail }: Props) {
   }, [detail]);
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden p-4">
-      <div className="mb-3 text-body-strong text-foreground">활동 타임라인</div>
-      <div className="grid flex-1 auto-rows-fr grid-cols-3 gap-3 lg:grid-cols-6">
+    <Card className="flex h-full flex-col overflow-hidden p-3">
+      <div className="mb-2 text-caption font-semibold text-foreground">활동 타임라인</div>
+      <div className="grid flex-1 auto-rows-fr grid-cols-3 gap-2 lg:grid-cols-6">
         {events.map((e, i) => (
           <div
             key={i}
-            className="flex h-full flex-col items-center justify-center gap-3 rounded-xl border border-border/40 bg-muted/20 p-4 text-center"
+            className="flex h-full flex-col items-center justify-center gap-1.5 rounded-xl border border-border/40 bg-muted/20 p-2 text-center"
           >
             <span
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${TONE_CLASSES[e.tone]}`}
             >
-              <e.icon className="h-5 w-5" />
+              <e.icon className="h-3.5 w-3.5" />
             </span>
             <div className="w-full">
-              <div className="text-caption font-semibold leading-snug text-foreground">
+              <div className="text-micro font-semibold leading-snug text-foreground">
                 {e.title}
               </div>
-              <div className="mt-1 text-caption leading-snug text-muted-foreground">
+              <div className="mt-0.5 text-micro leading-snug text-muted-foreground">
                 {e.detail}
               </div>
             </div>
