@@ -192,8 +192,8 @@ export function AcquisitionHistorySubtab() {
         {regionData.length > 0 && (
           <div className="border-t border-border pt-3">
             <p className="mb-2 text-body-strong font-semibold text-foreground">지역별 취득가 분포</p>
-            <div className="flex items-center gap-4">
-              <div className="h-[140px] w-[140px] shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="h-[210px] w-[210px] shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -225,17 +225,16 @@ export function AcquisitionHistorySubtab() {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
-              <ul className="min-w-0 flex-1 space-y-1.5">
+              <ul className="space-y-2">
                 {regionData.map((d, i) => (
-                  <li key={d.name} className="flex items-center gap-1.5">
+                  <li key={d.name} className="flex items-center gap-1">
                     <span
                       className="h-2 w-2 shrink-0 rounded-full"
                       style={{ background: REGION_COLORS[i % REGION_COLORS.length] }}
                       aria-hidden="true"
                     />
-                    <span className="min-w-0 flex-1 truncate text-caption text-muted-foreground">{d.name}</span>
-                    <span className="shrink-0 tabular-nums text-caption font-medium text-foreground">
-                      {totalRegion > 0 ? ((d.value / totalRegion) * 100).toFixed(1) : '0.0'}%
+                    <span className="text-caption text-muted-foreground">
+                      {d.name} <span className="font-medium text-foreground tabular-nums">{totalRegion > 0 ? ((d.value / totalRegion) * 100).toFixed(1) : '0.0'}%</span>
                     </span>
                   </li>
                 ))}
