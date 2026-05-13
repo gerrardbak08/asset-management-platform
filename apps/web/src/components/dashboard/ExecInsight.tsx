@@ -42,14 +42,14 @@ export function ExecInsight({ m0 }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-info/30 bg-info-subtle p-4">
+    <div className="rounded-2xl border border-info/30 bg-info-subtle p-3">
       <div className="mb-2 flex items-center gap-2">
         <Lightbulb className="h-4 w-4 text-info" aria-hidden="true" />
         <span className="text-caption font-semibold text-info">
           경영 요약 · {m0.meta.current_period}
         </span>
       </div>
-      <ul className="space-y-1.5 text-body leading-relaxed text-foreground">
+      <ul className="space-y-1.5 text-caption leading-relaxed text-foreground">
         {lines.map((line, i) => (
           <li key={i} className="flex gap-2">
             <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-info" />

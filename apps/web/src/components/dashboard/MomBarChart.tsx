@@ -26,10 +26,11 @@ export function MomBarChart({ m0 }: Props) {
     (v >= 0 ? '+' : '') + fmtKR(Math.abs(v)) + '원';
 
   return (
-    <Card className="p-5">
+    <Card className="p-3">
       <SectionHeader
         title="MoM 변동 폭"
         description={`전월 대비 항목별 증감 (상위 ${data.length}건)`}
+        compact
       />
       <div className="h-chart-sm w-full">
         <ResponsiveContainer>

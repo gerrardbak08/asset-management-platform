@@ -73,3 +73,6 @@ db_clean.json
 db_full.json
 raw_check.json
 matrix_check.txt
+
+# JDK binaries
+apps/*.jdk/

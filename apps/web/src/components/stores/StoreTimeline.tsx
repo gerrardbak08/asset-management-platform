@@ -96,7 +96,7 @@ export function StoreTimeline({ detail }: Props) {
 
   return (
     <Card className="flex h-full flex-col overflow-hidden p-3">
-      <div className="mb-2 text-caption font-semibold text-foreground">활동 타임라인</div>
+      <div className="mb-2 text-caption font-semibold text-foreground">사업장 현황 요약</div>
       <div className="grid flex-1 auto-rows-fr grid-cols-3 gap-2 lg:grid-cols-6">
         {events.map((e, i) => (
           <div

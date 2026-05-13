@@ -10,6 +10,13 @@ import { KpiCard } from '@/components/ui/KpiCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { cn } from '@/lib/utils';
 
+const STATUS_CLASS: Record<string, string> = {
+  active:     'bg-success-subtle text-success border-success/30',
+  expired:    'bg-danger-subtle text-danger border-danger/30',
+  terminated: 'bg-muted text-muted-foreground border-border',
+  pending:    'bg-warning-subtle text-warning border-warning/30',
+};
+
 const MS_DAY = 24 * 60 * 60 * 1000;
 
 function daysUntil(value: string): number {
@@ -50,12 +57,12 @@ export default function Leases() {
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <div className="min-w-[800px]">
-            <div className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] border-b border-border px-4 py-2 text-caption font-medium text-muted-foreground">
-              <span className="text-center">건물</span>
-              <span className="text-center">임차인</span>
+            <div className="grid grid-cols-[1.2fr,1fr,100px,140px,140px] border-b border-border bg-muted/40 px-4 py-2 text-micro font-semibold uppercase tracking-wide text-muted-foreground">
+              <span>건물</span>
+              <span>임차인</span>
               <span className="text-center">상태</span>
-              <span className="text-center">만료</span>
-              <span className="text-center">월 임대료</span>
+              <span>만료일</span>
+              <span className="text-right">월 임대료</span>
             </div>
             {leasesQ.isLoading ? (
               <p className="p-4 text-caption text-muted-foreground">로딩 중…</p>
@@ -74,19 +81,31 @@ export default function Leases() {
                   return (
                     <div
                       key={lease.id}
-                      className="grid grid-cols-[1.2fr,1fr,120px,120px,140px] items-center gap-4 px-4 py-3 text-caption"
+                      className="grid grid-cols-[1.2fr,1fr,100px,140px,140px] items-center gap-3 px-4 py-2.5 text-caption"
                     >
                       <div className="min-w-0">
-                        <div className="truncate text-caption font-medium text-foreground">{lease.buildingName ?? lease.buildingId}</div>
+                        <div className="truncate font-medium text-foreground">{lease.buildingName ?? lease.buildingId}</div>
                       </div>
-                      <div className="truncate text-caption text-muted-foreground whitespace-nowrap">{lease.tenantName}</div>
-                      <span className="w-fit whitespace-nowrap rounded-full bg-muted px-2 py-0.5 text-caption font-medium">
+                      <div className="truncate text-muted-foreground">{lease.tenantName}</div>
+                      <span className={cn(
+                        'w-fit whitespace-nowrap rounded-full border px-2 py-0.5 text-micro font-medium',
+                        STATUS_CLASS[lease.status] ?? STATUS_CLASS.terminated,
+                      )}>
                         {leaseStatusLabel[lease.status]}
                       </span>
-                      <span className={cn('text-caption whitespace-nowrap', left <= 30 ? 'text-danger' : 'text-muted-foreground')}>
-                        {lease.contractEnd} · {left >= 0 ? `${left}일` : `${Math.abs(left)}일 경과`}
-                      </span>
-                      <span className="whitespace-nowrap text-right text-caption font-medium text-foreground">
+                      <div className="flex items-center gap-1.5 whitespace-nowrap">
+                        <span className="text-muted-foreground">{lease.contractEnd}</span>
+                        <span className={cn(
+                          'rounded-full px-1.5 py-0.5 text-micro font-medium',
+                          left <= 7  ? 'bg-danger-subtle text-danger' :
+                          left <= 30 ? 'bg-warning-subtle text-warning' :
+                          left < 0   ? 'bg-muted text-muted-foreground' :
+                                       'bg-success-subtle text-success',
+                        )}>
+                          {left >= 0 ? `${left}일` : `${Math.abs(left)}일 경과`}
+                        </span>
+                      </div>
+                      <span className="whitespace-nowrap text-right font-medium text-foreground">
                         {fmtKRprice(Number(lease.monthlyRent))}원
                       </span>
                     </div>

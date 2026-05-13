@@ -102,9 +102,9 @@ export function AssetDrilldownSubtab({ m0 }: Props) {
         : '원장_무형자산 기준';
 
   return (
-    <div className="grid grid-cols-[170px_minmax(0,1fr)] gap-4 md:grid-cols-[300px_minmax(0,1fr)]">
+    <div className="grid grid-cols-[170px_minmax(0,1fr)] gap-3 md:grid-cols-[280px_minmax(0,1fr)]">
       {/* ── 좌: 3단 네비 ── */}
-      <div className="rounded-2xl border border-border bg-card p-4">
+      <div className="rounded-2xl border border-border bg-card p-3">
         {/* 1 DEPTH */}
         <Stage title="1 DEPTH">
           <DrillBtn active>자산</DrillBtn>
@@ -134,7 +134,7 @@ export function AssetDrilldownSubtab({ m0 }: Props) {
       </div>
 
       {/* ── 우: 원장 테이블 ── */}
-      <div className="rounded-2xl border border-border bg-card p-4">
+      <div className="rounded-2xl border border-border bg-card p-3">
         {/* 브레드크럼 */}
         <div className="mb-3 flex flex-wrap items-center gap-1.5">
           {breadcrumb.map((chip, i) => (
