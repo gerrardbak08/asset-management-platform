@@ -149,12 +149,12 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
           { label: '비품 이동', value: cur?.transfer ?? 0, mom: momKpi.transfer, positive: false },
           { label: '비품 폐기', value: cur?.disposal ?? 0, mom: momKpi.disposal, positive: false },
         ].map((it) => (
-          <div key={it.label} className="rounded-2xl border border-border bg-card p-3 shadow-elev-1">
+          <div key={it.label} className="rounded-2xl border border-border bg-card p-2 shadow-elev-1">
             <div className="text-micro text-muted-foreground">{it.label}</div>
-            <div className="mt-1 font-mono text-body-strong font-semibold tabular-nums text-foreground">
+            <div className="mt-0.5 font-mono text-caption font-semibold tabular-nums text-foreground">
               {fmtKRfull(it.value)}
             </div>
-            <div className="mt-1">
+            <div className="mt-0.5">
               <MomBadge ratio={it.mom.ratio} positiveIsGood={it.positive} />
             </div>
           </div>
@@ -171,7 +171,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
           description="클릭 시 상세"
           compact
         />
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {topCats.items.map((cat, i) => {
             const isSelected = selectedEq === cat.name;
             const rankOpacity = 1 - i * 0.15; // 1위=1.0 → 5위=0.40
@@ -181,17 +181,17 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
                   type="button"
                   onClick={() => setSelectedEq(isSelected ? null : cat.name)}
                   className={cn(
-                    'w-full rounded-xl p-2 text-left transition-colors',
+                    'w-full rounded-xl p-1.5 text-left transition-colors',
                     isSelected ? 'bg-primary/10' : 'hover:bg-muted/40',
                   )}
                 >
                   {/* 이름 + 비율 */}
-                  <div className="mb-1 flex items-center justify-between gap-2">
+                  <div className="mb-0.5 flex items-center justify-between gap-2">
                     <span className="truncate text-caption font-semibold text-foreground">{cat.name}</span>
                     <span className="shrink-0 text-micro text-muted-foreground">{cat.pct.toFixed(1)}%</span>
                   </div>
                   {/* 막대 + 금액 라벨 오버레이 */}
-                  <div className="relative h-5 overflow-hidden rounded-lg bg-muted">
+                  <div className="relative h-4 overflow-hidden rounded-lg bg-muted">
                     <div
                       className="absolute inset-y-0 left-0 rounded-lg transition-all duration-300"
                       style={{
@@ -208,7 +208,7 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
 
                 {/* 인라인 상세 패널 */}
                 {isSelected && selectedDetail && (
-                  <div className="mx-2 mb-2 mt-1 rounded-xl border border-border bg-muted/20 p-4">
+                  <div className="mx-2 mb-1 mt-1 rounded-xl border border-border bg-muted/20 p-3">
                     <div className="mb-3 flex items-center justify-between">
                       <span className="text-body-strong text-foreground">
                         {cat.name} · {fmtKRfull(selectedDetail.total)}{' '}

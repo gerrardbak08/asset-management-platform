@@ -212,11 +212,11 @@ export function LeaseStatusSubtab() {
   if (q.isLoading) return <p className="text-caption text-muted-foreground">로딩 중…</p>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* ── ① KPI 4종 (V16) + 위험 배지 ── */}
       {summary && (
-        <Card className="p-5">
-          <SectionHeader title="건물 임대 현황" description={`총 ${items.length}동`} />
+        <Card className="p-3">
+          <SectionHeader title="건물 임대 현황" description={`총 ${items.length}동`} compact />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <KpiCard
               label="임대 운영 건물"
@@ -248,7 +248,7 @@ export function LeaseStatusSubtab() {
             />
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             <RiskChip
               risk="success"
               text={`안정 ${summary.stable}동 (95%↑)`}
@@ -281,31 +281,11 @@ export function LeaseStatusSubtab() {
         />
       )}
 
-      {/* ── ② 지역(수도권/지방) + 용도(4압축) 2열 테이블 ── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <GroupTable
-          title="지역별 현황"
-          description="수도권 / 지방"
-          groups={regionGroups}
-          expanded={expandedRegion}
-          onToggle={(k) => setExpandedRegion(expandedRegion === k ? null : k)}
-          onPickBuilding={setDrawerBd}
-        />
-        <GroupTable
-          title="건물용도별 현황"
-          description={`${useGroups.length}개 용도 (4종 압축)`}
-          groups={useGroups}
-          expanded={expandedUse}
-          onToggle={(k) => setExpandedUse(expandedUse === k ? null : k)}
-          onPickBuilding={setDrawerBd}
-        />
-      </div>
-
       {/* ── ③ 건물별 임대율 + 면적 비교 + 산점도 (3열) ── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="p-5">
-          <SectionHeader title="건물별 임대율" description="공실 발생 건물은 주황 · 막대 클릭 시 상세" />
-          <div className="h-chart-lg w-full">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <Card className="p-3">
+          <SectionHeader title="건물별 임대율" description="공실 발생 건물은 주황 · 막대 클릭 시 상세" compact />
+          <div className="h-chart-md w-full">
             <ResponsiveContainer>
               <BarChart data={rateData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
@@ -358,9 +338,9 @@ export function LeaseStatusSubtab() {
           </div>
         </Card>
 
-        <Card className="p-5">
-          <SectionHeader title="임대면적 vs 전체면적 비교" description="상위 10동" />
-          <div className="h-chart-lg w-full">
+        <Card className="p-3">
+          <SectionHeader title="임대면적 vs 전체면적 비교" description="상위 10동" compact />
+          <div className="h-chart-md w-full">
             <ResponsiveContainer>
               <BarChart data={areaData} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
@@ -419,9 +399,9 @@ export function LeaseStatusSubtab() {
           </div>
         </Card>
 
-        <Card className="p-5">
-          <SectionHeader title="건물별 취득가 vs 임대율" description="점 클릭 시 상세" />
-          <div className="h-chart-lg w-full">
+        <Card className="p-3">
+          <SectionHeader title="건물별 취득가 vs 임대율" description="점 클릭 시 상세" compact />
+          <div className="h-chart-md w-full">
             <ResponsiveContainer>
               <ScatterChart margin={{ top: 4, right: 16, bottom: 30, left: 0 }}>
                 <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
@@ -492,6 +472,26 @@ export function LeaseStatusSubtab() {
         </Card>
       </div>
 
+      {/* ── ② 지역(수도권/지방) + 용도(4압축) 2열 테이블 ── */}
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <GroupTable
+          title="지역별 현황"
+          description="수도권 / 지방"
+          groups={regionGroups}
+          expanded={expandedRegion}
+          onToggle={(k) => setExpandedRegion(expandedRegion === k ? null : k)}
+          onPickBuilding={setDrawerBd}
+        />
+        <GroupTable
+          title="건물용도별 현황"
+          description={`${useGroups.length}개 용도 (4종 압축)`}
+          groups={useGroups}
+          expanded={expandedUse}
+          onToggle={(k) => setExpandedUse(expandedUse === k ? null : k)}
+          onPickBuilding={setDrawerBd}
+        />
+      </div>
+
       {drawerBd && (
         <BuildingDrawer building={drawerBd} open={!!drawerBd} onClose={() => setDrawerBd(null)} />
       )}
@@ -519,19 +519,19 @@ function KpiCard({
       type="button"
       onClick={onClick}
       className={cn(
-        'w-full rounded-xl border p-3 text-left transition-all duration-150',
+        'w-full rounded-xl border p-2 text-left transition-all duration-150',
         isActive
           ? 'border-primary bg-primary/10 ring-1 ring-primary/30'
           : 'border-border bg-muted/20 hover:border-primary/40 hover:bg-muted/40',
       )}
     >
       <div className="flex items-start justify-between gap-1">
-        <div className="text-caption text-muted-foreground">{label}</div>
+        <div className="text-micro text-muted-foreground">{label}</div>
         {isActive && (
           <span className="shrink-0 text-micro font-medium text-primary">▾ 목록</span>
         )}
       </div>
-      <div className="mt-1 font-mono text-heading-sm font-semibold tabular-nums text-foreground">
+      <div className="mt-0.5 font-mono text-caption font-semibold tabular-nums text-foreground">
         {value}
       </div>
       <div className="mt-0.5 text-micro text-muted-foreground">{sub}</div>
@@ -555,7 +555,7 @@ function RiskChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-caption font-medium transition-all duration-150',
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-micro font-medium transition-all duration-150',
         RISK_CLASS[risk],
         isActive ? 'ring-2 ring-offset-1' : 'hover:brightness-95',
         isActive && risk === 'success' && 'ring-success/50',
@@ -585,7 +585,7 @@ function DrilldownPanel({
     <Card className="overflow-hidden border-primary/20">
       <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3">
         <div>
-          <span className="text-heading-sm font-semibold text-foreground">{title}</span>
+          <span className="text-body-strong font-semibold text-foreground">{title}</span>
           <span className="ml-2 text-caption text-muted-foreground">{buildings.length}동</span>
         </div>
         <button
@@ -689,18 +689,18 @@ function GroupTable({
 }) {
   return (
     <Card className="overflow-hidden">
-      <div className="px-5 py-4">
-        <SectionHeader title={title} description={description} />
+      <div className="px-3 py-2">
+        <SectionHeader title={title} description={description} compact />
       </div>
       <div className="overflow-x-auto custom-scrollbar">
         <table className="w-full whitespace-nowrap">
-          <thead className="bg-muted/40 text-caption text-muted-foreground">
+          <thead className="bg-muted/40 text-micro text-muted-foreground">
             <tr>
-              <th className="px-4 py-2 text-left font-semibold">분류</th>
-              <th className="px-3 py-2 text-right font-semibold">건수</th>
-              <th className="px-3 py-2 text-right font-semibold">취득가 합계</th>
-              <th className="px-3 py-2 text-right font-semibold">임대율</th>
-              <th className="px-3 py-2 text-center font-semibold">상태</th>
+              <th className="px-3 py-1.5 text-left font-semibold">분류</th>
+              <th className="px-3 py-1.5 text-right font-semibold">건수</th>
+              <th className="px-3 py-1.5 text-right font-semibold">취득가 합계</th>
+              <th className="px-3 py-1.5 text-right font-semibold">임대율</th>
+              <th className="px-3 py-1.5 text-center font-semibold">상태</th>
             </tr>
           </thead>
           <tbody>
@@ -747,21 +747,21 @@ function GroupRowFragment({
         )}
         onClick={onToggle}
       >
-        <td className="px-4 py-2.5 font-medium text-foreground">
+        <td className="px-3 py-1.5 text-caption font-medium text-foreground">
           <span className="flex items-center gap-1.5">
             {isOpen ? '▾' : '▸'} {g.key}
           </span>
         </td>
-        <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
+        <td className="px-3 py-1.5 text-right font-mono text-caption tabular-nums text-muted-foreground">
           {g.count}동
         </td>
-        <td className="px-3 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
+        <td className="px-3 py-1.5 text-right font-mono text-caption tabular-nums text-muted-foreground">
           {g.totalPrice.toFixed(1)}억원
         </td>
-        <td className="px-3 py-2.5 text-right font-mono tabular-nums text-foreground">
+        <td className="px-3 py-1.5 text-right font-mono text-caption tabular-nums text-foreground">
           {g.avgRate.toFixed(1)}%
         </td>
-        <td className="px-3 py-2.5 text-center">
+        <td className="px-3 py-1.5 text-center">
           <RiskBadge risk={risk} />
         </td>
       </tr>
