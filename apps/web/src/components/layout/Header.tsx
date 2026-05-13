@@ -22,9 +22,10 @@ export function Header({ title, description, action }: Props) {
       {/* 모바일 전용 CI (사이드바 숨김 < md) */}
       <div className="flex min-w-0 items-center gap-2.5 md:hidden">
         <AsungSymbol />
-        <span className="truncate text-heading-md font-bold leading-snug tracking-tight text-primary">
-          전사 자산관리 시스템
-        </span>
+        <div className="min-w-0">
+          <div className="truncate text-micro font-semibold text-muted-foreground">전사 자산관리</div>
+          <div className="truncate text-body-strong font-bold leading-tight text-foreground">{title}</div>
+        </div>
       </div>
       {/* 데스크탑 전용 페이지 제목 */}
       <div className="hidden min-w-0 md:block">

@@ -73,13 +73,15 @@ export default function Admin() {
       }
     >
       {/* 탭 */}
-      <div className="flex gap-1 rounded-xl bg-muted p-1 self-start">
+      <div className="overflow-x-auto">
+      <div className="flex w-max gap-1 rounded-xl bg-muted p-1">
         <TabBtn active={tab === 'data'} onClick={() => setTab('data')}>데이터 관리</TabBtn>
         <TabBtn active={tab === 'adjust'} onClick={() => setTab('adjust')}>데이터 조정</TabBtn>
         <TabBtn active={tab === 'system'} onClick={() => setTab('system')}>
           <Shield className="h-3.5 w-3.5" aria-hidden="true" />
           시스템 관리
         </TabBtn>
+      </div>
       </div>
 
       {tab === 'data' && <DataTab canEdit={canEdit} />}

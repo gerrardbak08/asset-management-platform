@@ -33,7 +33,7 @@ export function MobileNav() {
           to={m.to}
           className={({ isActive }) =>
             cn(
-              'flex min-h-[44px] min-w-[64px] flex-1 flex-col items-center justify-center gap-0.5 text-micro font-medium transition-colors duration-150',
+              'flex min-h-[44px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-micro font-medium transition-colors duration-150',
               isActive
                 ? 'text-primary'
                 : 'text-muted-foreground hover:text-foreground',

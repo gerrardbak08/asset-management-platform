@@ -115,8 +115,8 @@ export default function AuditLogs() {
         />
       ) : (
         <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-caption">
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full min-w-[640px] text-caption">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
                   <th className="px-4 py-2.5 text-left font-semibold text-muted-foreground">시각</th>
