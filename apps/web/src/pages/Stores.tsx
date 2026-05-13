@@ -172,7 +172,7 @@ function SelectedPanel({
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <div className="flex items-baseline gap-2">
-              <h2 className="truncate text-heading-lg font-semibold tracking-tight text-foreground">{detail.name}</h2>
+              <h2 className="truncate text-body-strong font-semibold tracking-tight text-foreground">{detail.name}</h2>
               {detail.siteType ? (
                 <span className="truncate text-caption text-muted-foreground">· {detail.siteType}</span>
               ) : null}
