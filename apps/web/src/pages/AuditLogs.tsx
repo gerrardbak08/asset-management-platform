@@ -65,14 +65,14 @@ export default function AuditLogs() {
       {/* 필터 칩 */}
       <div className="flex flex-wrap gap-2">
         <div className="flex flex-wrap gap-1">
-          <span className="self-center text-caption text-muted-foreground">액션.</span>
+          <span className="self-center text-micro font-semibold uppercase tracking-wider text-muted-foreground">액션.</span>
           {ACTIONS.map((a) => (
             <button
               key={a}
               type="button"
               onClick={() => { setFilterAction(filterAction === a ? '' : a); setPage(1); }}
               className={cn(
-                'rounded-full border px-3 py-1 text-caption font-medium transition-colors',
+                'rounded-full border px-2.5 py-0.5 text-micro font-medium transition-colors',
                 filterAction === a
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground',
@@ -83,14 +83,14 @@ export default function AuditLogs() {
           ))}
         </div>
         <div className="flex flex-wrap gap-1">
-          <span className="self-center text-caption text-muted-foreground">리소스.</span>
+          <span className="self-center text-micro font-semibold uppercase tracking-wider text-muted-foreground">리소스.</span>
           {Object.entries(RESOURCE_LABELS).map(([key, label]) => (
             <button
               key={key}
               type="button"
               onClick={() => { setFilterResource(filterResource === key ? '' : key); setPage(1); }}
               className={cn(
-                'rounded-full border px-3 py-1 text-caption font-medium transition-colors',
+                'rounded-full border px-2.5 py-0.5 text-micro font-medium transition-colors',
                 filterResource === key
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground',
