@@ -215,14 +215,14 @@ function DataUploadCard({ card, canEdit }: { card: CardDef; canEdit: boolean }) 
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-elev-1">
+    <div className="flex flex-col rounded-2xl border border-border bg-card p-3 shadow-elev-1">
       <div className="flex items-start gap-3">
         <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.iconBg} ${card.iconColor}`}>
           <Icon className="h-5 w-5" aria-hidden="true" />
         </span>
         <div className="min-w-0">
-          <div className="text-heading-sm font-semibold leading-tight text-foreground">{card.label}</div>
-          <div className="mt-0.5 text-caption text-muted-foreground">{card.description}</div>
+          <div className="text-body-strong font-semibold leading-tight text-foreground">{card.label}</div>
+          <div className="mt-0.5 text-micro text-muted-foreground">{card.description}</div>
         </div>
       </div>
       <div className="mt-4">
@@ -283,7 +283,7 @@ function SystemTab({ isAdmin, me }: { isAdmin: boolean; me: { id: string; email:
 
   if (!isAdmin) {
     return (
-      <Card className="p-5">
+      <Card className="p-3">
         <EmptyState icon={Shield} title="admin 전용" description="시스템 관리 탭은 admin 역할만 접근 가능합니다." />
       </Card>
     );
@@ -291,7 +291,7 @@ function SystemTab({ isAdmin, me }: { isAdmin: boolean; me: { id: string; email:
 
   return (
     <div className="space-y-3">
-      <Card className="p-5">
+      <Card className="p-3">
         <SectionHeader title="시스템 통계" description="현재 DB 상태" />
         {stats.data ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -309,7 +309,7 @@ function SystemTab({ isAdmin, me }: { isAdmin: boolean; me: { id: string; email:
         )}
       </Card>
 
-      <Card className="p-5">
+      <Card className="p-3">
         <SectionHeader title="사용자 추가" description="역할별 계정 생성" />
         <CreateForm onCreate={(v) => createMut.mutate(v)} pending={createMut.isPending} />
         {createMut.isError ? (
@@ -318,7 +318,7 @@ function SystemTab({ isAdmin, me }: { isAdmin: boolean; me: { id: string; email:
       </Card>
 
       <Card className="overflow-hidden">
-        <div className="p-5 pb-3">
+        <div className="p-3 pb-2">
           <SectionHeader title="사용자 목록" description={`${users.data?.length ?? 0} 명`} />
         </div>
         <div className="overflow-x-auto custom-scrollbar">
@@ -354,7 +354,7 @@ function TabBtn({ active, onClick, children }: { active: boolean; onClick: () =>
       type="button"
       onClick={onClick}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-body font-medium transition-colors duration-150',
+        'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-caption font-medium transition-colors duration-150',
         active ? 'bg-card text-foreground shadow-elev-1' : 'text-muted-foreground hover:text-foreground',
       )}
     >
@@ -386,11 +386,11 @@ function CreateForm({ onCreate, pending }: { onCreate: (v: { email: string; pass
   return (
     <form onSubmit={submit} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr,1fr,140px,auto]">
       <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com"
-        className="rounded-lg border border-border bg-card px-3 py-2 text-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+        className="rounded-lg border border-border bg-card px-3 py-2 text-caption text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
       <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호 (8자 이상)"
-        className="rounded-lg border border-border bg-card px-3 py-2 text-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
+        className="rounded-lg border border-border bg-card px-3 py-2 text-caption text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" />
       <select value={role} onChange={(e) => setRole(e.target.value as AdminRole)}
-        className="rounded-lg border border-border bg-card px-3 py-2 text-body text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
+        className="rounded-lg border border-border bg-card px-3 py-2 text-caption text-foreground focus:outline-none focus:ring-2 focus:ring-primary">
         {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
       </select>
       <button type="submit" disabled={pending}
@@ -426,7 +426,7 @@ function Th({ children, align = 'left' }: { children: React.ReactNode; align?: '
   return <th className={cn('px-3 py-2.5 font-semibold', align === 'right' ? 'text-right' : 'text-left')}>{children}</th>;
 }
 function Td({ children, align = 'left' }: { children: React.ReactNode; align?: 'left' | 'right' }) {
-  return <td className={cn('px-3 py-2.5 text-body text-foreground', align === 'right' ? 'text-right' : '')}>{children}</td>;
+  return <td className={cn('px-3 py-2 text-caption text-foreground', align === 'right' ? 'text-right' : '')}>{children}</td>;
 }
 
 // ── 데이터 조정 탭 ─────────────────────────────────────────
@@ -461,7 +461,7 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
       </div>
 
       {subTab === 'monthly' && (
-        <Card className="p-5">
+        <Card className="p-3">
           <SectionHeader
             title="2026년 월별 실적 입력"
             description="각 항목의 월별 금액(백만원)을 입력하세요. 저장 후 자산 현황 탭의 추이 그래프에 즉시 반영됩니다."
@@ -479,7 +479,7 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
               <tbody>
                 {ADJUST_ROWS.map((row, ri) => (
                   <tr key={row.key} className={cn('border-t border-border', ri % 2 !== 0 && 'bg-muted/20')}>
-                    <td className="sticky left-0 z-10 bg-card px-3 py-2 text-body font-medium text-foreground shadow-[1px_0_0_0_hsl(var(--border))]">{row.label}</td>
+                    <td className="sticky left-0 z-10 bg-card px-3 py-2 text-caption font-medium text-foreground shadow-[1px_0_0_0_hsl(var(--border))]">{row.label}</td>
                     {Array.from({ length: 12 }, (_, mi) => (
                       <td key={mi} className="px-1 py-1.5 text-center">
                         {canEdit ? (
@@ -505,7 +505,7 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
               type="button"
               onClick={() => setSaved(true)}
               disabled={!canEdit}
-              className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-body font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-caption font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               저장 &amp; 반영
             </button>
@@ -513,7 +513,7 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
               type="button"
               onClick={handleReset}
               disabled={!canEdit}
-              className="inline-flex items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-2 text-body font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-2 text-caption font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-50"
             >
               초기화
             </button>
@@ -523,14 +523,14 @@ function DataAdjustTab({ canEdit }: { canEdit: boolean }) {
       )}
 
       {subTab === 'supplies' && (
-        <Card className="p-5">
+        <Card className="p-3">
           <SectionHeader title="비품현황 조정" description="비품 재고 및 운영 데이터를 직접 수정합니다." />
           <EmptyState icon={Package} title="준비 중" description="비품현황 조정 기능은 다음 릴리즈에서 제공됩니다." />
         </Card>
       )}
 
       {subTab === 'buildings' && (
-        <Card className="p-5">
+        <Card className="p-3">
           <SectionHeader title="건물정보 조정" description="건물 기본 정보를 수정합니다." />
           <EmptyState icon={Building} title="준비 중" description="건물정보 조정 기능은 다음 릴리즈에서 제공됩니다." />
         </Card>

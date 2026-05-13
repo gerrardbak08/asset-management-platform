@@ -1,0 +1,5 @@
+**/node_modules
+apps/oracleJdk-26.jdk
+apps/web/dist
+.git
+**/.git

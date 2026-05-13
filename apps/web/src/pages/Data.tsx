@@ -130,23 +130,23 @@ function DataUploadCard({ card, canEdit }: { card: CardDef; canEdit: boolean }) 
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-border bg-card p-3 shadow-elev-1">
       <div className="flex items-start gap-3">
         <span
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.iconBg} ${card.iconColor}`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${card.iconBg} ${card.iconColor}`}
         >
-          <Icon className="h-5 w-5" aria-hidden="true" />
+          <Icon className="h-4 w-4" aria-hidden="true" />
         </span>
         <div className="min-w-0">
-          <div className="text-heading-sm font-semibold leading-tight text-foreground">
+          <div className="text-body-strong font-semibold leading-tight text-foreground">
             {card.label}
           </div>
-          <div className="mt-0.5 text-caption text-muted-foreground">{card.description}</div>
+          <div className="mt-0.5 text-micro text-muted-foreground">{card.description}</div>
         </div>
       </div>
 
-      <div className="mt-4">
-        <div className="mb-1.5 text-caption font-medium text-muted-foreground">필수 열</div>
+      <div className="mt-3">
+        <div className="mb-1 text-micro font-medium text-muted-foreground">필수 열</div>
         <div className="flex flex-wrap gap-1">
           {card.columns.map((col) => (
             <span

@@ -72,7 +72,7 @@ export default function AuditLogs() {
               type="button"
               onClick={() => { setFilterAction(filterAction === a ? '' : a); setPage(1); }}
               className={cn(
-                'rounded-full border px-1.5 py-0 text-[10px] font-medium leading-[18px] transition-colors',
+                'rounded-full border px-1.5 py-0.5 text-micro font-medium transition-colors',
                 filterAction === a
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground',
@@ -90,7 +90,7 @@ export default function AuditLogs() {
               type="button"
               onClick={() => { setFilterResource(filterResource === key ? '' : key); setPage(1); }}
               className={cn(
-                'rounded-full border px-1.5 py-0 text-[10px] font-medium leading-[18px] transition-colors',
+                'rounded-full border px-1.5 py-0.5 text-micro font-medium transition-colors',
                 filterResource === key
                   ? 'border-primary bg-primary text-primary-foreground'
                   : 'border-border bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground',
