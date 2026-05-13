@@ -111,11 +111,11 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
   const top1 = topCats.items[0];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* 요약 패널 */}
-      <Card className="p-5">
-        <SectionHeader title="비품 운영 현황" description="필터 없음 · 전사 기준" />
-        <div className="space-y-1.5">
+      <Card className="p-3">
+        <SectionHeader title="비품 운영 현황" description="필터 없음 · 전사 기준" compact />
+        <div className="space-y-1">
           <SummaryLine
             label="규모"
             text={[
@@ -142,19 +142,19 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
       </Card>
 
       {/* KPI 4종 카드 */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           { label: '비품 재고', value: cur?.stock ?? 0, mom: momKpi.stock, positive: true },
           { label: '비품 구매', value: cur?.purchase ?? 0, mom: momKpi.purchase, positive: true },
           { label: '비품 이동', value: cur?.transfer ?? 0, mom: momKpi.transfer, positive: false },
           { label: '비품 폐기', value: cur?.disposal ?? 0, mom: momKpi.disposal, positive: false },
         ].map((it) => (
-          <div key={it.label} className="rounded-2xl border border-border bg-card p-4 shadow-elev-1">
-            <div className="text-caption text-muted-foreground">{it.label}</div>
-            <div className="mt-2 font-mono text-heading-sm font-semibold tabular-nums text-foreground">
+          <div key={it.label} className="rounded-2xl border border-border bg-card p-3 shadow-elev-1">
+            <div className="text-micro text-muted-foreground">{it.label}</div>
+            <div className="mt-1 font-mono text-body-strong font-semibold tabular-nums text-foreground">
               {fmtKRfull(it.value)}
             </div>
-            <div className="mt-1.5">
+            <div className="mt-1">
               <MomBadge ratio={it.mom.ratio} positiveIsGood={it.positive} />
             </div>
           </div>
@@ -162,15 +162,16 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
       </div>
 
       {/* 재고 TOP5 + 흐름 TOP10 좌우 2열 */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:items-stretch">
 
       {/* 재고 상위 카테고리 TOP5 + 상세 패널 */}
-      <Card className="flex flex-col p-5">
+      <Card className="flex flex-col p-3">
         <SectionHeader
           title="재고 상위 카테고리 TOP 5"
           description="클릭 시 상세"
+          compact
         />
-        <div className="space-y-2.5">
+        <div className="space-y-1.5">
           {topCats.items.map((cat, i) => {
             const isSelected = selectedEq === cat.name;
             const rankOpacity = 1 - i * 0.15; // 1위=1.0 → 5위=0.40
@@ -185,12 +186,12 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
                   )}
                 >
                   {/* 이름 + 비율 */}
-                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                  <div className="mb-1 flex items-center justify-between gap-2">
                     <span className="truncate text-caption font-semibold text-foreground">{cat.name}</span>
-                    <span className="shrink-0 text-caption text-muted-foreground">{cat.pct.toFixed(1)}%</span>
+                    <span className="shrink-0 text-micro text-muted-foreground">{cat.pct.toFixed(1)}%</span>
                   </div>
                   {/* 막대 + 금액 라벨 오버레이 */}
-                  <div className="relative h-6 overflow-hidden rounded-lg bg-muted">
+                  <div className="relative h-5 overflow-hidden rounded-lg bg-muted">
                     <div
                       className="absolute inset-y-0 left-0 rounded-lg transition-all duration-300"
                       style={{
@@ -307,11 +308,12 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
       </Card>
 
       {/* 비품 흐름 TOP10 */}
-      <Card className="flex flex-col p-5">
-        <div className="mb-3 flex items-center justify-between">
+      <Card className="flex flex-col p-3">
+        <div className="mb-2 flex items-center justify-between">
           <SectionHeader
             title="비품 흐름 TOP 10"
             description={`${FLOW_LABEL[flowKind]} 기준 · ${PERIOD}`}
+            compact
           />
           <div className="flex shrink-0 gap-1 rounded-lg bg-muted p-1">
             {(['inventory', 'purchase', 'transfer', 'disposal'] as const).map((k) => (
@@ -382,8 +384,8 @@ export function SuppliesOpsSubtab({ m0 }: Props) {
 
 function SummaryLine({ label, text }: { label: string; text: string }) {
   return (
-    <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-body text-muted-foreground">
-      <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-2 py-0.5 text-caption font-medium text-muted-foreground">
+    <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5 text-caption text-muted-foreground">
+      <span className="inline-flex shrink-0 items-center rounded-full bg-muted px-1.5 py-0.5 text-micro font-medium text-muted-foreground">
         {label}
       </span>
       {text}
