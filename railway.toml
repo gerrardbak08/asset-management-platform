@@ -3,7 +3,7 @@ builder = "nixpacks"
 buildCommand = "bash scripts/build.sh"
 
 [deploy]
-startCommand = "echo '--- RUNTIME DIR CHECK ---' && ls apps/api/public/files/buildings/ 2>/dev/null | wc -l && cd apps/api && pnpm exec prisma migrate deploy && (pnpm run db:seed || echo 'seed skipped') && node dist/server.js"
+startCommand = "echo '--- RUNTIME DIR CHECK ---' && ls apps/api/public/files/buildings/ 2>/dev/null | wc -l && cd apps/api && pnpm exec prisma migrate deploy && (pnpm run db:seed || echo 'seed skipped') && node dist/src/server.js"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 120
 restartPolicyType = "on_failure"
